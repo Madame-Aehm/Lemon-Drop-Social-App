@@ -9,5 +9,5 @@ cocktailsRouter.get("/test", (req, res) => {
 
 cocktailsRouter.get("/all", getAllCocktails);
 cocktailsRouter.get("/stirred", getStirredCocktails);
-cocktailsRouter.get("/all/:Method", getCocktailsByMethod);
+cocktailsRouter.get("/all/:method", getCocktailsByMethod);
 export default cocktailsRouter

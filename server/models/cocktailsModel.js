@@ -3,17 +3,19 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const cocktailSchema = new Schema({
-  Name: {
+  _id: Schema.Types.ObjectId,
+  name: {
     type: String,
     required: true,
     unique: true,
   },
-  Method: {
+  method: {
     type: String,
     required: true,
   },
-  Ingredients: [{"ingredient": String, "quantity": Number, "measure": String}],
-  Instructions: [String]
+  ingredients: [{"ingredient": String, "quantity": Number, "measure": String}],
+  instructions: [String],
+  posted_by: { type: Schema.Types.ObjectId, ref: "user" }
 })
 
 const cocktailModel = mongoose.model("cocktail", cocktailSchema);

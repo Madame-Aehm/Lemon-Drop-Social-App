@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cocktailsRouter from './routes/cocktails.js';
+import usersRouter from './routes/users.js';
 import * as dotenv from "dotenv";
 import mongoose from 'mongoose';
 
@@ -25,6 +26,7 @@ const addMiddlewares = () => {
 
 const loadRoutes = () => {
   app.use('/cocktails', cocktailsRouter);
+  app.use('/users', usersRouter);
 }
 
 const startServer = () => {

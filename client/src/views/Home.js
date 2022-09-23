@@ -20,6 +20,8 @@ function Home() {
 
   const [allCocktails, setAllCocktails] = useState([]); 
   const [methodsList, setMethodsList] = useState([]);
+  const [testState, setTestState] = useState(1);
+  const [userInput, setUserInput] = useState("Step " + testState);
 
   const fetchTest = async () => {
     const response = await fetch("http://localhost:5000/cocktails/all")
@@ -38,11 +40,30 @@ function Home() {
   }
 
   useEffect(() => {
-    fetchTest()
+    fetchTest();
   }, [])
+
+  const handleChange = (e) => {
+    setUserInput(e.target.value);
+  }
+
+  const handleOnClick = () => {
+    const newNumber = testState + 1;
+    setTestState(newNumber);
+  }
 
   return (
     <div style={container}>
+      <button onClick={handleOnClick}>set test state</button>
+      {console.log(testState)}
+      <form onSubmit={(e) => {
+          e.preventDefault();
+          console.log(userInput);
+        }}>
+        <input/>
+        <textarea value={userInput} onChange={handleChange}/>
+        <input type={"submit"} value={"Submit"} />
+      </form>
       {allCocktails.map((cocktail) => {
         return (
           <div key={cocktail._id} style={card}>

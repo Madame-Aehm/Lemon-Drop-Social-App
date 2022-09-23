@@ -1,7 +1,9 @@
 import { cocktailModel } from "../models/cocktailsModel.js";
 
 const getAllCocktails = async (req, res) => {
-  const allCocktails = await cocktailModel.find();
+  const allCocktails = await cocktailModel
+    .find()
+    .populate({ path: "posted_by", select: "username"});
   try {
     if (allCocktails.length === 0) {
       req.status(200).json({
@@ -21,7 +23,9 @@ const getAllCocktails = async (req, res) => {
 };
 
 const getStirredCocktails = async (req, res) => {
-  const stirredCocktails = await cocktailModel.find({ Method: "Stirred" });
+  const stirredCocktails = await cocktailModel
+    .find({ Method: "Stirred" })
+    .populate({ path: "posted_by", select: "username"});
   try {
     if (stirredCocktails.length === 0) {
       req.status(200).json({
@@ -41,8 +45,10 @@ const getStirredCocktails = async (req, res) => {
 };
 
 const getCocktailsByMethod = async (req, res) => {
-  console.log("req", req.params.Method);
-  const requestedCocktails = await cocktailModel.find({ method: req.params.method });
+  console.log("req", req.params.method);
+  const requestedCocktails = await cocktailModel
+    .find({ method: req.params.method })
+    .populate({ path: "posted_by", select: "username"});
   console.log(requestedCocktails)
   if (requestedCocktails.length === 0) {
     res.status(200).json({
@@ -61,22 +67,22 @@ const getCocktailsByMethod = async (req, res) => {
   }
 }
 
-const LIT = new cocktailModel({
-  name: "Long Island Iced Tea",
-  method: "Shaken",
-  ingredients: [{ingredient: "vodka", quantity: 15, measure: "ml"},
-                {ingredient: "rum", quantity: 15, measure: "ml"},
-                {ingredient: "triple sec", quantity: 15, measure: "ml"},
-                {ingredient: "gin", quantity: 15, measure: "ml"},
-                {ingredient: "tequila", quantity: 15, measure: "ml"},
-                {ingredient: "lemon juice", quantity: 30, measure: "ml"},
-                {ingredient: "cola", quantity: 30, measure: "ml"},
-                {ingredient: "lemon wedge", quantity: 1, measure: "item"}],
-  instructions: ["Step 1: Pour all liquors and lemon juice into cocktail shaker with ice.",
-                "Step 2: Shake well.",
-                "Step 3: Strain over fresh ice.",
-                "Step 4: Top with cola and garnish with lemon wedge. Enjoy!"]
-})
+// const LIT = new cocktailModel({
+//   name: "Long Island Iced Tea",
+//   method: "Shaken",
+//   ingredients: [{ingredient: "vodka", quantity: 15, measure: "ml"},
+//                 {ingredient: "rum", quantity: 15, measure: "ml"},
+//                 {ingredient: "triple sec", quantity: 15, measure: "ml"},
+//                 {ingredient: "gin", quantity: 15, measure: "ml"},
+//                 {ingredient: "tequila", quantity: 15, measure: "ml"},
+//                 {ingredient: "lemon juice", quantity: 30, measure: "ml"},
+//                 {ingredient: "cola", quantity: 30, measure: "ml"},
+//                 {ingredient: "lemon wedge", quantity: 1, measure: "item"}],
+//   instructions: ["Step 1: Pour all liquors and lemon juice into cocktail shaker with ice.",
+//                 "Step 2: Shake well.",
+//                 "Step 3: Strain over fresh ice.",
+//                 "Step 4: Top with cola and garnish with lemon wedge. Enjoy!"]
+// })
 
 
 export { getAllCocktails, getStirredCocktails, getCocktailsByMethod }
