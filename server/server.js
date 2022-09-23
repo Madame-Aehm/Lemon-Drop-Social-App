@@ -24,7 +24,7 @@ const addMiddlewares = () => {
 }
 
 const loadRoutes = () => {
-  app.use('/api', cocktailsRouter);
+  app.use('/cocktails', cocktailsRouter);
 }
 
 const startServer = () => {

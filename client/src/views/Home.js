@@ -22,10 +22,11 @@ function Home() {
   const [methodsList, setMethodsList] = useState([]);
 
   const fetchTest = async () => {
-    const response = await fetch("http://localhost:5000/api/all")
+    const response = await fetch("http://localhost:5000/cocktails/all")
     const data = await response.json()
-    setAllCocktails(data.allCocktails);
-    setMethodsList(generateMethodOptions(data.allCocktails));
+    console.log(data)
+    setAllCocktails(data);
+    // setMethodsList(generateMethodOptions(data.allCocktails));
   }
 
   function generateMethodOptions(list) {
@@ -45,16 +46,16 @@ function Home() {
       {allCocktails.map((cocktail) => {
         return (
           <div key={cocktail._id} style={card}>
-            <h1>{cocktail.Name}</h1>
-            <h3>{cocktail.Method}</h3>
+            <h1>{cocktail.name}</h1>
+            <h3>{cocktail.method}</h3>
             <ul style={instructionsDiv}>
-              {cocktail.Ingredients.map((ingredient) => {
+              {cocktail.ingredients.map((ingredient) => {
                 return <li key={ingredient._id}>{ingredient.quantity}{ingredient.measure} {ingredient.ingredient}</li>
               })}
             </ul>
             <div style={instructionsDiv}>
               <hr/>
-              {cocktail.Instructions.map((instruction, i) => {
+              {cocktail.instructions.map((instruction, i) => {
                 return <p key={i}>{instruction}</p>
               })}
               <hr/>

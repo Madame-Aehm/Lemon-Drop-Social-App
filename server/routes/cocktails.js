@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllCocktails, getStirredCocktails } from "../controllers/cocktailsController.js";
+import { getAllCocktails, getStirredCocktails, getCocktailsByMethod } from "../controllers/cocktailsController.js";
 
 const cocktailsRouter = express.Router()
 
@@ -9,4 +9,5 @@ cocktailsRouter.get("/test", (req, res) => {
 
 cocktailsRouter.get("/all", getAllCocktails);
 cocktailsRouter.get("/stirred", getStirredCocktails);
+cocktailsRouter.get("/all/:Method", getCocktailsByMethod);
 export default cocktailsRouter
