@@ -47,7 +47,7 @@ function Home() {
           <div key={cocktail._id} style={card}>
             <h1>{cocktail.Name}</h1>
             <h3>{cocktail.Method}</h3>
-            <ul>
+            <ul style={instructionsDiv}>
               {cocktail.Ingredients.map((ingredient) => {
                 return <li key={ingredient._id}>{ingredient.quantity}{ingredient.measure} {ingredient.ingredient}</li>
               })}

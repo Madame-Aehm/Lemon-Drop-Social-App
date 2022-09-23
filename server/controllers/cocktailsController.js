@@ -21,14 +21,14 @@ const getAllCocktails = async (req, res) => {
 };
 
 const getStirredCocktails = async (req, res) => {
-  const stirredCocktails = await cocktailModel.find({Method: "Stirred"});
+  const stirredCocktails = await cocktailModel.find({ Method: "Stirred" });
   try {
     if (stirredCocktails.length === 0) {
       req.status(200).json({
-        msg: "No stirred cocktails"
+        msg: "Menu empty"
       })
     } else {
-      req.status(200).json({
+      res.status(200).json({
         stirredCocktails
       })
     }
@@ -36,7 +36,7 @@ const getStirredCocktails = async (req, res) => {
     res.status(500).json({
       msg: "Server failed",
       error: error
-    })
+    });
   }
 };
 
