@@ -24,7 +24,7 @@ function Home() {
   const [userInput, setUserInput] = useState("Step " + testState);
 
   const fetchTest = async () => {
-    const response = await fetch("http://localhost:5000/cocktails/all")
+    const response = await fetch("http://localhost:5000/recipes/")
     const data = await response.json()
     console.log(data)
     setAllCocktails(data);

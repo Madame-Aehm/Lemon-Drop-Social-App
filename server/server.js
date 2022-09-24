@@ -1,18 +1,24 @@
 import express from 'express';
+import bodyParser from "body-parser";
 import cors from 'cors';
-import cocktailsRouter from './routes/cocktails.js';
-import usersRouter from './routes/users.js';
 import * as dotenv from "dotenv";
 import mongoose from 'mongoose';
+import recipesRouter from './routes/recipes.js';
+import usersRouter from './routes/users.js';
 
 dotenv.config();
 const app = express();
+app.use(cors());
 const port = process.env.PORT || 5000;
 
 const mongoDBConnect = () => {
   mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('Connection to Mongo DB established'))
-    .catch(err => console.log(err));
+    .then(() => {
+      app.listen(port, () => {
+        console.log('Connected to MongoDB & listening on port ' + port);
+      });
+    })
+    .catch((error) => {console.log(error.message)}) 
 }
 
 const addMiddlewares = () => {
@@ -22,24 +28,23 @@ const addMiddlewares = () => {
       extended: true,
     })
   );
+  //for patch
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  //track requests
+  app.use((req, res, next) => {
+    console.log(req.path, req.method)
+    next();
+  })
 }
 
 const loadRoutes = () => {
-  app.use('/cocktails', cocktailsRouter);
+  app.use('/recipes', recipesRouter);
   app.use('/users', usersRouter);
 }
-
-const startServer = () => {
-  app.listen(port, () => {
-    console.log('Server is running on port ' + port);
-  });
-}
-
-app.use(cors());
 
 (async function controller () {
   await mongoDBConnect();
   addMiddlewares();
   loadRoutes();
-  startServer();
 }) ();
