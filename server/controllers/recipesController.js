@@ -1,8 +1,11 @@
+import mongoose from "mongoose";
 import { recipeModel } from "../models/recipeModel.js";
+import { userModel } from "../models/usersModel.js";
 
 const getAllRecipes = async (req, res) => {
   const all = await recipeModel
-    .find()
+    .find({})
+    .sort({createdAt: -1})
     .populate({ path: "posted_by", select: "username"});
   try {
     if (all.length === 0) {
@@ -45,12 +48,16 @@ const getByMethod = async (req, res) => {
 }
 
 const getByID = async (req, res) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({msg: "Invalid ID"})
+  }
   const requested = await recipeModel
-    .find({ _id: req.params.id })
+    .find({ _id: id })
     .populate({ path: "posted_by", select: "username"});
   if (requested.length === 0) {
     res.status(200).json({
-      msg: "No recipe with ID " + req.params.id
+      msg: "No recipe with ID " + id
     })
   } else {
     try {
@@ -66,39 +73,55 @@ const getByID = async (req, res) => {
   }
 }
 
-// const LIT = new cocktailModel({
-  // name: "Long Island Iced Tea",
-  // method: "Shaken",
-  // ingredients: [{ingredient: "vodka", quantity: 15, measure: "ml"},
-  //               {ingredient: "rum", quantity: 15, measure: "ml"},
-  //               {ingredient: "triple sec", quantity: 15, measure: "ml"},
-  //               {ingredient: "gin", quantity: 15, measure: "ml"},
-  //               {ingredient: "tequila", quantity: 15, measure: "ml"},
-  //               {ingredient: "lemon juice", quantity: 30, measure: "ml"},
-  //               {ingredient: "cola", quantity: 30, measure: "ml"},
-  //               {ingredient: "lemon wedge", quantity: 1, measure: "item"}],
-  // instructions: ["Step 1: Pour all liquors and lemon juice into cocktail shaker with ice.",
-  //               "Step 2: Shake well.",
-  //               "Step 3: Strain over fresh ice.",
-  //               "Step 4: Top with cola and garnish with lemon wedge. Enjoy!"],
-  // posted_by: "632db07afc2d1691bac270f6"
-// })
-
 const postNewRecipe = async(req, res) => {
-  // const {name, method, ingredients, instructions} = req.body;
   try {
     const recipe = await recipeModel.create(req.body);
-    res.status(200).json(recipe)
+    res.status(200).json(recipe);
+    await userModel.findOneAndUpdate({ _id: recipe.posted_by }, {
+      $push: { posted_recipes: recipe._id, }
+    })
   } catch (error) { 
     res.status(500).json({ error: error.message })}
 }
 
+const addInPostedRecipes = async(req, res) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({msg: "Invalid ID"})
+  }
+  const user = await userModel.findOneAndUpdate({ _id: id }, {
+    ...req.body
+  })
+  if (!user) {
+    return res.status(400).json({ error: "ID not found." })
+  }
+  res.status(200).json({ msg: "User updated" });
+}
+
 const deleteRecipe = async(req, res) => {
-  res.json({mssg: "DELETE a recipe"})
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({msg: "Invalid ID"})
+  }
+  const recipe = await recipeModel.findOneAndDelete({ _id: id });
+  if (!recipe) {
+    return res.status(400).json({ error: "No recipe with ID " + id})
+  }
+  res.status(200).json({ msg: "Recipe deleted" });
 }
 
 const updateRecipe = async(req, res) => {
-  res.json({mssg: "UPDATE a recipe"})
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({msg: "Invalid ID"})
+  }
+  const recipe = await recipeModel.findOneAndUpdate({ _id: id }, {
+    ...req.body
+  }, { new: true })
+  if (!recipe) {
+    return res.status(400).json({ error: "ID not found." })
+  }
+  res.status(200).json(recipe);
 }
 
 export { getAllRecipes, getByMethod, getByID, postNewRecipe, deleteRecipe, updateRecipe }

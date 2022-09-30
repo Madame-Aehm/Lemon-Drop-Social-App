@@ -7,3 +7,21 @@
 {"_id":{"$oid":"6329c98bde93068d8605552b"},"Name":"Classic Daquiri","Method":"Shaken","Ingredients":[{"ingredient":"light rum","quantity":{"$numberInt":"45"},"measure":"ml"},{"ingredient":"lime juice","quantity":{"$numberInt":"20"},"measure":"ml"},{"ingredient":"simple syrup","quantity":{"$numberInt":"15"},"measure":"ml"}],"Instructions":["Step 1: Add the ingredients to a cocktail shaker with ice cubes.","Step 2: Shake well.","Step 3: Strain into a chilled cocktail glass. Serve and enjoy."]}
 
 {"_id":{"$oid":"6329cb36de93068d8605552c"},"Name":"Classic Side Car","Method":"Shaken","Ingredients":[{"ingredient":"brandy","quantity":{"$numberInt":"60"},"measure":"ml"},{"ingredient":"triple sec","quantity":{"$numberInt":"30"},"measure":"ml"},{"ingredient":"lemon juice","quantity":{"$numberInt":"20"},"measure":"ml"},{"ingredient":"orange twist","quantity":{"$numberInt":"1"},"measure":"item"}],"Instructions":["Step 1: Pour the ingredients into a cocktail shaker filled with ice cubes. Shake well.","Step 2: Strain into a chilled cocktail glass.","Step 3: Garnish with a lemon twist. Enjoy."]}
+
+{
+  "name": "Long Island Iced Tea",
+  "method": "Shaken",
+  "ingredients": [{"ingredient": "vodka", "quantity": 15, "measure": "ml"},
+                {"ingredient": "rum", "quantity": 15, "measure": "ml"},
+                {"ingredient": "triple sec", "quantity": 15, "measure": "ml"},
+                {"ingredient": "gin", "quantity": 15, "measure": "ml"},
+                {"ingredient": "tequila", "quantity": 15, "measure": "ml"},
+                {"ingredient": "lemon juice", "quantity": 30, "measure": "ml"},
+                {"ingredient": "cola", "quantity": 30, "measure": "ml"},
+                {"ingredient": "lemon wedge", "quantity": 1, "measure": "item"}],
+  "instructions": ["Step 1: Pour all liquors and lemon juice into cocktail shaker with ice.",
+                "Step 2: Shake well.",
+                "Step 3: Strain over fresh ice.",
+                "Step 4: Top with cola and garnish with lemon wedge. Enjoy!"],
+  "posted_by": "632db07afc2d1691bac270f6"
+}

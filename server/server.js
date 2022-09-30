@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from "body-parser";
 import cors from 'cors';
 import * as dotenv from "dotenv";
 import mongoose from 'mongoose';
@@ -28,9 +27,6 @@ const addMiddlewares = () => {
       extended: true,
     })
   );
-  //for patch
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
   //track requests
   app.use((req, res, next) => {
     console.log(req.path, req.method)
