@@ -54,7 +54,6 @@ function Home() {
 
   return (
     <div style={container}>
-      <p>test</p>
       <button onClick={handleOnClick}>set test state</button>
       {console.log(testState)}
       <form onSubmit={(e) => {

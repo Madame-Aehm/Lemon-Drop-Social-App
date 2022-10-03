@@ -3,6 +3,7 @@ import { userModel } from "../models/usersModel.js";
 import encryptPassword from "../utils/encryptPassword.js";
 import { body, validationResult } from 'express-validator';
 import { recipeModel } from "../models/recipeModel.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const getAllUsers = async (req, res) => {
   const allUsers = await userModel
@@ -52,8 +53,21 @@ const getUserByID = async (req, res) => {
   }
 };
 
-const uploadDI = async(req, res) => {
-
+const uploadImage = async(req, res) => {
+  try {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: "user_avatars",
+    });
+    console.log("uploadResult", uploadResult); //this show us the object with all the information about the upload, including the public URL in result.url
+    res.status(200).json({
+      message: "Successful image upload",
+      imageUrl: uploadResult.url,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Image couldn't be uploaded", error: error });
+  }
 }
 
 // const userValidation = (email, password, req) => {
@@ -128,4 +142,4 @@ const updateUser = async(req, res) => {
   res.status(200).json(user);
 }
 
-export { getAllUsers, newUser, getUserByID, uploadDI, deleteUser, updateUser }
+export { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser }

@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import mongoose from 'mongoose';
 import recipesRouter from './routes/recipes.js';
 import usersRouter from './routes/users.js';
+import { cloudinaryConfig } from './config/cloudinaryConfig.js';
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ const addMiddlewares = () => {
       extended: true,
     })
   );
+  cloudinaryConfig();
   //track requests
   app.use((req, res, next) => {
     console.log(req.path, req.method)
