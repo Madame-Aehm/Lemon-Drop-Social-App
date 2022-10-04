@@ -1,0 +1,14 @@
+#links {
+  font-size: large;
+  color: #754423;
+  padding: 1em;
+  text-decoration: none;
+}
+
+#links:active {
+  font-weight: 700;
+}
+
+#search {
+  justify-self: end;
+}

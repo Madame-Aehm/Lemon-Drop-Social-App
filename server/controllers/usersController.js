@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { userModel } from "../models/usersModel.js";
 import encryptPassword from "../utils/encryptPassword.js";
-import { body, validationResult } from 'express-validator';
 import { recipeModel } from "../models/recipeModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -58,7 +57,8 @@ const uploadImage = async(req, res) => {
     const uploadResult = await cloudinary.uploader.upload(req.file.path, {
       folder: "user_avatars",
     });
-    console.log("uploadResult", uploadResult); //this show us the object with all the information about the upload, including the public URL in result.url
+    //this show us the object with all the information about the upload, including the public URL in result.url
+    console.log("uploadResult", uploadResult);
     res.status(200).json({
       message: "Successful image upload",
       imageUrl: uploadResult.url,
@@ -70,25 +70,13 @@ const uploadImage = async(req, res) => {
   }
 }
 
-// const userValidation = (email, password, req) => {
-//   email.isEmail();
-//   password.isLength({ min: 6 });
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ errors: errors.array() })
-//   }
-// } //doesn't work
-
 const newUser = async(req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(409).json({ msg: "User with this email already exists." })
     }
-    // const validation = userValidation(res.body.email, res.body.password, req);
-    // if (validation) {
-    //   return validation;
-    // }
+    // insert validation here
     const hashedPassword = await encryptPassword(req.body.password);
     const user = new userModel({
       username: req.body.username,

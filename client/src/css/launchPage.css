@@ -1,0 +1,31 @@
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+#test {
+  width: 300px;
+  height: 300px;
+}
+
+.testStage1 {
+  transition: 1s;
+  transform: scale(50%);
+  opacity: 0;
+}
+
+.testStage2 {
+ transition: 1s;
+ transform: scale(100%);
+ opacity: 1;
+}
+
+.testStage3 {
+  opacity: 0;
+}

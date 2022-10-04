@@ -1,13 +1,13 @@
 import React from 'react'
 import NavBar from '../components/NavBar'
 
-function Home() {
+function Login() {
   return (
     <div>
       <NavBar />
-      Home
+      Login
     </div>
   )
 }
 
-export default Home
+export default Login
