@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser } from "../controllers/usersController.js";
+import { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser, deleteImage } from "../controllers/usersController.js";
 import { multerUploads } from '../middlewares/multer.js';
 
 const router = express.Router()
@@ -12,7 +12,8 @@ router.get("/all", getAllUsers);
 router.get("/:id", getUserByID);
 
 router.post('/upload-image', multerUploads.single("image"), uploadImage);
-router.post('/', newUser);
+router.post('/delete-image', deleteImage);
+router.post('/sign-up', newUser);
 
 router.patch('/:id', updateUser);
 

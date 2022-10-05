@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { userModel } from "../models/usersModel.js";
-import encryptPassword from "../utils/encryptPassword.js";
+import { encryptPassword } from "../utils/bcrypt.js";
 import { recipeModel } from "../models/recipeModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -66,15 +66,24 @@ const uploadImage = async(req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Image couldn't be uploaded", error: error });
+      .json({ error: error });
+  }
+}
+
+const deleteImage = async(req, res) => {
+  try {
+    cloudinary.uploader.destroy(req.body.image, function(err, result) {console.log("result: ", result)});
+  } catch (error) {
+    console.log("error: ", error)
   }
 }
 
 const newUser = async(req, res) => {
+  console.log(req.body)
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (existingUser) {
-      return res.status(409).json({ msg: "User with this email already exists." })
+      return res.status(409).json({ error: "User with this email already exists." })
     }
     // insert validation here
     const hashedPassword = await encryptPassword(req.body.password);
@@ -82,15 +91,15 @@ const newUser = async(req, res) => {
       username: req.body.username,
       password: hashedPassword,
       email: req.body.email,
-      favourite_drink: req.body.favourite_drink
+      profile_picture: req.body.profile_picture
     })
     try {
         await user.save();
-        res.status(200).json(user) //change later to hide private details
+        res.status(201).json(user) //change later to hide private details
       } catch (error) { 
         res.status(500).json({ error: error.message })}
   } catch(error) {
-    res.status(401).json({ msg: "Registration failed", error: error })
+    res.status(401).json({ error: error.message })
   }
 }
 
@@ -130,4 +139,4 @@ const updateUser = async(req, res) => {
   res.status(200).json(user);
 }
 
-export { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser }
+export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, updateUser }

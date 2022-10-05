@@ -12,10 +12,10 @@ function LaunchPage() {
     const title = document.getElementById("shakeItUp");
     setTimeout(() => {
       test.classList.add("testStage2");
-    }, 1000);
+    }, 500);
     setTimeout(() => {
       title.classList.add("testStage2");
-    }, 1500);
+    }, 1000);
     setTimeout(() => {
       test.classList.add("testStage3");
       title.classList.add("testStage3");
@@ -27,7 +27,7 @@ function LaunchPage() {
 
   return (
     <div className='container'>
-      <img id='test' src={lemonImage} className='testStage1'/>
+      <img id='test' src={lemonImage} alt="Lemon icon" className='testStage1'/>
       <h1 id='shakeItUp' className='testStage1' style={{color: "#ff9500"}}>Cheers Recipes</h1>
     </div>
   )

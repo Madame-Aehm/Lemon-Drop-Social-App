@@ -1,7 +1,7 @@
 #links {
   font-size: large;
   color: #754423;
-  padding: 1em;
+  padding: 0 1em;
   text-decoration: none;
 }
 
@@ -9,6 +9,8 @@
   font-weight: 700;
 }
 
-#search {
-  justify-self: end;
+.page-title {
+  color: #754423;
+  text-align: center;
+  margin: 0.5em;
 }

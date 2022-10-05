@@ -6,7 +6,6 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
   },
   password: {
     type: String,
@@ -16,10 +15,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true
-  },
-  favourite_drink: {
-    type: String,
-    required: true,
   },
   profile_picture: {
     type: String
