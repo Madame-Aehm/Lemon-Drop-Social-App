@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { userModel } from "../models/usersModel.js";
-import { encryptPassword } from "../utils/bcrypt.js";
+import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
+import { issueToken } from "../utils/jwt.js";
 import { recipeModel } from "../models/recipeModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -139,9 +140,23 @@ const updateUser = async(req, res) => {
 const login = async(req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
-    if (!existingUser) { res.status(401).json({ msg: "No user registered with that email" })}
+    if (!existingUser) { 
+      res.status(401).json({ msg: "No user registered with that email" })
+    } else {
+      const verified = await verifyPassword(req.body.password, existingUser.password);
+      if (verified) {
+        console.log("user is logged in");
+        const token = issueToken(existingUser.id);
+        res.status(201).json({
+          user: existingUser,
+          token: token
+        });
+      } else {
+        res.status(401).json({ msg: "Password doesn't match" });
+      }
+    }
   } catch(error) {
-
+    console.log("login error: ", error)
   }
 }
 
