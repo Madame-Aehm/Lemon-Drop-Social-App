@@ -56,13 +56,9 @@ const uploadImage = async(req, res) => {
   try {
     const uploadResult = await cloudinary.uploader.upload(req.file.path, {
       folder: "user_avatars",
+      return_delete_token: true,
     });
-    //this show us the object with all the information about the upload, including the public URL in result.url
-    console.log("uploadResult", uploadResult);
-    res.status(200).json({
-      message: "Successful image upload",
-      imageUrl: uploadResult.url,
-    });
+    res.status(200).json(uploadResult);
   } catch (error) {
     res
       .status(500)
@@ -72,9 +68,10 @@ const uploadImage = async(req, res) => {
 
 const deleteImage = async(req, res) => {
   try {
-    cloudinary.uploader.destroy(req.body.image, function(err, result) {console.log("result: ", result)});
+    const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
+    res.status(200).json(deleteResult);
   } catch (error) {
-    console.log("error: ", error)
+    res.status(500).json("error: ", error);
   }
 }
 
@@ -139,4 +136,13 @@ const updateUser = async(req, res) => {
   res.status(200).json(user);
 }
 
-export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, updateUser }
+const login = async(req, res) => {
+  try {
+    const existingUser = await userModel.findOne({ email: req.body.email });
+    if (!existingUser) { res.status(401).json({ msg: "No user registered with that email" })}
+  } catch(error) {
+
+  }
+}
+
+export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, updateUser, login }
