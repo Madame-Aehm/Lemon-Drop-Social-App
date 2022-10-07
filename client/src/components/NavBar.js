@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom';
 import lemonImage from "../lemon.png";
 import '../css/nav.css';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { AuthContext } from '../context/AuthContext.js'
 
 function NavBar() {
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <Navbar collapseOnSelect bg="light" expand="md">
@@ -17,10 +19,16 @@ function NavBar() {
             fontWeight: isActive ? 700 : 'inherit',
             cursor: isActive ? "inherit" : "pointer"
           })}>Home</NavLink>
-          <NavLink id="links" to={"/login"} style={({isActive}) => ({
-            fontWeight: isActive ? 700 : 'inherit',
-            cursor: isActive ? "inherit" : "pointer"
-          })}>Login</NavLink>
+          {!user && 
+            <NavLink id="links" to={"/login"} style={({isActive}) => ({
+              fontWeight: isActive ? 700 : 'inherit',
+              cursor: isActive ? "inherit" : "pointer"
+            })}>Login</NavLink>
+          }
+          {user && 
+            <NavLink id="links" onClick={logout} >Logout</NavLink>
+          }
+          
   
           
         </Nav>

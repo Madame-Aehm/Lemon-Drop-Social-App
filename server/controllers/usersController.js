@@ -12,7 +12,7 @@ const getAllUsers = async (req, res) => {
   try {
     if (allUsers.length === 0) {
       req.status(200).json({
-        msg: "No users found"
+        error: "No users found"
       })
     } else {
       res.status(200).json(
@@ -107,7 +107,7 @@ const newUser = async(req, res) => {
 const deleteUser = async(req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
+    return res.status(500).json({ error: "Invalid ID" })
   }
   const user = await userModel.findOneAndDelete({ _id: id });
   if (!user) {
@@ -129,7 +129,7 @@ const deleteUserRecipes = async(id) => {
 const updateUser = async(req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
+    return res.status(500).json({ error: "Invalid ID" })
   }
   const user = await userModel.findOneAndUpdate({ _id: id }, {
     ...req.body
@@ -144,18 +144,22 @@ const login = async(req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (!existingUser) { 
-      res.status(401).json({ msg: "No user registered with that email" })
+      res.status(401).json({ error: "No user registered with that email" })
     } else {
       const verified = await verifyPassword(req.body.password, existingUser.password);
       if (verified) {
-        console.log("user is logged in");
-        const token = issueToken(existingUser.id);
+        const token = issueToken(existingUser.id, existingUser.username, existingUser.profile_picture);
         res.status(201).json({
-          user: existingUser,
+          user: {
+            username: existingUser.username,
+            _id: existingUser._id,
+            profile_picture: existingUser.profile_picture.url,
+            user_since: existingUser.createdAt
+          },
           token: token
         });
       } else {
-        res.status(401).json({ msg: "Password doesn't match" });
+        res.status(401).json({ error: "Password doesn't match" });
       }
     }
   } catch(error) {
