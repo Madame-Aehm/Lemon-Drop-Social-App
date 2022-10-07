@@ -11,9 +11,9 @@ function SignUp() {
   const redirect = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [inputInfo, setInputInfo] = useState({});
-  const [validated, setValidated] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState("password");
   const [showOrHide, setShowOrHide] = useState("Show");
+  const [PWinvalid, setPWinvalid] = useState(false);
 
   const passwordToggle = () => {
     if (passwordVisibility === "password") {
@@ -30,29 +30,21 @@ function SignUp() {
   }
 
   const handleChanges = (e) => {
-    setInputInfo({ ...inputInfo, [e.target.name]: e.target.value})
+    setInputInfo({ ...inputInfo, [e.target.name]: e.target.value});
+    setPWinvalid(false);
   }
 
   const handleSubmit = (e) => {
-    const form = e.currentTarget;
-    if ((form.checkValidity() === false)) {
+    const validPassword = passwordValidation(inputInfo.password);
+    if (validPassword) {
+      e.preventDefault();
+      signUp();
+    } else {
       e.preventDefault();
       e.stopPropagation();
+      setPWinvalid(true);
     }
-    setValidated(true);
-    signUp();
-    // if (validated) {
-    //   const validPW = passwordValidation(inputInfo.password);
-    //   if (validPW) {
-    //     signUp();
-    //   } else {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     alert("Password must contain both lowercase and capital letters, and be at least 6 characters long.")
-    //   }
-    // }
   }
-
 
   const imageUpload = async () => {
     if (!selectedFile) {
@@ -68,10 +60,9 @@ function SignUp() {
       try {
         const response = await fetch("http://localhost:5000/users/upload-image", reqOptions);
         const result = await response.json();
-        console.log(result);
         return result
       } catch (error) {
-        alert(error)
+        alert("image upload error: ", error)
       }
     }
   }
@@ -90,13 +81,13 @@ function SignUp() {
       const result = await response.json();
       console.log(result);
     } catch(error) {
-      console.log(error);
+      alert("error deleting image: ", error);
     }
   }
 
   const signUp = async () => {
     const image = await imageUpload();
-    inputInfo.profile_picture = image.url; 
+    inputInfo.profile_picture = image; 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const newUser = JSON.stringify(inputInfo);
@@ -113,18 +104,18 @@ function SignUp() {
         if (image.public_id) {
           deleteImage(image)
         }
-        alert(result.msg);
+        alert("sign up problem: ", result.msg);
       } else if (result.error) {
         if (image.public_id) {
           deleteImage(image)
         }
-        alert(result.error);
+        alert("sign up error: ", result.error);
       } else {
         alert("Successfully signed up! Please log in.");
         redirect("/login", {replace: true});
       }
     } catch(error) {
-      console.log("error: ", error);
+      console.log("sign up error2: ", error);
     }
   }
 
@@ -134,28 +125,29 @@ function SignUp() {
 
       <h1 className='page-title'>Sign Up!</h1>
 
-        <Form name="signUpForm" noValidate validated={validated} onSubmit={handleSubmit} className='simple-display'>
-          <FloatingLabel controlId="floatingInput" label="Enter your email address*" style={{width: "80%"}} >
+        <Form name="signUpForm" onSubmit={handleSubmit} className='simple-display'>
+          <FloatingLabel controlId="floatingInputEmail" label="Enter your email address*" style={{width: "80%"}} >
             <Form.Control type="email" name="email" placeholder="name@example.com" onChange={handleChanges} required/>
             <Form.Control.Feedback type="invalid">
-              Please enter your email
+              You must enter an email
             </Form.Control.Feedback>
           </FloatingLabel>
 
-          <FloatingLabel controlId="floatingInput" label="Choose a username*" style={{width: "80%"}}>
+          <FloatingLabel controlId="floatingInputUsername" label="Choose a username*" style={{width: "80%"}}>
             <Form.Control type="username" name="username" placeholder="Username" onChange={handleChanges} required/>
             <Form.Control.Feedback type="invalid">
-              Please enter a username
+              You must choose a username
             </Form.Control.Feedback>
           </FloatingLabel>
 
           <InputGroup hasValidation style={{width: "80%"}}>
-            <Form.Control type={passwordVisibility} name="password" placeholder="Password*" onChange={handleChanges} required/>
-            <Button onClick={passwordToggle} variant="outline-secondary" id="button-addon2">
+            <Form.Control type={passwordVisibility} name="password" placeholder="Password*" onChange={handleChanges} isInvalid={PWinvalid} required/>
+            <Button onClick={passwordToggle} variant="outline-success" id="button-addon2">
             {showOrHide}
             </Button>
+            <Form.Text muted>Password must be at least 6 characters, including numbers, capital letters and lowercase letters.</Form.Text>
             <Form.Control.Feedback type="invalid">
-              Please enter a password
+              You must choose a password at least 6 characters, including numbers, capital letters and lowercase letters. 
             </Form.Control.Feedback>
           </InputGroup>
 

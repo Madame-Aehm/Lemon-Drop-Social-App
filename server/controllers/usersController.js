@@ -59,7 +59,10 @@ const uploadImage = async(req, res) => {
       folder: "user_avatars",
       return_delete_token: true,
     });
-    res.status(200).json(uploadResult);
+    res.status(200).json({
+      url: uploadResult.url,
+      public_id: uploadResult.public_id
+    });
   } catch (error) {
     res
       .status(500)

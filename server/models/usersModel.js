@@ -17,7 +17,7 @@ const userSchema = new Schema({
     unique: true
   },
   profile_picture: {
-    type: String
+    type: Object
   },
   posted_recipes: [{ type: Schema.Types.ObjectId, ref: "cocktail" }]
 }, { timestamps: true })
