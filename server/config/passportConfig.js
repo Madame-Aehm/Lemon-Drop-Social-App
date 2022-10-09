@@ -1,24 +1,21 @@
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import * as dotenv from "dotenv";
-import userModel from "../models/usersModel.js";
+import { userModel } from "../models/usersModel.js";
 import passport from "passport";
 dotenv.config();
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.SECRET_OR_KEY,
+  secretOrKey: process.env.JWT_SECRET,
 };
 
 const jwtStrategy = new JwtStrategy(jwtOptions, function (jwt_payload, done) {
-  userModel.findOne({ _id: jwt_payload.sub }, function (error, user) {
-    if (error) {
-      return done(error, false);
-    }
+  userModel.findOne({ id: jwt_payload.id }, function (error, user) {
     if (user) {
       console.log("user in jwtStrategy :>> ", user);
       return done(null, user);
     } else {
-      return done(null, false);
+      return done(error, false);
     }
   });
 });

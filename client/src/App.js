@@ -4,6 +4,7 @@ import { AuthContextProvider } from './context/AuthContext';
 import Home from './views/Home';
 import LaunchPage from './views/LaunchPage';
 import Login from './views/Login';
+import MyProfile from './views/MyProfile';
 import SignUp from './views/SignUp';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path='/home' element={ <Home/> } />
             <Route path='/login' element={ <Login/> } />
             <Route path='/sign-up' element={ <SignUp/> } />
+            <Route path='/my-profile' element={ <MyProfile/> } />
           </Routes>
         </AuthContextProvider>
       </BrowserRouter>

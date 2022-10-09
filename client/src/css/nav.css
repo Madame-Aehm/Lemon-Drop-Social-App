@@ -1,11 +1,11 @@
-#links {
+.links {
   font-size: large;
   color: #754423;
   padding: 0 1em;
   text-decoration: none;
 }
 
-#links:active {
+.links:active {
   font-weight: 700;
 }
 

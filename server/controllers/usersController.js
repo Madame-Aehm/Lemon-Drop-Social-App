@@ -148,13 +148,12 @@ const login = async(req, res) => {
     } else {
       const verified = await verifyPassword(req.body.password, existingUser.password);
       if (verified) {
-        const token = issueToken(existingUser.id, existingUser.username, existingUser.profile_picture);
+        const token = issueToken(existingUser.id, existingUser.username, existingUser.profile_picture.url);
         res.status(201).json({
           user: {
+            id: existingUser.id,
             username: existingUser.username,
-            _id: existingUser._id,
             profile_picture: existingUser.profile_picture.url,
-            user_since: existingUser.createdAt
           },
           token: token
         });
@@ -167,4 +166,9 @@ const login = async(req, res) => {
   }
 }
 
-export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, updateUser, login }
+const getMyProfile = async (req, res) => {
+  console.log(req);
+}
+
+export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, 
+  updateUser, login, getMyProfile }

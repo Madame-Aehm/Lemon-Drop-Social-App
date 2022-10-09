@@ -4,9 +4,9 @@ dotenv.config();
 
 const issueToken = (id, username, pp) => {
   const payload = {
-    sub: id,
+    id: id,
     username: username,
-    pp: pp
+    profile_picture: pp
   };
   const options = {
     expiresIn: "7d",

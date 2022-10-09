@@ -7,4 +7,4 @@ const cloudinaryConfig = () => {
     api_secret: process.env.CLOUD_API_SECRET,
   });
 };
-export { cloudinaryConfig };
+export default cloudinaryConfig;

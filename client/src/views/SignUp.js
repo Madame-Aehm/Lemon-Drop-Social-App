@@ -107,7 +107,7 @@ function SignUp() {
         alert("sign up error: ", result.error);
       } else {
         alert("Successfully signed up! Please log in.");
-        redirect("/login", {replace: true});
+        redirect("/login", { replace: true });
       }
     } catch(error) {
       console.log("sign up error2: ", error);
@@ -141,6 +141,7 @@ function SignUp() {
           {!PWinvalid && 
             <Form.Text muted style={{width: "80%", marginTop: "-0.8em"}}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
           }
+          
           <Form.Group controlId="formFile" style={{width: "80%"}}>
             <Form.Label>Choose a display picture:</Form.Label>
             <Form.Control type="file" name="profile_picture" onChange={handleFileAttach} />

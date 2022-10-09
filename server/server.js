@@ -4,7 +4,7 @@ import * as dotenv from "dotenv";
 import mongoose from 'mongoose';
 import recipesRouter from './routes/recipes.js';
 import usersRouter from './routes/users.js';
-import { cloudinaryConfig } from './config/cloudinaryConfig.js';
+import cloudinaryConfig from './config/cloudinaryConfig.js';
 import passport from 'passport';
 import passportConfig from './config/passportConfig.js';
 
@@ -32,7 +32,7 @@ const addMiddlewares = () => {
   app.use(cors());
   cloudinaryConfig();
   app.use(passport.initialize());
-  passportConfig(passport);
+  passportConfig();
 
   //track requests
   app.use((req, res, next) => {

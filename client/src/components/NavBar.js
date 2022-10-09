@@ -15,18 +15,24 @@ function NavBar() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: "1em" }}/>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="me-auto" style={{ width: "100%" }}>
-          <NavLink id="links" to={"/home"} style={({isActive}) => ({
+          <NavLink className={"links"} to={"/home"} style={({isActive}) => ({
             fontWeight: isActive ? 700 : 'inherit',
             cursor: isActive ? "inherit" : "pointer"
           })}>Home</NavLink>
           {!user && 
-            <NavLink id="links" to={"/login"} style={({isActive}) => ({
+            <NavLink className={"links"} to={"/login"} style={({isActive}) => ({
               fontWeight: isActive ? 700 : 'inherit',
               cursor: isActive ? "inherit" : "pointer"
             })}>Login</NavLink>
           }
           {user && 
-            <NavLink id="links" onClick={logout} >Logout</NavLink>
+            <>
+              <NavLink className={"links"} to={"/my-profile"} style={({isActive}) => ({
+              fontWeight: isActive ? 700 : 'inherit',
+              cursor: isActive ? "inherit" : "pointer"
+            })}>My Profile</NavLink>
+              <NavLink className={"links"} onClick={logout} >Logout</NavLink>
+            </>
           }
           
   

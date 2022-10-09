@@ -7,15 +7,21 @@ export const AuthContext = createContext();
 export const AuthContextProvider = (props) => {
   const redirect = useNavigate();
   const [user, setUser] = useState(null);
+
+  function parseJwt (token) {
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+}
   
   const checkForUser = () => {
     const token = getToken();
     if (token) {
-      setUser(token);
       console.log("User logged in");
+      const test = parseJwt(token);
+      setUser(test);
+      console.log(test);
     } else {
-      setUser(null);
       console.log("User NOT logged in");
+      setUser(null);
     }
   }
 
@@ -36,14 +42,13 @@ export const AuthContextProvider = (props) => {
       const result = await response.json();
       if (result.error) {
         console.log(result);
-        alert("Login error: ", result.error.error);  //wtf just show my error message!!
+        alert("Login error: ", result);  //wtf just show my error message!!
         return
       }
       if (result.token) {
-        console.log(result);
         localStorage.setItem("token", result.token);
+        setUser(result.user);
         alert(result.user.username + " has successfully logged in!")
-        checkForUser();
         redirect("/home", {replace: true});
       }
     } catch (error) {
@@ -59,7 +64,7 @@ export const AuthContextProvider = (props) => {
 
   useEffect(() => {
     checkForUser();
-  })
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
