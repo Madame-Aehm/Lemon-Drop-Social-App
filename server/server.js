@@ -5,10 +5,11 @@ import mongoose from 'mongoose';
 import recipesRouter from './routes/recipes.js';
 import usersRouter from './routes/users.js';
 import { cloudinaryConfig } from './config/cloudinaryConfig.js';
+import passport from 'passport';
+import passportConfig from './config/passportConfig.js';
 
 dotenv.config();
 const app = express();
-app.use(cors());
 const port = process.env.PORT || 5000;
 
 const mongoDBConnect = () => {
@@ -28,7 +29,11 @@ const addMiddlewares = () => {
       extended: true,
     })
   );
+  app.use(cors());
   cloudinaryConfig();
+  app.use(passport.initialize());
+  passportConfig(passport);
+
   //track requests
   app.use((req, res, next) => {
     console.log(req.path, req.method)
