@@ -5,12 +5,9 @@ import jwtAuth from "../utils/jwtAuth.js";
 
 const router = express.Router()
 
-router.get("/test", (req, res) => {
-  res.send({message: "testing message recieved"})
-})
-
 router.get("/all", getAllUsers);
 router.get("/user/:id", getUserByID);
+
 router.get("/my-profile", jwtAuth, getMyProfile);
 
 router.post('/upload-image', multerUploads.single("image"), uploadImage);

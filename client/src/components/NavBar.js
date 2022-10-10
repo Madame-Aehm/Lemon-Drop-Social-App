@@ -17,20 +17,23 @@ function NavBar() {
         <Nav className="me-auto" style={{ width: "100%" }}>
           <NavLink className={"links"} to={"/home"} style={({isActive}) => ({
             fontWeight: isActive ? 700 : 'inherit',
-            cursor: isActive ? "inherit" : "pointer"
+            cursor: isActive ? "inherit" : "pointer",
+            color: "#b34414"
           })}>Home</NavLink>
           {!user && 
             <NavLink className={"links"} to={"/login"} style={({isActive}) => ({
               fontWeight: isActive ? 700 : 'inherit',
-              cursor: isActive ? "inherit" : "pointer"
+              cursor: isActive ? "inherit" : "pointer",
+              color: "#b34414"
             })}>Login</NavLink>
           }
           {user && 
             <>
               <NavLink className={"links"} to={"/my-profile"} style={({isActive}) => ({
               fontWeight: isActive ? 700 : 'inherit',
-              cursor: isActive ? "inherit" : "pointer"
-            })}>My Profile</NavLink>
+              cursor: isActive ? "inherit" : "pointer",
+              color: "#b34414"
+            })}>Profile</NavLink>
               <NavLink className={"links"} onClick={logout} >Logout</NavLink>
             </>
           }

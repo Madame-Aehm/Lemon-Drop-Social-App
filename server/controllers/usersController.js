@@ -42,7 +42,7 @@ const getUserByID = async (req, res) => {
   } else {
     try {
       res.status(200).json(
-        requested     //change later to hide private details
+        requested
       )
     } catch(error) {
       res.status(500).json({
@@ -80,7 +80,6 @@ const deleteImage = async(req, res) => {
 }
 
 const newUser = async(req, res) => {
-  console.log(req.body)
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (existingUser) {
@@ -148,13 +147,8 @@ const login = async(req, res) => {
     } else {
       const verified = await verifyPassword(req.body.password, existingUser.password);
       if (verified) {
-        const token = issueToken(existingUser.id, existingUser.username, existingUser.profile_picture.url);
+        const token = issueToken(existingUser.id);
         res.status(201).json({
-          user: {
-            id: existingUser.id,
-            username: existingUser.username,
-            profile_picture: existingUser.profile_picture.url,
-          },
           token: token
         });
       } else {
@@ -167,7 +161,7 @@ const login = async(req, res) => {
 }
 
 const getMyProfile = async (req, res) => {
-  console.log(req);
+  res.status(200).json(req.user);
 }
 
 export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, 

@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import NavBar from '../components/NavBar'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -10,7 +9,7 @@ import { AuthContext } from '../context/AuthContext.js'
 
 function Login() {
 
-  const { login } = useContext(AuthContext);
+  const { login, logout, user } = useContext(AuthContext);
 
   const [inputInfo, setInputInfo] = useState({});
   const [passwordVisibility, setPasswordVisibility] = useState("password");
@@ -46,37 +45,43 @@ function Login() {
 
   return (
     <div>
-      <NavBar />
-
       <h1 className='page-title'>Login</h1>
+      {!user &&
+        <Form name="loginForm" onSubmit={handleSubmit} className='simple-display'>
 
-      <Form name="loginForm" onSubmit={handleSubmit} className='simple-display'>
+          <FloatingLabel controlId="floatingInputEmail" label="Enter your email address" style={{width: "80%"}} >
+            <Form.Control type="email" name="email" placeholder="name@example.com" onChange={handleChanges} required/>
+          </FloatingLabel>
 
-        <FloatingLabel controlId="floatingInputEmail" label="Enter your email address" style={{width: "80%"}} >
-          <Form.Control type="email" name="email" placeholder="name@example.com" onChange={handleChanges} required/>
-        </FloatingLabel>
+          <InputGroup hasValidation style={{width: "80%"}}>
+            <Form.Control type={passwordVisibility} name="password" placeholder="Password" onChange={handleChanges} isInvalid={PWinvalid} required/>
+            <Button onClick={passwordToggle} variant="outline-success" id="button-addon2">
+            {showOrHide}
+            </Button>
+            <Form.Control.Feedback type="invalid">
+              Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.
+            </Form.Control.Feedback>
+          </InputGroup>
 
-        <InputGroup hasValidation style={{width: "80%"}}>
-          <Form.Control type={passwordVisibility} name="password" placeholder="Password" onChange={handleChanges} isInvalid={PWinvalid} required/>
-          <Button onClick={passwordToggle} variant="outline-success" id="button-addon2">
-          {showOrHide}
-          </Button>
-          <Form.Control.Feedback type="invalid">
-            Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.
-          </Form.Control.Feedback>
-        </InputGroup>
+          {!PWinvalid && 
+              <Form.Text muted style={{width: "80%", marginTop: "-0.8em"}}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
+          }
 
-        {!PWinvalid && 
-            <Form.Text muted style={{width: "80%", marginTop: "-0.8em"}}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
-        }
+          <p style={{width: "80%", textAlign: "right", margin: 0}}>*required</p>
 
-        <p style={{width: "80%", textAlign: "right", margin: 0}}>*required</p>
+          <Button size="lg" variant="success" type="submit">Login</Button>
 
-        <Button size="lg" variant="success" type="submit">Login</Button>
+          <p>Not signed up yet? <Link to={'/sign-up'} replace={true}>Sign up</Link>!</p>
 
-        <p>Not signed up yet? <Link to={'/sign-up'} replace={true}>Click here</Link>!</p>
-
-      </Form>
+        </Form>
+      }
+      {user && 
+        <div className='simple-display'>
+          <p className='p-type-1'><strong>{user.username}</strong> is already logged in.</p>
+          <Button size="lg" variant="success" onClick={logout}>Logout?</Button>
+        </div>
+      }
+      
     </div>
   )
 }

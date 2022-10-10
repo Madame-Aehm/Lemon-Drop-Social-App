@@ -8,17 +8,17 @@ function LaunchPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const test = document.getElementById("test");
-    const title = document.getElementById("shakeItUp");
+    const test = document.getElementById("lemon");
+    const title = document.getElementById("title");
     setTimeout(() => {
-      test.classList.add("testStage2");
+      test.classList.add("stage2");
     }, 500);
     setTimeout(() => {
-      title.classList.add("testStage2");
+      title.classList.add("stage2");
     }, 1000);
     setTimeout(() => {
-      test.classList.add("testStage3");
-      title.classList.add("testStage3");
+      test.classList.add("stage3");
+      title.classList.add("stage3");
     }, 3500)
     setTimeout(() => {
       navigate("/home")
@@ -26,10 +26,13 @@ function LaunchPage() {
   }, [])
 
   return (
-    <div className='container'>
-      <img id='test' src={lemonImage} alt="Lemon icon" className='testStage1'/>
-      <h1 id='shakeItUp' className='testStage1' style={{color: "#ff9500"}}>Cheers Recipes</h1>
+    <div className='set-page'>
+      <div className='container'>
+        <img id='lemon' src={lemonImage} alt="Lemon icon" className='stage1'/>
+        <h1 id='title' className='stage1' style={{color: "#ff9500"}}>Cheers Recipes</h1>
+      </div>
     </div>
+    
   )
 }
 

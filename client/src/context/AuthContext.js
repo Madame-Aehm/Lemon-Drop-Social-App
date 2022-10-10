@@ -8,20 +8,41 @@ export const AuthContextProvider = (props) => {
   const redirect = useNavigate();
   const [user, setUser] = useState(null);
 
-  function parseJwt (token) {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-}
+//   function parseJwt (token) {
+//     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+// }
   
   const checkForUser = () => {
     const token = getToken();
     if (token) {
       console.log("User logged in");
-      const test = parseJwt(token);
-      setUser(test);
-      console.log(test);
+      getUser(token);
     } else {
       console.log("User NOT logged in");
       setUser(null);
+    }
+  }
+
+  const getUser = async (token) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    const reqOptions = {
+      method: "GET",
+      headers: myHeaders
+    };
+    try {
+      const response = await fetch("http://localhost:5000/users/my-profile", reqOptions);
+      const result = await response.json();
+      setUser({
+        createdAt: result.createdAt,
+        email: result.email,
+        posted_recipes: result.posted_recipes.length,
+        profile_picture: result.profile_picture,
+        username: result.username,
+        _id: result._id
+      });
+    } catch(error) {
+      console.log(error)
     }
   }
 
@@ -67,7 +88,7 @@ export const AuthContextProvider = (props) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, checkForUser, login, logout }}>
       { props.children }
     </AuthContext.Provider>
   )

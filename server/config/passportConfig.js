@@ -10,7 +10,7 @@ const jwtOptions = {
 };
 
 const jwtStrategy = new JwtStrategy(jwtOptions, function (jwt_payload, done) {
-  userModel.findOne({ id: jwt_payload.id }, function (error, user) {
+  userModel.findOne({ id: jwt_payload.sub }, function (error, user) {
     if (user) {
       console.log("user in jwtStrategy :>> ", user);
       return done(null, user);

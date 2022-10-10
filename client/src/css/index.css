@@ -19,3 +19,18 @@ code {
   gap: 1em;
   padding: 1em;
 }
+
+.page-title {
+  color: #94d333;
+  text-align: center;
+  margin: 0.5em;
+}
+
+.sub-title {
+  color: #754423;
+}
+
+.p-type-1 {
+  text-align: center;
+  color: #754423;
+}

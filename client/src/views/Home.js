@@ -1,13 +1,9 @@
-import React, { useContext } from 'react'
-import NavBar from '../components/NavBar';
-import { AuthContext } from '../context/AuthContext';
+import React from 'react'
 
 function Home() {
-  const { user } = useContext(AuthContext);
 
   return (
     <div>
-      <NavBar />
       Home
     </div>
   )

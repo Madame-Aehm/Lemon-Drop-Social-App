@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
+import React, { useContext, useState } from 'react';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Link, useNavigate } from 'react-router-dom';
 import { passwordValidation } from '../utils/JSvalidationFunctions';
+import { AuthContext } from '../context/AuthContext.js'
 
 function SignUp() {
+  const { logout, user } = useContext(AuthContext);
   const redirect = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [inputInfo, setInputInfo] = useState({});
@@ -116,10 +117,9 @@ function SignUp() {
 
   return (
     <div>
-      <NavBar />
-
       <h1 className='page-title'>Sign Up!</h1>
 
+      {!user && 
         <Form name="signUpForm" onSubmit={handleSubmit} className='simple-display'>
           <FloatingLabel controlId="floatingInputEmail" label="Enter your email address*" style={{width: "80%"}} >
             <Form.Control type="email" name="email" placeholder="name@example.com" onChange={handleChanges} required/>
@@ -153,9 +153,14 @@ function SignUp() {
           <Button size="lg" variant="success" type="submit">Sign up</Button>
           <p>Already have an account? <Link to={'/login'} replace={true}>Login</Link>!</p>
         </Form>
+      }
 
-
-
+      {user && 
+        <div className='simple-display'>
+          <p className='p-type-1'><strong>{user.username}</strong> is already logged in.</p>
+          <Button size="lg" variant="success" onClick={logout}>Logout?</Button>
+        </div>
+      }
       
     </div>
   )

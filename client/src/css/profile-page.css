@@ -1,0 +1,30 @@
+.profile-img {
+  border-radius: 50%;
+  border: solid 2px #1b8f47;
+  padding: 0.2em;
+  width: 15em
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.profile-tabs-container {
+  width: 100%;
+}
+
+.simple-align {
+  display: flex; 
+  flex-direction: row; 
+  gap: 1em
+}
+
+.account-mini-title {
+  color: #1b8f47
+}
+
+td {
+  padding: 0.5em 1em;
+}
+
+

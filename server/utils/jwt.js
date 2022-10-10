@@ -2,11 +2,9 @@ import jsonwebtoken from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const issueToken = (id, username, pp) => {
+const issueToken = (id) => {
   const payload = {
-    id: id,
-    username: username,
-    profile_picture: pp
+    sub: id
   };
   const options = {
     expiresIn: "7d",
