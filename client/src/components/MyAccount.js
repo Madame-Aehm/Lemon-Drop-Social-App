@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import editIcon from "../edit.png";
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
+import getToken from '../utils/getToken'
+import { AuthContext } from '../context/AuthContext.js'
 
-function MyAccount({ user }) {
-  
-  console.log(user)
+function MyAccount() {
+  const { user, setUser } = useContext(AuthContext);
   const [editMode, setEditMode] = useState(false);
   const [inputs, setInputs] = useState("none");
   const [hideOnEdit, setHideOnEdit] = useState("block");
@@ -40,9 +41,25 @@ function MyAccount({ user }) {
     setEmail(e.target.value)
   }
 
-  const handleUsernameUpdate = () => {
-
+ const updateUser = async (item) => {
+  const token = getToken();
+  if (token) {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+    const toUpdate = JSON.stringify(item);
+    const reqOptions = {
+      method: 'PATCH',
+      headers: myHeaders,
+      body: toUpdate
+    }
+  const response = await fetch("http://localhost:5000/users/update-user", reqOptions);
+  const result = await response.json();
+  setUser(result);
+  } else {
+    console.log("no token")
   }
+ }
 
   useEffect(() => {
     editModeToggle();
@@ -86,7 +103,7 @@ function MyAccount({ user }) {
 
           <div style={currentDisplay} className='simple-align'>
             <h6 className='account-mini-title'>Recipes posted: </h6>
-            <h6 className='sub-title'>{user.posted_recipes}</h6>
+            <h6 className='sub-title'>{user.posted_recipes.length}</h6>
           </div>
 
           <table style={inputDisplay}>
@@ -109,7 +126,7 @@ function MyAccount({ user }) {
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleUsernameUpdate}>edit</Button>
+                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={() => updateUser({username: username})}>edit</Button>
                 </td>
               </tr>
               <tr>

@@ -15,7 +15,7 @@ router.post('/delete-image', deleteImage);
 router.post('/sign-up', newUser);
 router.post('/login', login);
 
-router.patch('/user/:id', updateUser);
+router.patch('/update-user', jwtAuth, updateUser);
 
 router.delete('/user/:id', deleteUser);
 

@@ -95,7 +95,14 @@ const newUser = async(req, res) => {
     })
     try {
         await user.save();
-        res.status(201).json(user) //change later to hide private details
+        res.status(201).json({
+          createdAt: user.createdAt,
+          email: user.email,
+          posted_recipes: user.posted_recipes,
+          profile_picture: user.profile_picture,
+          username: user.username,
+          _id: user._id
+        })
       } catch (error) { 
         res.status(500).json({ error: error.message })}
   } catch(error) {
@@ -126,7 +133,7 @@ const deleteUserRecipes = async(id) => {
 }
 
 const updateUser = async(req, res) => {
-  const id = req.params.id;
+  const id = req.user._id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(500).json({ error: "Invalid ID" })
   }
@@ -136,7 +143,14 @@ const updateUser = async(req, res) => {
   if (!user) {
     return res.status(400).json({ error: "ID not found." })
   }
-  res.status(200).json(user);
+  res.status(200).json({
+    createdAt: user.createdAt,
+    email: user.email,
+    posted_recipes: user.posted_recipes,
+    profile_picture: user.profile_picture,
+    username: user.username,
+    _id: user._id
+  });
 }
 
 const login = async(req, res) => {
@@ -149,6 +163,14 @@ const login = async(req, res) => {
       if (verified) {
         const token = issueToken(existingUser.id);
         res.status(201).json({
+          user: {
+            createdAt: existingUser.createdAt,
+            email: existingUser.email,
+            posted_recipes: existingUser.posted_recipes,
+            profile_picture: existingUser.profile_picture,
+            username: existingUser.username,
+            _id: existingUser._id
+          },
           token: token
         });
       } else {

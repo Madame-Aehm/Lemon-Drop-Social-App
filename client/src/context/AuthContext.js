@@ -69,7 +69,7 @@ export const AuthContextProvider = (props) => {
       if (result.token) {
         localStorage.setItem("token", result.token);
         setUser(result.user);
-        alert(result.user.username + " has successfully logged in!")
+        alert(result.user.username + " has successfully logged in!");
         redirect("/home", {replace: true});
       }
     } catch (error) {
