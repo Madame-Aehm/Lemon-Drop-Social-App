@@ -183,8 +183,47 @@ const login = async(req, res) => {
 }
 
 const getMyProfile = async (req, res) => {
-  res.status(200).json(req.user);
+  res.status(200).json({
+    createdAt: req.user.createdAt,
+    email: req.user.email,
+    posted_recipes: req.user.posted_recipes,
+    profile_picture: req.user.profile_picture,
+    username: req.user.username,
+    _id: req.user._id
+  });
+}
+
+const passwordVerification = async (req, res) => {
+  const id = req.user._id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Invalid ID" })
+  }
+  try {
+    const user = await userModel.findOne({ _id: req.user._id });
+    const verified = await verifyPassword(req.body.password, user.password);
+    if (verified) {
+      return res.status(200).json(true)
+    } else {
+      res.status(401).json(false);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error})
+  }
+}
+
+const updatePassword = async(req, res) => {
+  const id = req.user._id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Invalid ID" })
+  } ///// here
+  const hashedPassword = await encryptPassword(req.body.password);
+  const user = await userModel.findOneAndUpdate({ _id: id }, {
+    password: hashedPassword
+  }, { new: true })
+  if (!user) {
+    return res.status(400).json({ error: "ID not found." })
+  }
 }
 
 export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, 
-  updateUser, login, getMyProfile }
+  updateUser, login, getMyProfile, passwordVerification, updatePassword }

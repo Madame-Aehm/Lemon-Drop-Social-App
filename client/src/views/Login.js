@@ -2,29 +2,17 @@ import React, { useContext, useState } from 'react'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup';
 import { Link } from 'react-router-dom';
 import { passwordValidation } from '../utils/JSvalidationFunctions';
 import { AuthContext } from '../context/AuthContext.js'
+import PasswordInput from '../components/PasswordInput';
 
 function Login() {
 
   const { login, logout, user } = useContext(AuthContext);
-
   const [inputInfo, setInputInfo] = useState({});
-  const [passwordVisibility, setPasswordVisibility] = useState("password");
-  const [showOrHide, setShowOrHide] = useState("Show");
   const [PWinvalid, setPWinvalid] = useState(false);
 
-  const passwordToggle = () => {
-    if (passwordVisibility === "password") {
-      setPasswordVisibility("text");
-      setShowOrHide("Hide")
-    } else {
-      setPasswordVisibility("password");
-      setShowOrHide("Show")
-    }
-  }
 
   const handleChanges = (e) => {
     setInputInfo({ ...inputInfo, [e.target.name]: e.target.value });
@@ -53,21 +41,7 @@ function Login() {
             <Form.Control type="email" name="email" placeholder="name@example.com" onChange={handleChanges} required/>
           </FloatingLabel>
 
-          <InputGroup hasValidation style={{width: "80%"}}>
-            <Form.Control type={passwordVisibility} name="password" placeholder="Password" onChange={handleChanges} isInvalid={PWinvalid} required/>
-            <Button onClick={passwordToggle} variant="outline-success" id="button-addon2">
-            {showOrHide}
-            </Button>
-            <Form.Control.Feedback type="invalid">
-              Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.
-            </Form.Control.Feedback>
-          </InputGroup>
-
-          {!PWinvalid && 
-              <Form.Text muted style={{width: "80%", marginTop: "-0.8em"}}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
-          }
-
-          <p style={{width: "80%", textAlign: "right", margin: 0}}>*required</p>
+          <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} placeholder={"Password"} />
 
           <Button size="lg" variant="success" type="submit">Login</Button>
 
@@ -81,7 +55,6 @@ function Login() {
           <Button size="lg" variant="success" onClick={logout}>Logout?</Button>
         </div>
       }
-      
     </div>
   )
 }

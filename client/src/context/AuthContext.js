@@ -33,14 +33,7 @@ export const AuthContextProvider = (props) => {
     try {
       const response = await fetch("http://localhost:5000/users/my-profile", reqOptions);
       const result = await response.json();
-      setUser({
-        createdAt: result.createdAt,
-        email: result.email,
-        posted_recipes: result.posted_recipes.length,
-        profile_picture: result.profile_picture,
-        username: result.username,
-        _id: result._id
-      });
+      setUser(result);
     } catch(error) {
       console.log(error)
     }
@@ -63,7 +56,7 @@ export const AuthContextProvider = (props) => {
       const result = await response.json();
       if (result.error) {
         console.log(result);
-        alert("Login error: ", result);  //wtf just show my error message!!
+        alert("Login error: " + result.error);  //wtf just show my error message!!
         return
       }
       if (result.token) {

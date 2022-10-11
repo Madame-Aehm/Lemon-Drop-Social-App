@@ -1,18 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react'
 import editIcon from "../edit.png";
+import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
 import getToken from '../utils/getToken'
 import { AuthContext } from '../context/AuthContext.js'
+import { emailValidation, passwordValidation, verifyCurrentPassword } from '../utils/JSvalidationFunctions';
+import { deleteImage, uploadImage } from '../utils/imageMangement';
+import PasswordInput from './PasswordInput';
 
 function MyAccount() {
   const { user, setUser } = useContext(AuthContext);
   const [editMode, setEditMode] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState("none");
   const [hideOnEdit, setHideOnEdit] = useState("block");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPWinvalid, setNewPWinvalid] = useState(false);
+  const [oldPWinvalid, setOldPWinvalid] = useState(false);
 
   const handleEditSwitch = () => {
     if (editMode) {
@@ -23,6 +33,7 @@ function MyAccount() {
       setEmail(user.email)
     }
   }
+
   const editModeToggle = () => {
     if (editMode) {
       setInputs("block");
@@ -37,29 +48,115 @@ function MyAccount() {
     setUsername(e.target.value);
   }
 
+  const handleUsernameClick = () => {
+    if (username === "") {
+      alert("Username can't be nothing.")
+    } else if (user.username === username) {
+      alert(username + " is already your username.")
+    } else {
+      if (window.confirm("Are you sure you want to change your username from " + user.username + " to " + username + "?")) {
+        updateUser({username: username});
+      }
+    }
+  }
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
   }
 
- const updateUser = async (item) => {
-  const token = getToken();
-  if (token) {
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer " + token);
-    myHeaders.append("Content-Type", "application/json");
-    const toUpdate = JSON.stringify(item);
-    const reqOptions = {
-      method: 'PATCH',
-      headers: myHeaders,
-      body: toUpdate
+  const handleEmailClick = () => {
+    if (!emailValidation(email)) {
+      alert("Invalid email format. Please try again.")
+    } else if (user.email === email) {
+      alert(email + " is already your registered email.")
+    } else {
+      if (window.confirm("Are you sure you want to change your email from " + user.email + " to " + email + "?")) {
+        updateUser({email: email});
+      }
     }
-  const response = await fetch("http://localhost:5000/users/update-user", reqOptions);
-  const result = await response.json();
-  setUser(result);
-  } else {
-    console.log("no token")
   }
- }
+
+  const handleFileAttach = (e) => {
+    setSelectedFile(e.target.files[0]);
+  }
+
+  const handleFileClick = async() => {
+    if (!selectedFile && !user.profile_picture.public_id) {
+      alert("Your display picture is already set to default.")
+    }
+    else if (!selectedFile) {
+      if (window.confirm("There is no file selected. This will return your display picture back to default. Is that ok?")) {
+        await deleteImage(user.profile_picture);
+        updateUser(
+          {profile_picture: {
+          url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
+          public_id: null
+          }});
+      }
+    } else {
+      if (window.confirm("You're sure you want to update your display picture?")) {
+        const image = await uploadImage(selectedFile);
+        updateUser({profile_picture: image});
+        setSelectedFile(null);
+      }
+    }
+  }
+
+  const handleNewPWChange = (e) => {
+    setNewPassword(e.target.value);
+    setNewPWinvalid(false);
+    console.log(newPassword);
+  }
+
+  const handlePWClick = () => {
+    const validPassword = passwordValidation(newPassword);
+    if (validPassword) {
+      setShowModal(true);
+    } else {
+      setNewPWinvalid(true);
+    }
+  }
+
+  const handleOldPWChange = (e) => {
+    setOldPassword(e.target.value);
+    setOldPWinvalid(false);
+  }
+
+  const handleOldPWClick = async() => {
+    const validPassword = passwordValidation(oldPassword);
+    if (validPassword) {
+      const isPassword = await verifyCurrentPassword(oldPassword);
+      if (!isPassword) {
+        alert("Password doesn't match")
+      } else {
+        // write update password function here
+        setShowModal(false);
+      }
+    } else {
+      setOldPWinvalid(true);
+    }
+  }
+
+  const updateUser = async (item) => {
+    const token = getToken();
+    if (token) {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer " + token);
+      myHeaders.append("Content-Type", "application/json");
+      const toUpdate = JSON.stringify(item);
+      const reqOptions = {
+        method: 'PATCH',
+        headers: myHeaders,
+        body: toUpdate
+      }
+      const response = await fetch("http://localhost:5000/users/update-user", reqOptions);
+      const result = await response.json();
+      setUser(result);
+      alert("Profile updated")
+    } else {
+      console.log("no token")
+    }
+  }
 
   useEffect(() => {
     editModeToggle();
@@ -112,11 +209,11 @@ function MyAccount() {
                 <td>
                   <Form.Group controlId="formFile">
                     <Form.Label>Choose a new display picture:</Form.Label>
-                    <Form.Control type="file" name="profile_picture" />
+                    <Form.Control type="file" name="profile_picture" onChange={handleFileAttach} />
                   </Form.Group>
                 </td>
                 <td style={{verticalAlign: "bottom"}}>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}}>edit</Button>
+                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleFileClick}>edit</Button>
                 </td>
               </tr>
               <tr>
@@ -126,7 +223,7 @@ function MyAccount() {
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={() => updateUser({username: username})}>edit</Button>
+                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleUsernameClick}>edit</Button>
                 </td>
               </tr>
               <tr>
@@ -136,7 +233,15 @@ function MyAccount() {
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}}>edit</Button>
+                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleEmailClick}>edit</Button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <PasswordInput handleChanges={handleNewPWChange} PWinvalid={newPWinvalid} placeholder={"Enter new password"} />
+                </td>
+                <td style={{verticalAlign: "top"}}>
+                <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handlePWClick}>edit</Button>
                 </td>
               </tr>
             </tbody>
@@ -146,6 +251,22 @@ function MyAccount() {
 
           <br/>
           <br/>
+
+          <Modal show={showModal} onHide={() => {setShowModal(false)}}>
+            <Modal.Header closeButton />
+            <Modal.Body>
+              <p>Please enter your old password to verify this change:</p>
+              <PasswordInput handleChanges={handleOldPWChange} PWinvalid={oldPWinvalid} placeholder={"Enter old password"}/>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => {setShowModal(false)}}>
+                Close
+              </Button>
+              <Button variant="success" onClick={handleOldPWClick}>
+                Enter and Save
+              </Button>
+            </Modal.Footer>
+          </Modal>
           
         </div>
       }

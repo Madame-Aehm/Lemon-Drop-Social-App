@@ -2,29 +2,18 @@ import React, { useContext, useState } from 'react';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup';
 import { Link, useNavigate } from 'react-router-dom';
 import { passwordValidation } from '../utils/JSvalidationFunctions';
 import { AuthContext } from '../context/AuthContext.js'
+import { deleteImage, uploadImage } from '../utils/imageMangement';
+import PasswordInput from '../components/PasswordInput';
 
 function SignUp() {
   const { logout, user } = useContext(AuthContext);
   const redirect = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [inputInfo, setInputInfo] = useState({});
-  const [passwordVisibility, setPasswordVisibility] = useState("password");
-  const [showOrHide, setShowOrHide] = useState("Show");
   const [PWinvalid, setPWinvalid] = useState(false);
-
-  const passwordToggle = () => {
-    if (passwordVisibility === "password") {
-      setPasswordVisibility("text");
-      setShowOrHide("Hide")
-    } else {
-      setPasswordVisibility("password");
-      setShowOrHide("Show")
-    }
-  }
 
   const handleFileAttach = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -49,40 +38,13 @@ function SignUp() {
 
   const imageUpload = async () => {
     if (!selectedFile) {
-      return {url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
-              public_id: null}
-    } else {
-      const formData = new FormData();
-      formData.append("image", selectedFile);
-      const reqOptions = {
-        method: "POST",
-        body: formData
-      };
-      try {
-        const response = await fetch("http://localhost:5000/users/upload-image", reqOptions);
-        const result = await response.json();
-        return result
-      } catch (error) {
-        alert("image upload error: ", error)
+      return {
+        url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
+        public_id: null
       }
-    }
-  }
-
-  const deleteImage = async (image) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const imageData = JSON.stringify(image);
-    const reqOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: imageData
-    };
-    try {
-      const response = await fetch("http://localhost:5000/users/delete-image", reqOptions);
-      const result = await response.json();
-      console.log(result);
-    } catch(error) {
-      alert("error deleting image: ", error);
+    } else {
+      const image = await uploadImage(selectedFile)
+      return image
     }
   }
 
@@ -129,18 +91,7 @@ function SignUp() {
             <Form.Control type="username" name="username" placeholder="Username" onChange={handleChanges} required/>
           </FloatingLabel>
 
-          <InputGroup hasValidation style={{width: "80%"}}>
-            <Form.Control type={passwordVisibility} name="password" placeholder="Password*" onChange={handleChanges} isInvalid={PWinvalid} required/>
-            <Button onClick={passwordToggle} variant="outline-success" id="button-addon2">
-            {showOrHide}
-            </Button>
-            <Form.Control.Feedback type="invalid">
-              Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.
-            </Form.Control.Feedback>
-          </InputGroup>
-          {!PWinvalid && 
-            <Form.Text muted style={{width: "80%", marginTop: "-0.8em"}}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
-          }
+          <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} placeholder={"Password*"} />
           
           <Form.Group controlId="formFile" style={{width: "80%"}}>
             <Form.Label>Choose a display picture:</Form.Label>
