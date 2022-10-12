@@ -8,21 +8,24 @@ import LaunchPage from './views/LaunchPage';
 import Login from './views/Login';
 import MyProfile from './views/MyProfile';
 import SignUp from './views/SignUp';
+import { RecipesContextProvider } from './context/RecipesContext';
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <AuthContextProvider>
-          <NavBar />
-          <Routes>
-            <Route path='*' element={ <LaunchPage/> } />
-            <Route path='/' element={ <LaunchPage/> } />
-            <Route path='/home' element={ <Home/> } />
-            <Route path='/login' element={ <Login/> } />
-            <Route path='/sign-up' element={ <SignUp/> } />
-            <Route path='/my-profile' element={ <ProtectedRoute> <MyProfile/> </ProtectedRoute> } />
-          </Routes>
+          <RecipesContextProvider>
+            <NavBar />
+            <Routes>
+              <Route path='*' element={ <LaunchPage/> } />
+              <Route path='/' element={ <LaunchPage/> } />
+              <Route path='/home' element={ <Home/> } />
+              <Route path='/login' element={ <Login/> } />
+              <Route path='/sign-up' element={ <SignUp/> } />
+              <Route path='/my-profile' element={ <ProtectedRoute> <MyProfile/> </ProtectedRoute> } />
+            </Routes>
+          </RecipesContextProvider>
         </AuthContextProvider>
       </BrowserRouter>
     </>

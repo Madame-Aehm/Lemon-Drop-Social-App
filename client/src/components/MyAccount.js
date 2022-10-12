@@ -134,7 +134,7 @@ function MyAccount() {
         if (result.error) {
           return alert(result.error)
         } else {
-          alert(result.msg)
+          alert(result)
           setShowModal(false);
           const pwInput = document.querySelector("input[name='password']");
           pwInput.value = "";

@@ -195,13 +195,11 @@ const getMyProfile = async (req, res) => {
 
 const passwordVerification = async (req, res) => {
   const id = req.user._id;
-  console.log(req.body)
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(500).json({ error: "Invalid ID" })
   }
   try {
     const user = await userModel.findOne({ _id: req.user._id });
-    console.log(user)
     const verified = await verifyPassword(req.body.old_password, user.password);
     if (verified) {
       try {
@@ -209,11 +207,11 @@ const passwordVerification = async (req, res) => {
         user.update({ password: hashedPassword }, (error, result) => {
           if (error) {
             console.log(error);
+            res.status(500).json({ error: error });
           } else {
-            console.log("result: ", result);
+            res.status(200).json("Password updated");
           }
         })
-        res.status(200).json({ msg: "Password updated" });
       } catch (error) {
         res.status(401).json({ error: error });
       }
@@ -221,7 +219,7 @@ const passwordVerification = async (req, res) => {
       res.status(401).json({ error: "Password not verified"});
     }
   } catch (error) {
-    res.status(500).json({ error: error, msg: "Failed to find user"})
+    res.status(500).json({ error: error })
   }
 }
 

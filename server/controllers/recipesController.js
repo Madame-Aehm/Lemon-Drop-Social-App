@@ -5,8 +5,8 @@ import { userModel } from "../models/usersModel.js";
 const getAllRecipes = async (req, res) => {
   const all = await recipeModel
     .find({})
-    .sort({createdAt: -1})
-    .populate({ path: "posted_by", select: "username"});
+    // .sort({createdAt: -1})
+    // .populate({ path: "posted_by", select: "username"});
   try {
     if (all.length === 0) {
       req.status(200).json({
@@ -24,28 +24,6 @@ const getAllRecipes = async (req, res) => {
     });
   }
 };
-
-const getByMethod = async (req, res) => {
-  const requested = await recipeModel
-    .find({ method: req.params.method })
-    .populate({ path: "posted_by", select: "username"});
-  if (requested.length === 0) {
-    res.status(200).json({
-      msg: "No recipe with '" + req.params.method + "' method."
-    })
-  } else {
-    try {
-      res.status(200).json(
-        requested
-      )
-    } catch(error) {
-      res.status(500).json({
-        msg: "Server failed",
-        error: error
-      })
-    }
-  }
-}
 
 const getByID = async (req, res) => {
   const id = req.params.id;
@@ -73,6 +51,23 @@ const getByID = async (req, res) => {
   }
 }
 
+const uploadImage = async(req, res) => {
+  try {
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: "recipe_images",
+      return_delete_token: true,
+    });
+    res.status(200).json({
+      url: uploadResult.url,
+      public_id: uploadResult.public_id
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error });
+  }
+}
+
 const postNewRecipe = async(req, res) => {
   try {
     const recipe = await recipeModel.create(req.body);
@@ -84,19 +79,27 @@ const postNewRecipe = async(req, res) => {
     res.status(500).json({ error: error.message })}
 }
 
-const addInPostedRecipes = async(req, res) => {
-  const id = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
-  }
-  const user = await userModel.findOneAndUpdate({ _id: id }, {
-    ...req.body
-  })
-  if (!user) {
-    return res.status(400).json({ error: "ID not found." })
-  }
-  res.status(200).json({ msg: "User updated" });
-}
+// const getByMethod = async (req, res) => {
+//   const requested = await recipeModel
+//     .find({ method: req.params.method })
+//     .populate({ path: "posted_by", select: "username"});
+//   if (requested.length === 0) {
+//     res.status(200).json({
+//       msg: "No recipe with '" + req.params.method + "' method."
+//     })
+//   } else {
+//     try {
+//       res.status(200).json(
+//         requested
+//       )
+//     } catch(error) {
+//       res.status(500).json({
+//         msg: "Server failed",
+//         error: error
+//       })
+//     }
+//   }
+// }
 
 const deleteRecipe = async(req, res) => {
   const id = req.params.id;
@@ -124,4 +127,4 @@ const updateRecipe = async(req, res) => {
   res.status(200).json(recipe);
 }
 
-export { getAllRecipes, getByMethod, getByID, postNewRecipe, deleteRecipe, updateRecipe }
+export { getAllRecipes, getByID, postNewRecipe, deleteRecipe, updateRecipe, uploadImage }

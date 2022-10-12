@@ -29,7 +29,7 @@ function LaunchPage() {
     <div className='set-page'>
       <div className='container'>
         <img id='lemon' src={lemonImage} alt="Lemon icon" className='stage1'/>
-        <h1 id='title' className='stage1' style={{color: "#ff9500"}}>Cheers Recipes</h1>
+        <h1 id='title' className='stage1' style={{color: "#ffe733"}}>Lemon Drop Drinks</h1>
       </div>
     </div>
     

@@ -1,17 +1,19 @@
 import express from "express";
-import { getAllRecipes, getByMethod, getByID, postNewRecipe, deleteRecipe, updateRecipe } from "../controllers/recipesController.js";
+import { getAllRecipes, getByID, postNewRecipe, deleteRecipe, updateRecipe, uploadImage } from "../controllers/recipesController.js";
+import { multerUploads } from "../middlewares/multer.js";
 
 const router = express.Router()
 
-router.get("/test", (req, res) => {
-  res.send({message: "testing message recieved"})
-})
 
 router.get("/", getAllRecipes);
-router.get("/:id", getByID);
-router.get("method/:method", getByMethod);
 
-router.post('/', postNewRecipe)
+router.post('/upload-image', multerUploads.single("image"), uploadImage);
+
+
+router.get("/:id", getByID);
+// router.get("method/:method", getByMethod);
+
+router.post('/new-recipe', postNewRecipe)
 
 router.delete('/:id', deleteRecipe)
 
