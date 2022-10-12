@@ -67,13 +67,13 @@ function SignUp() {
         if (image.public_id) {
           deleteImage(image)
         }
-        alert("sign up error: ", result.error);
+        alert("sign up error: " + result.error);
       } else {
         alert("Successfully signed up! Please log in.");
         redirect("/login", { replace: true });
       }
     } catch(error) {
-      console.log("sign up error2: ", error);
+      console.log("sign up error: " + error);
     }
   }
 
@@ -91,7 +91,8 @@ function SignUp() {
             <Form.Control type="username" name="username" placeholder="Username" onChange={handleChanges} required/>
           </FloatingLabel>
 
-          <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} placeholder={"Password*"} />
+          <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} 
+            textStyling={{width: "80%", marginTop: "-0.8em"}} placeholder={"Password*"} />
           
           <Form.Group controlId="formFile" style={{width: "80%"}}>
             <Form.Label>Choose a display picture:</Form.Label>

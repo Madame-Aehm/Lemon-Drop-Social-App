@@ -6,7 +6,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
 import getToken from '../utils/getToken'
 import { AuthContext } from '../context/AuthContext.js'
-import { emailValidation, passwordValidation, verifyCurrentPassword } from '../utils/JSvalidationFunctions';
+import { emailValidation, passwordValidation, verifyAndUpdatePassword } from '../utils/JSvalidationFunctions';
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
 
@@ -36,7 +36,7 @@ function MyAccount() {
 
   const editModeToggle = () => {
     if (editMode) {
-      setInputs("block");
+      setInputs("flex");
       setHideOnEdit("none");
     } else {
       setInputs("none");
@@ -84,7 +84,7 @@ function MyAccount() {
     if (!selectedFile && !user.profile_picture.public_id) {
       alert("Your display picture is already set to default.")
     }
-    else if (!selectedFile) {
+    else if (!selectedFile && user.profile_picture.public_id) {
       if (window.confirm("There is no file selected. This will return your display picture back to default. Is that ok?")) {
         await deleteImage(user.profile_picture);
         updateUser(
@@ -95,10 +95,14 @@ function MyAccount() {
       }
     } else {
       if (window.confirm("You're sure you want to update your display picture?")) {
-        await deleteImage(user.profile_picture);
+        if (user.profile_picture.public_id) {
+          await deleteImage(user.profile_picture);
+        }
         const image = await uploadImage(selectedFile);
         updateUser({ profile_picture: image });
         setSelectedFile(null);
+        const fileInput = document.querySelector("input[name='profile_picture']");
+        fileInput.value = "";
       }
     }
   }
@@ -106,7 +110,6 @@ function MyAccount() {
   const handleNewPWChange = (e) => {
     setNewPassword(e.target.value);
     setNewPWinvalid(false);
-    console.log(newPassword);
   }
 
   const handlePWClick = () => {
@@ -126,12 +129,18 @@ function MyAccount() {
   const handleOldPWClick = async() => {
     const validPassword = passwordValidation(oldPassword);
     if (validPassword) {
-      const isPassword = await verifyCurrentPassword(oldPassword);
-      if (!isPassword) {
-        alert("Password doesn't match")
-      } else {
-        // write update password function here
-        setShowModal(false);
+      try{
+        const result = await verifyAndUpdatePassword(oldPassword, newPassword);
+        if (result.error) {
+          return alert(result.error)
+        } else {
+          alert(result.msg)
+          setShowModal(false);
+          const pwInput = document.querySelector("input[name='password']");
+          pwInput.value = "";
+        }
+      } catch(error) {
+        console.log("error: ", error)
       }
     } else {
       setOldPWinvalid(true);
@@ -164,7 +173,8 @@ function MyAccount() {
   }, [editMode])
   
   const inputDisplay = {
-    display: inputs
+    display: inputs,
+    alignItems: "center"
   }
 
   const currentDisplay = {
@@ -204,7 +214,8 @@ function MyAccount() {
             <h6 className='sub-title'>{user.posted_recipes.length}</h6>
           </div>
 
-          <table style={inputDisplay}>
+          <div style={inputDisplay}>
+          <table>
             <tbody>
               <tr>
                 <td>
@@ -220,35 +231,44 @@ function MyAccount() {
               <tr>
                 <td>
                   <FloatingLabel controlId="floatingInputUsername" label="Edit username">
-                    <Form.Control type="username" name="username" placeholder="Username" value={username} onChange={handleUsernameChange}/>
+                    <Form.Control type="username" name="username" placeholder="Username" value={username} 
+                      onChange={handleUsernameChange}/>
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleUsernameClick}>edit</Button>
+                  <Button variant="warning" onClick={handleUsernameClick}>edit</Button>
                 </td>
               </tr>
               <tr>
                 <td>
                   <FloatingLabel controlId="floatingInputEmail" label="Edit email address" style={inputDisplay} >
-                    <Form.Control type="email" name="email" placeholder="name@example.com" value={email} onChange={handleEmailChange} />
+                    <Form.Control type="email" name="email" placeholder="name@example.com" value={email} 
+                      onChange={handleEmailChange} />
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleEmailClick}>edit</Button>
+                  <Button variant="warning" onClick={handleEmailClick}>edit</Button>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <PasswordInput handleChanges={handleNewPWChange} PWinvalid={newPWinvalid} placeholder={"Enter new password"} textStyling={{marginTop: "-0.8em"}}/>
+                  <PasswordInput PWinvalid={newPWinvalid} placeholder={"Enter new password"} textStyling={{marginTop: "-0.8em"}} 
+                    handleChanges={handleNewPWChange}/>
                 </td>
                 <td style={{verticalAlign: "top"}}>
-                <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handlePWClick}>edit</Button>
+                  <Button variant="warning" onClick={handlePWClick}>edit</Button>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} style={{textAlign: "center"}} >
+                  <Button variant="success" onClick={handleEditSwitch}>Close</Button>
                 </td>
               </tr>
             </tbody>
           </table>
+          </div>
 
-          <Button variant="success" style={inputDisplay} onClick={handleEditSwitch}>Close</Button>
+          
 
           <br/>
           <br/>

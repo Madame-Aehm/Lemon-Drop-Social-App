@@ -56,7 +56,7 @@ export const AuthContextProvider = (props) => {
       const result = await response.json();
       if (result.error) {
         console.log(result);
-        alert("Login error: " + result.error);  //wtf just show my error message!!
+        alert("Login error: " + result.error);
         return
       }
       if (result.token) {

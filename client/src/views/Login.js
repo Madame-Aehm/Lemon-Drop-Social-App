@@ -41,7 +41,7 @@ function Login() {
             <Form.Control type="email" name="email" placeholder="name@example.com" onChange={handleChanges} required/>
           </FloatingLabel>
 
-          <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} placeholder={"Password"} />
+          <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} textStyling={{width: "80%", marginTop: "-0.8em"}} placeholder={"Password"} />
 
           <Button size="lg" variant="success" type="submit">Login</Button>
 

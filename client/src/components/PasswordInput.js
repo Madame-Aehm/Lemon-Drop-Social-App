@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 
-function PasswordInput({ handleChanges, PWinvalid, styling, placeholder }) {
+function PasswordInput({ handleChanges, PWinvalid, styling, textStyling, placeholder }) {
   const [passwordVisibility, setPasswordVisibility] = useState("password");
   const [showOrHide, setShowOrHide] = useState("Show");
 
@@ -29,7 +29,7 @@ function PasswordInput({ handleChanges, PWinvalid, styling, placeholder }) {
         </Form.Control.Feedback>
       </InputGroup>
       {!PWinvalid && 
-        <Form.Text muted style={{width: "80%", marginTop: "-0.8em"}}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
+        <Form.Text muted style={textStyling}>Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.</Form.Text>
       }
     </>
   )

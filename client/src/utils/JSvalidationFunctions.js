@@ -13,35 +13,34 @@ function passwordValidation (string) {
 
 function emailValidation (string) {
   if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(string)) {
-    return (true)
+    return true
   }
-  return (false)
+  return false
 }
 
-const verifyCurrentPassword = async(passwordInput) => {
+const verifyAndUpdatePassword = async(oldPassword, newPassword) => {
   const token = getToken();
   if (token) {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Authorization", "Bearer " + token);
       myHeaders.append("Content-Type", "application/json");
-      const currentPassword = JSON.stringify({
-        password: passwordInput
+      const reqBody = JSON.stringify({
+        old_password: oldPassword,
+        new_password: newPassword
       });
       const reqOptions = {
         method: "POST",
         headers: myHeaders,
-        body: currentPassword
+        body: reqBody
       }
       const response = await fetch("http://localhost:5000/users/verify-password", reqOptions);
       const result = await response.json();
-      console.log(result);
       return result
     } catch(error) {
       console.log(error);
     }
-
   }
 }
 
-export { passwordValidation, emailValidation, verifyCurrentPassword }
+export { passwordValidation, emailValidation, verifyAndUpdatePassword }

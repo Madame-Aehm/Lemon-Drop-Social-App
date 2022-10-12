@@ -10,7 +10,7 @@ function NavBar() {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <Navbar collapseOnSelect bg="light" expand="md">
+    <Navbar collapseOnSelect bg="light" expand="sm">
       <Navbar.Brand href="/"><img src={ lemonImage } alt="lemon icon" style={{ height: "30px", width: "auto", marginLeft: "1em" }}/></Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: "1em" }}/>
       <Navbar.Collapse id="basic-navbar-nav">

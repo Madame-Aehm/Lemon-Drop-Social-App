@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser, deleteImage, login, getMyProfile, passwordVerification, updatePassword } from "../controllers/usersController.js";
+import { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser, deleteImage, login, getMyProfile, passwordVerification } from "../controllers/usersController.js";
 import { multerUploads } from '../middlewares/multer.js';
 import jwtAuth from "../utils/jwtAuth.js";
 
@@ -17,7 +17,6 @@ router.post('/sign-up', newUser);
 router.post('/login', login);
 
 router.patch('/update-user', jwtAuth, updateUser);
-router.patch('/update-password', jwtAuth, updatePassword)
 
 router.delete('/user/:id', deleteUser);
 

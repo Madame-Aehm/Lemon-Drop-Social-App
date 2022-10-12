@@ -75,7 +75,7 @@ const deleteImage = async(req, res) => {
     const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
     res.status(200).json(deleteResult);
   } catch (error) {
-    res.status(500).json("error: ", error);
+    res.status(500).json({ error: error });
   }
 }
 
@@ -195,35 +195,35 @@ const getMyProfile = async (req, res) => {
 
 const passwordVerification = async (req, res) => {
   const id = req.user._id;
+  console.log(req.body)
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(500).json({ error: "Invalid ID" })
   }
   try {
     const user = await userModel.findOne({ _id: req.user._id });
-    const verified = await verifyPassword(req.body.password, user.password);
+    console.log(user)
+    const verified = await verifyPassword(req.body.old_password, user.password);
     if (verified) {
-      return res.status(200).json(true)
+      try {
+        const hashedPassword = await encryptPassword(req.body.new_password);
+        user.update({ password: hashedPassword }, (error, result) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("result: ", result);
+          }
+        })
+        res.status(200).json({ msg: "Password updated" });
+      } catch (error) {
+        res.status(401).json({ error: error });
+      }
     } else {
-      res.status(401).json(false);
+      res.status(401).json({ error: "Password not verified"});
     }
   } catch (error) {
-    res.status(500).json({ error: error})
-  }
-}
-
-const updatePassword = async(req, res) => {
-  const id = req.user._id;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
-  } ///// here
-  const hashedPassword = await encryptPassword(req.body.password);
-  const user = await userModel.findOneAndUpdate({ _id: id }, {
-    password: hashedPassword
-  }, { new: true })
-  if (!user) {
-    return res.status(400).json({ error: "ID not found." })
+    res.status(500).json({ error: error, msg: "Failed to find user"})
   }
 }
 
 export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, 
-  updateUser, login, getMyProfile, passwordVerification, updatePassword }
+  updateUser, login, getMyProfile, passwordVerification }
