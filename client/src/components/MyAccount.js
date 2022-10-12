@@ -6,7 +6,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
 import getToken from '../utils/getToken'
 import { AuthContext } from '../context/AuthContext.js'
-import { emailValidation, passwordValidation, verifyAndUpdatePassword } from '../utils/JSvalidationFunctions';
+import { emailValidation, passwordValidation } from '../utils/JSFunctions';
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
 
@@ -144,6 +144,31 @@ function MyAccount() {
       }
     } else {
       setOldPWinvalid(true);
+    }
+  }
+
+  const verifyAndUpdatePassword = async() => {
+    const token = getToken();
+    if (token) {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + token);
+        myHeaders.append("Content-Type", "application/json");
+        const reqBody = JSON.stringify({
+          old_password: oldPassword,
+          new_password: newPassword
+        });
+        const reqOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: reqBody
+        }
+        const response = await fetch("http://localhost:5000/users/verify-password", reqOptions);
+        const result = await response.json();
+        return result
+      } catch(error) {
+        console.log(error);
+      }
     }
   }
 

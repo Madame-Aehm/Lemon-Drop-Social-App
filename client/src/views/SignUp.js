@@ -3,7 +3,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
-import { passwordValidation } from '../utils/JSvalidationFunctions';
+import { passwordValidation } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from '../components/PasswordInput';

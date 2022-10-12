@@ -20,18 +20,20 @@ function Home() {
       </p>}
       {user && <>
         <p>Welcome back, <strong style={{color: "#ffbc36"}}>{user.username}</strong> 🌞</p>
-        <div style={{width: "100%", display: "flex", justifyContent: "space-between"}}>
+        <div style={{width: "100%", display: "flex", justifyContent: "space-around"}}>
           <button>Add Recipe</button>
           <button>Search</button>
         </div>
       </>}
        
       {!recipesList && <p>Looks like there's no recipes :(</p>}
-      {recipesList && <>
-        {recipesList.map((drink) => {
-          return <DrinkCard key={drink._id} drink={drink} />
-        })}
-      </>}
+      <div style={{width: "80vw", display: "flex", flexDirection: "column", gap: "1em"}}>
+        {recipesList && <>
+          {recipesList.map((drink) => {
+            return <DrinkCard key={drink._id} drink={drink} />
+          })}
+        </>}
+      </div>
     </div>
   )
 }
