@@ -95,8 +95,9 @@ function MyAccount() {
       }
     } else {
       if (window.confirm("You're sure you want to update your display picture?")) {
+        await deleteImage(user.profile_picture);
         const image = await uploadImage(selectedFile);
-        updateUser({profile_picture: image});
+        updateUser({ profile_picture: image });
         setSelectedFile(null);
       }
     }
@@ -238,7 +239,7 @@ function MyAccount() {
               </tr>
               <tr>
                 <td>
-                  <PasswordInput handleChanges={handleNewPWChange} PWinvalid={newPWinvalid} placeholder={"Enter new password"} />
+                  <PasswordInput handleChanges={handleNewPWChange} PWinvalid={newPWinvalid} placeholder={"Enter new password"} textStyling={{marginTop: "-0.8em"}}/>
                 </td>
                 <td style={{verticalAlign: "top"}}>
                 <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handlePWClick}>edit</Button>
