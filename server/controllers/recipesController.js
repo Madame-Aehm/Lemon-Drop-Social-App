@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { recipeModel } from "../models/recipeModel.js";
 import { userModel } from "../models/usersModel.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const getAllRecipes = async (req, res) => {
   const all = await recipeModel

@@ -3,12 +3,9 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const recipeSchema = new Schema({
-  name: {
-    type: String, required: true, unique: true,
-  },
-  method: {
-    type: String, required: true,
-  },
+  name: { type: String, required: true, unique: true },
+  method: { type: String, required: true },
+  image: { type: Object, required: true },
   ingredients: [{ 
     ingredient: { type: String, required: true }, 
     quantity: { type: Number, required: true },

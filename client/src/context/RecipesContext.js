@@ -8,7 +8,6 @@ export const RecipesContextProvider = (props) => {
   const fetchAllRecipes = async () => {
     const response = await fetch("http://localhost:5000/recipes/")
     const data = await response.json()
-    console.log(data)
     setRecipesList(data);
   }
 

@@ -1,7 +1,7 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.5em;
   border: solid 1px #704021;
   border-radius: 0.3em;
   padding: 1em;
@@ -24,15 +24,7 @@ label {
   margin: 0
 }
 
-.image-upload {
-  font-weight: 400;
-  border-radius: 0.3em;
-  padding: 0.5em;
-  background-color: #198754;
-  color: white
-}
-
-.ingredient-box {
+.box {
   background-color: white;
   border: solid 1px black;
   border-radius: 0.3em;
@@ -46,26 +38,30 @@ label {
 }
 
 @media only screen and (max-width: 600px) {
-  .ingredient-box {
+  .box {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     padding: 0.5em;
   }
 
-  .ingredient-box > input {
+  .box > input {
     width: 100%;
+  }
+
+  .box > label {
+    align-self: flex-start;
   }
 }
 
 @media only screen and (min-width: 601px) {
-  .ingredient-box > input[name='ingredient'] {
+  .box > input[name='ingredient'] {
     width: 65%;
   }
-  .ingredient-box > input[name='quantity'] {
+  .box > input[name='quantity'] {
     width: 5%;
   }
-  .ingredient-box > input[name='measure'] {
+  .box > input[name='measure'] {
     width: 20%;
   }
 }

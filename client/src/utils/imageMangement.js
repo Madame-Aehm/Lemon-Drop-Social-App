@@ -16,7 +16,7 @@ const deleteImage = async (image) => {
   }
 }
 
-const uploadImage = async (file) => {
+const uploadImage = async (file, url) => {
   const formData = new FormData();
   formData.append("image", file);
   const reqOptions = {
@@ -24,7 +24,7 @@ const uploadImage = async (file) => {
     body: formData
   };
   try {
-    const response = await fetch("http://localhost:5000/users/upload-image", reqOptions);
+    const response = await fetch(url, reqOptions);
     const result = await response.json();
     return result
   } catch (error) {

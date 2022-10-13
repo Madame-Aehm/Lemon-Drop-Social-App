@@ -43,7 +43,7 @@ function SignUp() {
         public_id: null
       }
     } else {
-      const image = await uploadImage(selectedFile)
+      const image = await uploadImage(selectedFile, "http://localhost:5000/users/upload-image")
       return image
     }
   }

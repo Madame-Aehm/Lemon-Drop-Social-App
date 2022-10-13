@@ -98,7 +98,7 @@ function MyAccount() {
         if (user.profile_picture.public_id) {
           await deleteImage(user.profile_picture);
         }
-        const image = await uploadImage(selectedFile);
+        const image = await uploadImage(selectedFile, "http://localhost:5000/users/upload-image");
         updateUser({ profile_picture: image });
         setSelectedFile(null);
         const fileInput = document.querySelector("input[name='profile_picture']");
