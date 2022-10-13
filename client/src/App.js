@@ -9,6 +9,7 @@ import Login from './views/Login';
 import MyProfile from './views/MyProfile';
 import SignUp from './views/SignUp';
 import { RecipesContextProvider } from './context/RecipesContext';
+import NewRecipe from './views/NewRecipe';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path='/login' element={ <Login/> } />
               <Route path='/sign-up' element={ <SignUp/> } />
               <Route path='/my-profile' element={ <ProtectedRoute> <MyProfile/> </ProtectedRoute> } />
+              <Route path='/new-recipe' element={ <ProtectedRoute> <NewRecipe/> </ProtectedRoute> } />
             </Routes>
           </RecipesContextProvider>
         </AuthContextProvider>

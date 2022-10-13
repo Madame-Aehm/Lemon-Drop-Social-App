@@ -24,7 +24,7 @@ function PasswordInput({ handleChanges, PWinvalid, styling, textStyling, placeho
         <Button onClick={passwordToggle} variant="outline-success" id="button-addon2">
         {showOrHide}
         </Button>
-        <Form.Control.Feedback type="invalid">
+        <Form.Control.Feedback type="invalid" >
           Password must be at least 6 characters, include at least one number, and mix capital and lowercase letters.
         </Form.Control.Feedback>
       </InputGroup>

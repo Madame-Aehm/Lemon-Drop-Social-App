@@ -1,6 +1,10 @@
 .links {
   font-size: large;
-  color: #754423;
+  color: #b34414;
   padding: 0 1em;
   text-decoration: none;
+}
+
+.links:hover {
+  color: #b34414;
 }

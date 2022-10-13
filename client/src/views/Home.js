@@ -16,14 +16,11 @@ function Home() {
         Welcome to <strong style={{color: "#ffbc36"}}>Lemon Drop Drinks</strong>!
         This page is for flavour enthusiasts. Check out our recipes below for some quick inspiration, or 
         <Link to={"/sign-up"} style={{color: "#ffbc36", fontWeight: 700, textDecoration: "none"}}> sign up </Link> 
-        to join our community of stirrers and shakers! 
+        to join our community of stirrers and shakers! 🌞
       </p>}
       {user && <>
         <p>Welcome back, <strong style={{color: "#ffbc36"}}>{user.username}</strong> 🌞</p>
-        <div style={{width: "100%", display: "flex", justifyContent: "space-around"}}>
-          <button>Add Recipe</button>
-          <button>Search</button>
-        </div>
+        <button style={{alignSelf: "flex-end", marginRight: "10em"}}>Search</button>
       </>}
        
       {!recipesList && <p>Looks like there's no recipes :(</p>}

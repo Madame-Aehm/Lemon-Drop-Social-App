@@ -1,0 +1,71 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  border: solid 1px #704021;
+  border-radius: 0.3em;
+  padding: 1em;
+  background: rgba(148,211,51,0.2)
+}
+
+.one-line {
+  display: flex;
+  justify-content: space-between; 
+  gap: 1em
+}
+
+.one-line > label {
+  min-width: 4em;
+}
+
+label {
+  font-weight: 700;
+  color: #704021;
+  margin: 0
+}
+
+.image-upload {
+  font-weight: 400;
+  border-radius: 0.3em;
+  padding: 0.5em;
+  background-color: #198754;
+  color: white
+}
+
+.ingredient-box {
+  background-color: white;
+  border: solid 1px black;
+  border-radius: 0.3em;
+  padding: 0.5em 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+@media only screen and (max-width: 600px) {
+  .ingredient-box {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5em;
+  }
+
+  .ingredient-box > input {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  .ingredient-box > input[name='ingredient'] {
+    width: 65%;
+  }
+  .ingredient-box > input[name='quantity'] {
+    width: 5%;
+  }
+  .ingredient-box > input[name='measure'] {
+    width: 20%;
+  }
+}

@@ -18,22 +18,23 @@ function NavBar() {
           <NavLink className={"links"} to={"/home"} style={({isActive}) => ({
             fontWeight: isActive ? 700 : 'inherit',
             cursor: isActive ? "inherit" : "pointer",
-            color: "#b34414"
           })}>Home</NavLink>
           {!user && 
             <NavLink className={"links"} to={"/login"} style={({isActive}) => ({
               fontWeight: isActive ? 700 : 'inherit',
               cursor: isActive ? "inherit" : "pointer",
-              color: "#b34414"
             })}>Login</NavLink>
           }
           {user && 
             <>
               <NavLink className={"links"} to={"/my-profile"} style={({isActive}) => ({
-              fontWeight: isActive ? 700 : 'inherit',
-              cursor: isActive ? "inherit" : "pointer",
-              color: "#b34414"
+                fontWeight: isActive ? 700 : 'inherit',
+                cursor: isActive ? "inherit" : "pointer",
             })}>Profile</NavLink>
+              <NavLink className={"links"} to={"/new-recipe"} style={({isActive}) => ({
+                fontWeight: isActive ? 700 : 'inherit',
+                cursor: isActive ? "inherit" : "pointer",
+            })}>Add Recipe</NavLink>
               <NavLink className={"links"} onClick={logout} >Logout</NavLink>
             </>
           }
