@@ -32,4 +32,28 @@ const uploadImage = async (file, url) => {
   }
 }
 
-export { uploadImage, deleteImage }
+const recipeImageUpload = async (selectedFile) => {
+  if (!selectedFile) {
+    return {
+      url: "https://res.cloudinary.com/cocktail-recipes/image/upload/v1665673309/recipe_images/yz2fbyzppludsz99ibrq.png",
+      public_id: null
+    }
+  } else {
+    const image = await uploadImage(selectedFile, "http://localhost:5000/recipes/upload-image")
+    return image
+  }
+}
+
+const signUpImageUpload = async (selectedFile) => {
+  if (!selectedFile) {
+    return {
+      url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
+      public_id: null
+    }
+  } else {
+    const image = await uploadImage(selectedFile, "http://localhost:5000/users/upload-image")
+    return image
+  }
+}
+
+export { uploadImage, deleteImage, signUpImageUpload, recipeImageUpload }

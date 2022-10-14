@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { passwordValidation } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
-import { deleteImage, uploadImage } from '../utils/imageMangement';
+import { deleteImage, signUpImageUpload } from '../utils/imageMangement';
 import PasswordInput from '../components/PasswordInput';
 
 function SignUp() {
@@ -36,20 +36,8 @@ function SignUp() {
     }
   }
 
-  const imageUpload = async () => {
-    if (!selectedFile) {
-      return {
-        url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
-        public_id: null
-      }
-    } else {
-      const image = await uploadImage(selectedFile, "http://localhost:5000/users/upload-image")
-      return image
-    }
-  }
-
   const signUp = async () => {
-    const image = await imageUpload();
+    const image = await signUpImageUpload(selectedFile);
     inputInfo.profile_picture = image; 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");

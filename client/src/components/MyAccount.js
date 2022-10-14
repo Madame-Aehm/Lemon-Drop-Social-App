@@ -9,9 +9,11 @@ import { AuthContext } from '../context/AuthContext.js'
 import { emailValidation, passwordValidation } from '../utils/JSFunctions';
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
+import PageLoader from './PageLoader';
 
 function MyAccount() {
   const { user, setUser } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState("none");
@@ -86,15 +88,18 @@ function MyAccount() {
     }
     else if (!selectedFile && user.profile_picture.public_id) {
       if (window.confirm("There is no file selected. This will return your display picture back to default. Is that ok?")) {
+        setLoading(true);
         await deleteImage(user.profile_picture);
         updateUser(
           {profile_picture: {
           url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
           public_id: null
           }});
+        setLoading(false);
       }
     } else {
       if (window.confirm("You're sure you want to update your display picture?")) {
+        setLoading(true);
         if (user.profile_picture.public_id) {
           await deleteImage(user.profile_picture);
         }
@@ -103,6 +108,7 @@ function MyAccount() {
         setSelectedFile(null);
         const fileInput = document.querySelector("input[name='profile_picture']");
         fileInput.value = "";
+        setLoading(false);
       }
     }
   }
@@ -129,11 +135,14 @@ function MyAccount() {
   const handleOldPWClick = async() => {
     const validPassword = passwordValidation(oldPassword);
     if (validPassword) {
-      try{
+      setLoading(true);
+      try {
         const result = await verifyAndUpdatePassword(oldPassword, newPassword);
         if (result.error) {
+          setLoading(false);
           return alert(result.error)
         } else {
+          setLoading(false);
           alert(result)
           setShowModal(false);
           const pwInput = document.querySelector("input[name='password']");
@@ -210,6 +219,7 @@ function MyAccount() {
     <>
       {user && 
         <div className='simple-display'>
+          {loading && <PageLoader />}
 
           <div className='simple-align'>
             <h4 className='sub-title'>Account Details</h4>

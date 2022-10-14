@@ -63,9 +63,7 @@ const uploadImage = async(req, res) => {
       public_id: uploadResult.public_id
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: error });
+    res.status(500).json({ error: error });
   }
 }
 
@@ -77,7 +75,7 @@ const postNewRecipe = async(req, res) => {
       $push: { posted_recipes: recipe._id, }
     })
   } catch (error) { 
-    res.status(500).json({ error: error.message })}
+    res.status(500).json({ error: error })}
 }
 
 // const getByMethod = async (req, res) => {
@@ -105,7 +103,7 @@ const postNewRecipe = async(req, res) => {
 const deleteRecipe = async(req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
+    return res.status(500).json({ error: "Invalid ID" })
   }
   const recipe = await recipeModel.findOneAndDelete({ _id: id });
   if (!recipe) {
@@ -117,7 +115,7 @@ const deleteRecipe = async(req, res) => {
 const updateRecipe = async(req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
+    return res.status(500).json({ error: "Invalid ID" })
   }
   const recipe = await recipeModel.findOneAndUpdate({ _id: id }, {
     ...req.body

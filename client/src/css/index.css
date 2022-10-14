@@ -34,3 +34,7 @@ code {
   text-align: center;
   color: #754423;
 }
+
+.fine {
+  transform: translate(-50%, -50%)
+}

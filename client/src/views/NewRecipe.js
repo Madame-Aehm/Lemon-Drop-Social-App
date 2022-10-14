@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import '../css/newRecipe.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { uploadImage } from '../utils/imageMangement';
+import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
+import { AuthContext } from '../context/AuthContext.js'
+import getToken from '../utils/getToken';
+import PageLoader from '../components/PageLoader';
 
 function NewRecipe() {
 
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
   const [stepsList, setStepsList] = useState([""]);
   const [inputInfo, setInputInfo] = useState({})
@@ -13,12 +18,10 @@ function NewRecipe() {
 
   const handleFileAttach = (e) => {
     setSelectedFile(e.target.files[0]);
-    console.log(selectedFile)
   }
 
   const handleInputChanges = (e) => {
     setInputInfo({ ...inputInfo, [e.target.name]: e.target.value});
-    console.log(inputInfo)
   }
 
   const handleIngredientChange = (e, i) => {
@@ -55,44 +58,76 @@ function NewRecipe() {
     setStepsList([...stepsList, ""]);
   }
 
-  const imageUpload = async () => {
-    if (!selectedFile) {
-      return {
-        url: "https://res.cloudinary.com/cocktail-recipes/image/upload/v1665673309/recipe_images/yz2fbyzppludsz99ibrq.png",
-        public_id: null
-      }
-    } else {
-      const image = await uploadImage(selectedFile, "http://localhost:5000/recipes/upload-image")
-      return image
-    }
-
-  }
-
   const handleSubmit = async(e) => {
     e.preventDefault();
-    const image = await imageUpload();
-    setInputInfo({ ...inputInfo, ingredients: ingredientsList, instructions: stepsList, image: image });
-    console.log(inputInfo)
+    setLoading(true);
+    const token = getToken();
+    if (token) {
+      const image = await recipeImageUpload(selectedFile);
+      const recipeObject = { 
+        ...inputInfo, 
+        ingredients: ingredientsList, 
+        instructions: stepsList, 
+        image: image,
+        username: user.username,
+        posted_by: user._id
+      };
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", "Bearer " + token);
+        myHeaders.append("Content-Type", "application/json");
+        const toSubmit = JSON.stringify(recipeObject);
+        const reqOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: toSubmit,
+        }
+        const response = await fetch("http://localhost:5000/recipes/new-recipe", reqOptions);
+        const result = await response.json();
+        if (!result.error) {
+          console.log(result);
+          resetForm();
+          setLoading(false);
+          alert("Recipe added to the collection!")
+        } else {
+          if (image.public_id) {
+            deleteImage(image);
+          }
+          setLoading(false);
+          alert("Something went wrong. Please check all fields and try again.")
+        }
+      } catch (error) {
+        console.log(error);
+        if (image.public_id) {
+          deleteImage(image);
+        }
+        setLoading(false);
+      }
+    }
+  }
 
+  function resetForm() {
     setIngredientsList([{ ingredient: "", quantity: 0, measure: "" }]);
     setStepsList([""]);
     setInputInfo({})
     setSelectedFile(null);
-
+    const recipeForm = document.getElementById('new-recipe-form');
+    recipeForm.reset();
   }
 
   return (
     <div className='simple-display'>
+      {loading && <PageLoader/>}
       <h1 className='page-title'>New Recipe</h1>
       <div style={{textAlign: "center", background: "rgba(148,211,51,0.3)", color: "#1b8f47", padding: "0.5em", borderRadius: "1em", width: "80%"}}>
         <q>I've come up with a new recipeeh!</q> - Ignis Scientia
       </div>
 
-      <Form className='form-container' onSubmit={handleSubmit}>
+      <Form id='new-recipe-form' className='form-container' onSubmit={handleSubmit}>
 
         <Form.Group>
           <Form.Label>Drink Name:</Form.Label>
-          <Form.Control name='name' placeholder="Enter a name for your drink" onChange={handleInputChanges} required />
+          <Form.Control name='name' placeholder="Enter a name for your drink" spellCheck="false" onChange={handleInputChanges} required/>
         </Form.Group>
 
         <hr/>
@@ -159,7 +194,6 @@ function NewRecipe() {
         <button type='submit'>create object</button>
 
       </Form>
-      {console.log(inputInfo)}
 
 
       

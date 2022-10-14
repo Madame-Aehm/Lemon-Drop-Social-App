@@ -12,7 +12,8 @@ const recipeSchema = new Schema({
     measure: { type: String, required: true }
   }],
   instructions: [{ type: String, required: true }],
-  posted_by: { type: Schema.Types.ObjectId, ref: "user", required: true }
+  posted_by: { type: Schema.Types.ObjectId, ref: "user", required: true },
+  comments: []
 }, { timestamps: true })
 
 const recipeModel = mongoose.model("cocktail", recipeSchema);
