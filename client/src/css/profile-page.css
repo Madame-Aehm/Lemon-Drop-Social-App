@@ -27,4 +27,21 @@ td {
   padding: 0.5em 1em;
 }
 
+.link-button {
+  margin-right: 1em;
+  font-size: large;
+  background-color: #1b8f47;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5em;
+  padding: 1em;
+}
 
+.link-button:hover {
+  color: white;
+  background-color: #28a745;
+}
+
+.link-button:active {
+  background-color: #28a745;
+}

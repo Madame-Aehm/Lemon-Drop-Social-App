@@ -78,6 +78,25 @@ const postNewRecipe = async(req, res) => {
     res.status(500).json({ error: error })}
 }
 
+const deleteRecipe = async(req, res) => {
+  const id = req.body._id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Invalid ID" })
+  }
+  try {
+    const recipe = await recipeModel.findOneAndDelete({ _id: id });
+    if (!recipe) {
+      return res.status(400).json({ error: "No recipe with ID " + id})
+    }
+    await userModel.findOneAndUpdate({ _id: recipe.posted_by }, {
+      $pull: { posted_recipes: recipe._id, }
+    })
+    res.status(200).json({ msg: "Recipe deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
+}
+
 // const getByMethod = async (req, res) => {
 //   const requested = await recipeModel
 //     .find({ method: req.params.method })
@@ -99,18 +118,6 @@ const postNewRecipe = async(req, res) => {
 //     }
 //   }
 // }
-
-const deleteRecipe = async(req, res) => {
-  const id = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
-  }
-  const recipe = await recipeModel.findOneAndDelete({ _id: id });
-  if (!recipe) {
-    return res.status(400).json({ error: "No recipe with ID " + id})
-  }
-  res.status(200).json({ msg: "Recipe deleted" });
-}
 
 const updateRecipe = async(req, res) => {
   const id = req.params.id;

@@ -16,7 +16,7 @@ router.get("/:id", getByID);
 
 router.post('/new-recipe', jwtAuth, postNewRecipe);
 
-router.delete('/:id', deleteRecipe)
+router.delete('/delete-recipe', jwtAuth, deleteRecipe)
 
 router.patch('/:id', updateRecipe)
 

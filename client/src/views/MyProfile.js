@@ -1,12 +1,14 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import '../css/profile-page.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import MyAccount from '../components/MyAccount';
 import { AuthContext } from '../context/AuthContext.js'
+import MyRecipes from '../components/MyRecipes';
 
 function MyProfile() {
   const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   return (
       <div className='simple-display no-padding'>
@@ -19,11 +21,11 @@ function MyProfile() {
             justify>
 
             <Tab eventKey="account" title="Account">
-              <MyAccount user={user} />
+              <MyAccount user={user} loading={loading} setLoading={setLoading} />
             </Tab>
 
             <Tab eventKey="recipes" title="Recipes" className='test'>
-              <p>testing2</p>
+              <MyRecipes />
             </Tab>
 
             <Tab eventKey="favourites" title="Favourites">

@@ -11,9 +11,8 @@ import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
 import PageLoader from './PageLoader';
 
-function MyAccount() {
+function MyAccount({ loading, setLoading }) {
   const { user, setUser } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState("none");
@@ -50,14 +49,16 @@ function MyAccount() {
     setUsername(e.target.value);
   }
 
-  const handleUsernameClick = () => {
+  const handleUsernameClick = async() => {
     if (username === "") {
       alert("Username can't be nothing.")
     } else if (user.username === username) {
       alert(username + " is already your username.")
     } else {
       if (window.confirm("Are you sure you want to change your username from " + user.username + " to " + username + "?")) {
-        updateUser({username: username});
+        setLoading(true);
+        await updateUser({username: username});
+        setLoading(false);
       }
     }
   }
@@ -66,14 +67,16 @@ function MyAccount() {
     setEmail(e.target.value)
   }
 
-  const handleEmailClick = () => {
+  const handleEmailClick = async() => {
     if (!emailValidation(email)) {
       alert("Invalid email format. Please try again.")
     } else if (user.email === email) {
       alert(email + " is already your registered email.")
     } else {
       if (window.confirm("Are you sure you want to change your email from " + user.email + " to " + email + "?")) {
-        updateUser({email: email});
+        setLoading(true);
+        await updateUser({email: email});
+        setLoading(false);
       }
     }
   }
@@ -196,7 +199,6 @@ function MyAccount() {
       const response = await fetch("http://localhost:5000/users/update-user", reqOptions);
       const result = await response.json();
       setUser(result);
-      alert("Profile updated")
     } else {
       console.log("no token")
     }
@@ -208,11 +210,18 @@ function MyAccount() {
   
   const inputDisplay = {
     display: inputs,
-    alignItems: "center"
+    flexDirection: "column",
+    alignItems: "center",
   }
 
   const currentDisplay = {
-    display: hideOnEdit
+    display: hideOnEdit,
+    width: "fit-content",
+    flexDirection: "column", 
+    gap: "0.5em", 
+    border: "solid 1px #1b8f47", 
+    padding: "1em", 
+    borderRadius: "0.5em"
   }
 
   return (
@@ -232,24 +241,29 @@ function MyAccount() {
 
           <img className='profile-img' src={user.profile_picture.url} alt={`${user.username}'s profile`}/>
 
-          <h5 className='account-mini-title' style={currentDisplay}>{user.username}</h5>
+          <div style={currentDisplay}>
+            <h5 className='account-mini-title'>{user.username}</h5>
 
-          <div style={currentDisplay} className='simple-align'>
-            <h6 className='account-mini-title'>Email: </h6>
-            <h6 className='sub-title'>{user.email}</h6>
+            <div className='simple-align'>
+              <h6 className='account-mini-title'>Email: </h6>
+              <h6 className='sub-title'>{user.email}</h6>
+            </div>
+
+            <div className='simple-align'>
+              <h6 className='account-mini-title'>User since: </h6>
+              <h6 className='sub-title'>{user.createdAt}</h6>
+            </div>
+
+            <div className='simple-align'>
+              <h6 className='account-mini-title'>Recipes posted: </h6>
+              <h6 className='sub-title'>{user.posted_recipes.length}</h6>
+            </div>
           </div>
 
-          <div style={currentDisplay} className='simple-align'>
-            <h6 className='account-mini-title'>User since: </h6>
-            <h6 className='sub-title'>{user.createdAt}</h6>
-          </div>
-
-          <div style={currentDisplay} className='simple-align'>
-            <h6 className='account-mini-title'>Recipes posted: </h6>
-            <h6 className='sub-title'>{user.posted_recipes.length}</h6>
-          </div>
+          
 
           <div style={inputDisplay}>
+          <h5 className='account-mini-title'>{user.username}</h5>
           <table>
             <tbody>
               <tr>

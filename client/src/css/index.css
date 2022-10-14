@@ -38,3 +38,8 @@ code {
 .fine {
   transform: translate(-50%, -50%)
 }
+
+.recipe-search {
+  display: flex;
+  gap: 1em
+}

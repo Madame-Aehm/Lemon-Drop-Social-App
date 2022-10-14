@@ -4,12 +4,14 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
 import { AuthContext } from '../context/AuthContext.js'
+import { RecipesContext } from '../context/RecipesContext.js'
 import getToken from '../utils/getToken';
 import PageLoader from '../components/PageLoader';
 
 function NewRecipe() {
 
   const { user } = useContext(AuthContext);
+  const { recipesList, setRecipesList } = useContext(RecipesContext);
   const [loading, setLoading] = useState(false);
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
   const [stepsList, setStepsList] = useState([""]);
@@ -64,44 +66,49 @@ function NewRecipe() {
     const token = getToken();
     if (token) {
       const image = await recipeImageUpload(selectedFile);
-      const recipeObject = { 
-        ...inputInfo, 
-        ingredients: ingredientsList, 
-        instructions: stepsList, 
-        image: image,
-        username: user.username,
-        posted_by: user._id
-      };
-      try {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", "Bearer " + token);
-        myHeaders.append("Content-Type", "application/json");
-        const toSubmit = JSON.stringify(recipeObject);
-        const reqOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: toSubmit,
-        }
-        const response = await fetch("http://localhost:5000/recipes/new-recipe", reqOptions);
-        const result = await response.json();
-        if (!result.error) {
-          console.log(result);
-          resetForm();
-          setLoading(false);
-          alert("Recipe added to the collection!")
-        } else {
+      if (!image.error) {
+        const recipeObject = { 
+          ...inputInfo, 
+          ingredients: ingredientsList, 
+          instructions: stepsList, 
+          image: image,
+          username: user.username,
+          posted_by: user._id
+        };
+        try {
+          const myHeaders = new Headers();
+          myHeaders.append("Authorization", "Bearer " + token);
+          myHeaders.append("Content-Type", "application/json");
+          const toSubmit = JSON.stringify(recipeObject);
+          const reqOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: toSubmit,
+          }
+          const response = await fetch("http://localhost:5000/recipes/new-recipe", reqOptions);
+          const result = await response.json();
+          if (!result.error) {
+            console.log(result);
+            resetForm();
+            setRecipesList([result].concat(recipesList));
+            setLoading(false);
+            alert("Recipe added to the collection!")
+          } else {
+            if (image.public_id) {
+              deleteImage(image);
+            }
+            setLoading(false);
+            alert("Something went wrong. Please check all fields and try again.")
+          }
+        } catch (error) {
+          console.log(error);
           if (image.public_id) {
             deleteImage(image);
           }
           setLoading(false);
-          alert("Something went wrong. Please check all fields and try again.")
         }
-      } catch (error) {
-        console.log(error);
-        if (image.public_id) {
-          deleteImage(image);
-        }
-        setLoading(false);
+      } else {
+        alert("Error uploading image");
       }
     }
   }
@@ -191,7 +198,9 @@ function NewRecipe() {
           <Button variant='success' onClick={handleAddStep}>Add Step</Button>
         </div>
 
-        <button type='submit'>create object</button>
+        <hr/>
+
+        <Button variant='warning' type='submit'>Post New Recipe</Button>
 
       </Form>
 
