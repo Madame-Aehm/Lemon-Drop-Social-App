@@ -3,14 +3,12 @@ import '../css/newRecipe.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
-import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 import getToken from '../utils/getToken';
 import PageLoader from '../components/PageLoader';
 
 function NewRecipe() {
 
-  const { user } = useContext(AuthContext);
   const { recipesList, setRecipesList } = useContext(RecipesContext);
   const [loading, setLoading] = useState(false);
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
@@ -72,8 +70,6 @@ function NewRecipe() {
           ingredients: ingredientsList, 
           instructions: stepsList, 
           image: image,
-          username: user.username,
-          posted_by: user._id
         };
         try {
           const myHeaders = new Headers();
@@ -108,6 +104,7 @@ function NewRecipe() {
           setLoading(false);
         }
       } else {
+        setLoading(false);
         alert("Error uploading image");
       }
     }
@@ -133,28 +130,28 @@ function NewRecipe() {
       <Form id='new-recipe-form' className='form-container' onSubmit={handleSubmit}>
 
         <Form.Group>
-          <Form.Label>Drink Name:</Form.Label>
+          <Form.Label className='new-rec-label'>Drink Name:</Form.Label>
           <Form.Control name='name' placeholder="Enter a name for your drink" spellCheck="false" onChange={handleInputChanges} required/>
         </Form.Group>
 
         <hr/>
 
         <Form.Group >
-          <Form.Label>Method:</Form.Label>
+          <Form.Label className='new-rec-label'>Method:</Form.Label>
           <Form.Control name='method' placeholder="Enter the preparation method" onChange={handleInputChanges} required/>
         </Form.Group>
 
         <hr/>
 
         <Form.Group controlId="formFile">
-          <Form.Label>Upload an image:</Form.Label>
+          <Form.Label className='new-rec-label'>Upload an image:</Form.Label>
           <Form.Control type="file" name="image" onChange={handleFileAttach} />
         </Form.Group>
 
         <hr/>
 
         <div>
-          <Form.Label>Ingredients:</Form.Label>
+          <Form.Label className='new-rec-label'>Ingredients:</Form.Label>
           <p style={{marginBottom: "0.3em"}}>
             Enter the ingredients used in your recipe. Include the name of the ingredient, the quantity, 
             and which measurement system you're using (eg. ml, dash, parts, etc.)
@@ -162,7 +159,7 @@ function NewRecipe() {
           {ingredientsList.map((input, i) => {
             return (
               <div key={"ingredientInput" + i} className='box'>
-                <label>Ingredient{i + 1}</label>
+                <label className='new-rec-label'>Ingredient{i + 1}</label>
                 <input name='ingredient' value={input.ingredient} placeholder='Ingredient name'
                   onChange={(e) => handleIngredientChange(e, i)} required/>
                 <input name='quantity' value={input.quantity} type={"number"} placeholder='?'
@@ -180,14 +177,14 @@ function NewRecipe() {
         <hr/>
 
         <div>
-          <Form.Label>Recipe instructions:</Form.Label>
+          <Form.Label className='new-rec-label'>Recipe instructions:</Form.Label>
           <p style={{marginBottom: "0.3em"}}>
             Explain step by step how to prepare your drink.
           </p>
           {stepsList.map((input, i) => {
             return (
               <div key={"stepsInput" + i} className='box'>
-                <label>Step{i + 1}</label>
+                <label className='new-rec-label'>Step{i + 1}</label>
                 <textarea name='step' value={input} placeholder='Write instructions here' style={{width: "100%"}}
                   onChange={(e) => handleStepsChange(e, i)} required/>
                 {stepsList.length > 1 && <Button variant='danger' style={{alignSelf: "flex-end"}}

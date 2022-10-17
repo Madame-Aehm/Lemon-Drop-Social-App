@@ -23,7 +23,6 @@ function MyRecipes() {
           <Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link>
           {myList.length > 0 && 
             <>
-              <Button>Search</Button>
               <div className='recipe-search'>
                 <div>
                   {myList.map((drink) => {
@@ -31,7 +30,7 @@ function MyRecipes() {
                   })}
                 </div>
                 <div className='search-bar'>
-                  <p>testing</p>
+                  <Button>Search</Button>
                 </div>
               </div>
             </>

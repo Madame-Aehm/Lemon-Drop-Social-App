@@ -4,18 +4,21 @@ import Button from 'react-bootstrap/esm/Button';
 import { RecipesContext } from '../context/RecipesContext.js'
 import { deleteImage } from '../utils/imageMangement.js';
 import { displayNicely } from '../utils/JSFunctions';
+import { AuthContext } from '../context/AuthContext.js'
+import { Link } from 'react-router-dom';
 
-function DrinkCard({drink, myList, setMyList}) {
+function DrinkCard({ drink }) {
   const { deleteRecipe, recipesList, setRecipesList } = useContext(RecipesContext);
+  const { user } = useContext(AuthContext);
 
   const handleDeleteRecipe = async (drink) => {
-    if (window.confirm("You're sure you want to update your display picture?")) {
+    if (window.confirm("You're sure you want to delete this recipe? This is cannot be undone.")) {
       try {
         const deleted = await deleteRecipe(drink._id);
         setRecipesList(recipesList.filter((recipe) => recipe._id !== drink._id));
         try {
           await deleteImage(drink.image);
-          alert(deleted.msg);
+          console.log(deleted.msg);
         } catch (error) {
           console.log("Recipe deleted, but problem deleting image: ", error);
         }
@@ -31,7 +34,7 @@ function DrinkCard({drink, myList, setMyList}) {
       <Card.Header>
         <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
           <Card.Title style={{color: "#1b8f47", marginBottom: 0}}>{drink.name}</Card.Title>
-          <Button variant="danger" onClick={() => handleDeleteRecipe(drink)}>Delete</Button>
+          {user && <>{user._id === drink.posted_by && <Button variant="danger" onClick={() => handleDeleteRecipe(drink)}>Delete</Button>}</>}
         </span>
       </Card.Header>
       
@@ -47,6 +50,7 @@ function DrinkCard({drink, myList, setMyList}) {
             }
           })}
         </p>
+        <Link to={'/view-recipe'} state={{ drinkId: drink._id }}>Read more..</Link>
       </Card.Body>
     </Card>
   )

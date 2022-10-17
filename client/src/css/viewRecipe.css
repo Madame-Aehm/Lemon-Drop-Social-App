@@ -1,0 +1,13 @@
+.recipe-div {
+  background-color: #eff1cf;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  padding: 0 1em;
+}
+
+.simple-align {
+  display: flex;
+  flex-flow: row-wrap; 
+  align-items: center;
+}

@@ -5,11 +5,13 @@ export const RecipesContext = createContext();
 
 export const RecipesContextProvider = (props) => {
   const [recipesList, setRecipesList] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchAllRecipes = async () => {
     const response = await fetch("http://localhost:5000/recipes/")
     const data = await response.json()
     setRecipesList(data);
+    setLoading(false);
   }
 
   const deleteRecipe = async (id) => {
@@ -40,7 +42,7 @@ export const RecipesContextProvider = (props) => {
 
 
   return (
-    <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe }}>
+    <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe, loading }}>
       { props.children }
     </RecipesContext.Provider>
   )

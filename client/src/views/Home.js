@@ -1,15 +1,18 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import DrinkCard from '../components/DrinkCard';
+import PageLoader from '../components/PageLoader';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 
 function Home() {
   const { user } = useContext(AuthContext);
-  const { recipesList } = useContext(RecipesContext);
+  const { recipesList, loading } = useContext(RecipesContext);
+  console.log(user)
 
   return (
     <div className='simple-display'>
+      {loading && <PageLoader/>}
       <h1 className='page-title'>Homepage</h1>
 
       {!user && <p>
