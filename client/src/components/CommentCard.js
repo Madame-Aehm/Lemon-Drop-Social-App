@@ -3,6 +3,8 @@ import getToken from '../utils/getToken';
 import Card from 'react-bootstrap/Card';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { AuthContext } from '../context/AuthContext.js';
+import Button from 'react-bootstrap/esm/Button';
+import * as Icon from 'react-bootstrap-icons';
 
 function CommentCard({ comment, comments, setComments, recipeID }) {
   const { user } = useContext(AuthContext);
@@ -41,7 +43,10 @@ function CommentCard({ comment, comments, setComments, recipeID }) {
           {comment.posted_by.username}
         </div>
         {user && <>
-          {user._id === comment.posted_by._id && <button onClick={deleteComment}>x</button>}
+          {user._id === comment.posted_by._id && 
+            <Button variant="danger" size="sm" onClick={deleteComment}>
+              <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
+            </Button>}
         </>}
       </Card.Title>
       <Card.Subtitle className="mb-2 text-muted">

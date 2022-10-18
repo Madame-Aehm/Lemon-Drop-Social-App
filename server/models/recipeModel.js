@@ -8,7 +8,7 @@ const commentSchema = new Schema({
 }, { timestamps: true });
 
 const recipeSchema = new Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   method: { type: String, required: true },
   image: { type: Object, required: true },
   ingredients: [{ 

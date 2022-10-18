@@ -6,7 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 const getAllRecipes = async (req, res) => {
   const all = await recipeModel
     .find({})
-    // .sort({createdAt: -1})
+    .sort({createdAt: -1})
     // .populate({ path: "posted_by", select: "username"});
   try {
     if (all.length === 0) {

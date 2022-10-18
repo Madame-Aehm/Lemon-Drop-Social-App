@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import editIcon from "../edit.png";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -11,6 +10,7 @@ import { emailValidation, passwordValidation } from '../utils/JSFunctions';
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
 import PageLoader from './PageLoader';
+import * as Icon from 'react-bootstrap-icons';
 
 function MyAccount({ loading, setLoading }) {
   const { user, setUser } = useContext(AuthContext);
@@ -233,11 +233,10 @@ function MyAccount({ loading, setLoading }) {
 
           <div className='simple-align'>
             <h4 className='sub-title'>Account Details</h4>
-            <img style={{width: "1.5em", height: "1.5em", cursor: "pointer"}} 
-                src={editIcon} 
-                title="Edit Account Details"
-                onClick={handleEditSwitch}
-                alt="Edit Account Icon"/>
+            <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant='warning' title="Edit Account Details" 
+              onClick={handleEditSwitch}>
+              <Icon.PencilSquare style={{fontSize: "large"}}/>
+            </Button>
           </div>
 
           <img className='profile-img' src={user.profile_picture.url} alt={`${user.username}'s profile`}/>
@@ -275,7 +274,10 @@ function MyAccount({ loading, setLoading }) {
                   </Form.Group>
                 </td>
                 <td style={{verticalAlign: "bottom"}}>
-                  <Button variant="warning" style={{alignSelf: "flex-end"}} onClick={handleFileClick}>edit</Button>
+                  <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant='warning' title="Change Profile Picture" 
+                    onClick={handleFileClick}>
+                      <Icon.Pencil style={{fontSize: "large"}}/>
+                  </Button>
                 </td>
               </tr>
               <tr>
@@ -286,7 +288,10 @@ function MyAccount({ loading, setLoading }) {
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" onClick={handleUsernameClick}>edit</Button>
+                  <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant="warning" title="Change Username"
+                    onClick={handleUsernameClick}>
+                      <Icon.Pencil style={{fontSize: "large"}}/>
+                  </Button>
                 </td>
               </tr>
               <tr>
@@ -297,7 +302,10 @@ function MyAccount({ loading, setLoading }) {
                   </FloatingLabel>
                 </td>
                 <td>
-                  <Button variant="warning" onClick={handleEmailClick}>edit</Button>
+                <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant="warning" title="Change Email Address" 
+                  onClick={handleEmailClick}>
+                    <Icon.Pencil style={{fontSize: "large"}}/>
+                </Button>
                 </td>
               </tr>
               <tr>
@@ -306,7 +314,10 @@ function MyAccount({ loading, setLoading }) {
                     handleChanges={handleNewPWChange}/>
                 </td>
                 <td style={{verticalAlign: "top"}}>
-                  <Button variant="warning" onClick={handlePWClick}>edit</Button>
+                  <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant="warning" title="Change Password" 
+                    onClick={handlePWClick}>
+                      <Icon.Pencil style={{fontSize: "large"}}/>
+                  </Button>
                 </td>
               </tr>
               <tr>

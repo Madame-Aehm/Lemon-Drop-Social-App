@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
+import * as Icon from 'react-bootstrap-icons';
 import useRecipeFetch from '../hooks/useRecipeFetch';
 import PageLoader from '../components/PageLoader'
 import '../css/viewRecipe.css'
@@ -70,12 +71,23 @@ function ViewRecipe() {
       {(!loading && !error && recipe) && 
         <>
           <div className='recipe-div'>
+
             <h1 className='page-title'>{recipe.name}</h1>
+
+            {user && (user._id === recipe.posted_by._id) &&
+            <div style={{marginBottom: "0.5em", textAlign: "right"}}>
+              <Button variant="danger" size="sm">
+                <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
+              </Button>
+            </div>}
+
             <img src={recipe.image.url} alt={recipe.name} style={{maxWidth: '500px', minWidth: '200px', width: '90%', alignSelf: "center"}}/>
-              <Link className='simple-align' style={{alignSelf: "flex-end", padding: "0.2em 1em", textDecoration: "none"}}>
-                <h5 className='account-mini-title'>{recipe.posted_by.username}</h5>
-                <img src={recipe.posted_by.profile_picture.url} alt="Recipe Author" className='thumbnail-image'/>
-              </Link>
+
+            <Link className='simple-align' style={{alignSelf: "flex-end", padding: "0.2em 1em", textDecoration: "none"}}>
+              <h5 className='account-mini-title'>{recipe.posted_by.username}</h5>
+              <img src={recipe.posted_by.profile_picture.url} alt="Recipe Author" className='thumbnail-image'/>
+            </Link>
+
             <div className='simple-align'>
               <h4 className='sub-title'>Method:</h4>
               <h5 style={{paddingLeft: "1em"}}>{recipe.method}</h5>
@@ -87,18 +99,22 @@ function ViewRecipe() {
                 return <li key={ingredient._id}>{ingredient.quantity} {ingredient.measure} {ingredient.ingredient}</li>
               })}
             </ul>
+
             <h4 className='sub-title'>Instructions</h4>
             <ol style={{maxWidth: "100%"}}>
               {recipe.instructions.map((step, i) => {
                 return <li key={"step"+i}>{step}</li>
               })}
             </ol>
+
             <h4 className='sub-title'>Comments: </h4>
             {comments.length === 0 && <p style={{textAlign: "center"}}>No comments yet :( </p>}
             {comments.length > 0 && comments.map((comment) => {
               return <CommentCard key={comment._id} comment={comment} comments={comments} setComments={setComments} recipeID={recipe._id}/>
             })}
+
             <hr/>
+
             {user && 
               <Form onSubmit={handleSubmit}>
                 <Form.Label className='sub-title'>Leave a comment: </Form.Label>
@@ -113,9 +129,6 @@ function ViewRecipe() {
                 <Button disabled variant='success' type='submit'>Post comment</Button>
               </Form>
             }
-            
-            
-            
           </div>
         </>}
 

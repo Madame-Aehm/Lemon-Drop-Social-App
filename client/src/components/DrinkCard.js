@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/esm/Button';
 import { RecipesContext } from '../context/RecipesContext.js'
@@ -6,6 +7,7 @@ import { deleteImage } from '../utils/imageMangement.js';
 import { displayNicely } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { Link } from 'react-router-dom';
+import * as Icon from 'react-bootstrap-icons';
 
 function DrinkCard({ drink }) {
   const { deleteRecipe, recipesList, setRecipesList } = useContext(RecipesContext);
@@ -30,12 +32,26 @@ function DrinkCard({ drink }) {
   }
 
   return (
+
     <Card style={{maxWidth: "30em"}}>
-      {drink.image && <Card.Img variant="top" src={drink.image.url} />}
+        {user && (user._id === drink.posted_by) && 
+          <Card.Header style={{textAlign: "right"}}>
+            <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
+              <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
+            </Button>
+          </Card.Header>
+        }
+      
+      <Link to={'/view-recipe'} state={{ drinkId: drink._id }}>
+        <Card.Img variant="top" src={drink.image.url} />
+      </Link>
+      
       <Card.Header>
         <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
           <Card.Title style={{color: "#1b8f47", marginBottom: 0}}>{drink.name}</Card.Title>
-          {user && <>{user._id === drink.posted_by && <Button variant="danger" onClick={() => handleDeleteRecipe(drink)}>Delete</Button>}</>}
+          <Card.Subtitle className="text-muted">
+            { formatDistanceToNow(new Date(drink.createdAt), { addSuffix: true }) }
+          </Card.Subtitle>
         </span>
       </Card.Header>
       
