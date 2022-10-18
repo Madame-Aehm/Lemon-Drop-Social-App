@@ -33,7 +33,8 @@ const getByID = async (req, res) => {
   }
   const requested = await recipeModel
     .findOne({ _id: id })
-    .populate({ path: "posted_by", select: ["username", "profile_picture.url"] });
+    .populate({ path: "posted_by", select: ["username", "profile_picture.url"] })
+    .populate({ path: "comments.posted_by", select: ["username", "profile_picture.url"] })
   if (requested.length === 0) {
     res.status(200).json({
       msg: "No recipe with ID " + id
@@ -102,8 +103,7 @@ const addComment = async(req, res) => {
   if (!mongoose.Types.ObjectId.isValid(recipeID)) {
     return res.status(500).json({ error: "Invalid ID" })
   }
-  const toSubmit = { ...req.body, user_id: req.user._id, username: req.user.username, profile_picture: req.user.profile_picture.url }
-  console.log(toSubmit);
+  const toSubmit = { ...req.body, posted_by: req.user._id }
   const recipe = await recipeModel.findOneAndUpdate({ _id: recipeID }, {
     $push: { comments: toSubmit }
   }, { new: true });
@@ -119,14 +119,12 @@ const deleteComment = async(req, res) => {
     return res.status(500).json({ error: "Invalid ID" })
   }
   const recipe = await recipeModel.findOneAndUpdate({ _id: recipeID }, {
-    $pull: { comments: {_id: req.body._id} }
+    $pull: { comments: { _id: req.body._id } }
   }, { new: true });
   if (!recipe) {
     return res.status(400).json({ error: "ID not found." })
   }
-  recipe.populate({ path: "posted_by", select: ["username", "profile_picture.url"] });
   res.status(200).json(recipe);
-
 }
 
 // const getByMethod = async (req, res) => {

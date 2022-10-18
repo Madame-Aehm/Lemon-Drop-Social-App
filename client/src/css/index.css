@@ -30,6 +30,26 @@ code {
   color: #754423;
 }
 
+.link-button {
+  margin-right: 1em;
+  font-size: large;
+  background-color: #1b8f47;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5em;
+  padding: 1em;
+}
+
+.link-button2 {
+  width: 100%;
+  font-size: large;
+  background-color: #1b8f47;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5em;
+  padding: 1em;
+}
+
 .p-type-1 {
   text-align: center;
   color: #754423;
@@ -42,4 +62,10 @@ code {
 .recipe-search {
   display: flex;
   gap: 1em
+}
+
+.thumbnail-image {
+  width: 50px; 
+  height: 50px; 
+  border-radius: 50%;
 }

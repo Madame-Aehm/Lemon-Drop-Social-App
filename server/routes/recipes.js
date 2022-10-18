@@ -7,19 +7,14 @@ const router = express.Router()
 
 
 router.get("/", getAllRecipes);
-
-router.post('/upload-image', multerUploads.single("image"), uploadImage);
-
-
 router.get("/:id", getByID);
-// router.get("method/:method", getByMethod);
-
+router.post('/upload-image', multerUploads.single("image"), uploadImage);
 router.post('/new-recipe', jwtAuth, postNewRecipe);
-
-router.delete('/delete-recipe', jwtAuth, deleteRecipe);
-
 router.patch('/:id', jwtAuth, updateRecipe);
 router.post('/add-comment/:id', jwtAuth, addComment);
-router.post('/delete-comment/:id', jwtAuth, deleteComment);
+router.patch('/delete-comment/:id', jwtAuth, deleteComment);
+router.delete('/delete-recipe', jwtAuth, deleteRecipe);
+
+// router.get("method/:method", getByMethod);
 
 export default router

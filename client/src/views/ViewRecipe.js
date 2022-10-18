@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/Form';
 import useRecipeFetch from '../hooks/useRecipeFetch';
 import PageLoader from '../components/PageLoader'
 import '../css/viewRecipe.css'
 import CommentCard from '../components/CommentCard';
 import getToken from '../utils/getToken';
+import { AuthContext } from '../context/AuthContext.js'
 
 function ViewRecipe() {
+  const { user } = useContext(AuthContext);
   const location = useLocation();
   const { drinkId } = location.state;
   const { recipe, comments, setComments, loading, error } = useRecipeFetch(drinkId);
   const [commentText, setCommentText] = useState("");
-  console.log(recipe);
 
   const handleTextChange = (e) => {
     setCommentText(e.target.value);
   }
 
-  const handleSubmitComment = async(e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const token = getToken();
     if (token) {
@@ -33,14 +36,32 @@ function ViewRecipe() {
         }
         const response = await fetch("http://localhost:5000/recipes/add-comment/" + recipe._id, reqOptions);
         const result = await response.json();
+        const newComment = result.comments[result.comments.length - 1];
         console.log(result);
-        setComments(result.comments);
+        setComments([...comments, { 
+          comment: newComment.comment,
+          createdAt: newComment.createdAt,
+          updatedAt: newComment.updatedAt,
+          _id: newComment._id,
+          posted_by: {
+            username: user.username,
+            _id: user._id,
+            profile_picture: {
+              url: user.profile_picture.url
+            }
+          }
+         }]);
         setCommentText("");
       } catch(error) {
         console.log(error);
       }
     }
   } 
+
+  useEffect(() => {
+    console.log(comments)
+  }, [comments])
+  
 
   return (
     <div className='simple-display'>
@@ -51,7 +72,10 @@ function ViewRecipe() {
           <div className='recipe-div'>
             <h1 className='page-title'>{recipe.name}</h1>
             <img src={recipe.image.url} alt={recipe.name} style={{maxWidth: '500px', minWidth: '200px', width: '90%', alignSelf: "center"}}/>
-            <br/>
+              <Link className='simple-align' style={{alignSelf: "flex-end", padding: "0.2em 1em", textDecoration: "none"}}>
+                <h5 className='account-mini-title'>{recipe.posted_by.username}</h5>
+                <img src={recipe.posted_by.profile_picture.url} alt="Recipe Author" className='thumbnail-image'/>
+              </Link>
             <div className='simple-align'>
               <h4 className='sub-title'>Method:</h4>
               <h5 style={{paddingLeft: "1em"}}>{recipe.method}</h5>
@@ -69,23 +93,28 @@ function ViewRecipe() {
                 return <li key={"step"+i}>{step}</li>
               })}
             </ol>
-            <div className='simple-align'>
-              <h4 className='sub-title'>This recipe was posted by: </h4>
-              <Link className='simple-align'>
-                <img src={recipe.posted_by.profile_picture.url} style={{width: "50px", height: "50px", borderRadius: "50%"}} alt={recipe.posted_by.username}/>
-                <h5>{recipe.posted_by.username}</h5>
-              </Link>  
-            </div>
-            <br/>
             <h4 className='sub-title'>Comments: </h4>
-            {console.log(comments.length)}
             {comments.length === 0 && <p style={{textAlign: "center"}}>No comments yet :( </p>}
             {comments.length > 0 && comments.map((comment) => {
-              return <CommentCard comment={comment} setComments={setComments}/>
+              return <CommentCard key={comment._id} comment={comment} comments={comments} setComments={setComments} recipeID={recipe._id}/>
             })}
-            <h4 className='sub-title'>Leave a comment: </h4>
-            <textarea style={{width: "100%"}} value={commentText} onChange={handleTextChange}/>
-            <button onClick={handleSubmitComment}>Post comment</button>
+            <hr/>
+            {user && 
+              <Form onSubmit={handleSubmit}>
+                <Form.Label className='sub-title'>Leave a comment: </Form.Label>
+                <Form.Control className='mb-3' as="textarea" rows={3} value={commentText} onChange={handleTextChange}/>
+                <Button variant='success' type='submit'>Post comment</Button>
+              </Form>
+            }
+            {!user && 
+              <Form>
+                <Form.Label className='sub-title'>Leave a comment: </Form.Label>
+                <Form.Control className='mb-3' as="textarea" rows={3} placeholder='Only logged-in users can leave comments.' disabled/>
+                <Button disabled variant='success' type='submit'>Post comment</Button>
+              </Form>
+            }
+            
+            
             
           </div>
         </>}

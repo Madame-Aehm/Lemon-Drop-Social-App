@@ -3,9 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const commentSchema = new Schema({
-  user_id: { type: String, required: true },
-  username: { type: String, required: true },
-  profile_picture: { type: String, required: true },
+  posted_by: { type: Schema.Types.ObjectId, ref: "user", required: true },
   comment: { type: String, required: true },
 }, { timestamps: true });
 
@@ -20,10 +18,6 @@ const recipeSchema = new Schema({
   }],
   instructions: [{ type: String, required: true }],
   posted_by: { type: Schema.Types.ObjectId, ref: "user", required: true },
-  // posted_by: {
-  //   username: { type: String, required: true },
-  //   user_id: { type: String, required: true }
-  //  },
   comments: [commentSchema]
 }, { timestamps: true });
 

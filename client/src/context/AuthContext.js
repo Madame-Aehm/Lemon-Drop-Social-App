@@ -70,10 +70,11 @@ export const AuthContextProvider = (props) => {
     }
   }
 
-  const logout = () => {
-    alert(user.username + " has been logged out.")
+  const logout = (e) => {
+    e.preventDefault()
     localStorage.removeItem("token");
     checkForUser();
+    alert(user.username + " has been logged out.")
   };
 
   useEffect(() => {

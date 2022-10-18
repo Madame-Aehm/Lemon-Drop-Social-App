@@ -15,10 +15,11 @@ function DrinkCard({ drink }) {
     if (window.confirm("You're sure you want to delete this recipe? This is cannot be undone.")) {
       try {
         const deleted = await deleteRecipe(drink._id);
+        console.log(deleted.msg);
         setRecipesList(recipesList.filter((recipe) => recipe._id !== drink._id));
         try {
-          await deleteImage(drink.image);
-          console.log(deleted.msg);
+          const deletedImage = await deleteImage(drink.image);
+          console.log(deletedImage);
         } catch (error) {
           console.log("Recipe deleted, but problem deleting image: ", error);
         }
@@ -29,7 +30,7 @@ function DrinkCard({ drink }) {
   }
 
   return (
-    <Card>
+    <Card style={{maxWidth: "30em"}}>
       {drink.image && <Card.Img variant="top" src={drink.image.url} />}
       <Card.Header>
         <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
@@ -50,8 +51,12 @@ function DrinkCard({ drink }) {
             }
           })}
         </p>
-        <Link to={'/view-recipe'} state={{ drinkId: drink._id }}>Read more..</Link>
       </Card.Body>
+      <Link to={'/view-recipe'} state={{ drinkId: drink._id }} style={{textDecoration: "none", textAlign: "center"}}>
+        <Card.Footer style={{backgroundColor: "#1b8f47", color: "white", fontSize: "large"}}>
+          View full recipe
+        </Card.Footer>
+      </Link>
     </Card>
   )
 }

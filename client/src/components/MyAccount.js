@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import editIcon from "../edit.png";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -250,8 +251,8 @@ function MyAccount({ loading, setLoading }) {
             </div>
 
             <div className='simple-align'>
-              <h6 className='account-mini-title'>User since: </h6>
-              <h6 className='sub-title'>{user.createdAt}</h6>
+              <h6 className='account-mini-title'>User for: </h6>
+              <h6 className='sub-title'>{formatDistanceToNow(new Date(user.createdAt))}</h6>
             </div>
 
             <div className='simple-align'>
