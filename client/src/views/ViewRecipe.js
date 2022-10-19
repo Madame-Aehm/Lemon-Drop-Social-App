@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
@@ -57,12 +57,7 @@ function ViewRecipe() {
         console.log(error);
       }
     }
-  } 
-
-  useEffect(() => {
-    console.log(comments)
-  }, [comments])
-  
+  }
 
   return (
     <div className='simple-display'>
@@ -83,7 +78,8 @@ function ViewRecipe() {
 
             <img src={recipe.image.url} alt={recipe.name} style={{maxWidth: '500px', minWidth: '200px', width: '90%', alignSelf: "center"}}/>
 
-            <Link className='simple-align' style={{alignSelf: "flex-end", padding: "0.2em 1em", textDecoration: "none"}}>
+            <Link className='simple-align' style={{alignSelf: "flex-end", padding: "0.2em 1em", textDecoration: "none"}}
+              to={'/view-user'} state={{userId: recipe.posted_by}}>
               <h5 className='account-mini-title'>{recipe.posted_by.username}</h5>
               <img src={recipe.posted_by.profile_picture.url} alt="Recipe Author" className='thumbnail-image'/>
             </Link>

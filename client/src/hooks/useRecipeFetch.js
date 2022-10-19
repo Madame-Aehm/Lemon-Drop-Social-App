@@ -22,7 +22,9 @@ function useRecipeFetch(id) {
   }
 
   useEffect(() => {
-    getRecipe();
+    if (id) {
+      getRecipe();
+    }
   }, [id]);
 
   return ({ recipe, comments, setComments, loading, error })

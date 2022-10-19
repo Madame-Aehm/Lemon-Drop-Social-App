@@ -29,4 +29,10 @@ function displayNicely(string) {
   } return final;
 }
 
-export { passwordValidation, emailValidation, displayNicely }
+function formatImage500px (imageURL) {
+  const uploadIndex = imageURL.indexOf("upload/") + 7;
+  const result = imageURL.slice(0, uploadIndex) + "w_500,h_500,c_fill/" + imageURL.slice(uploadIndex);
+  return result
+}
+
+export { passwordValidation, emailValidation, displayNicely, formatImage500px }

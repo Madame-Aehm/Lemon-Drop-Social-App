@@ -4,54 +4,36 @@ import { encryptPassword, verifyPassword } from "../utils/bcrypt.js";
 import { issueToken } from "../utils/jwt.js";
 import { recipeModel } from "../models/recipeModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import validator from 'validator';
 
 const getAllUsers = async (req, res) => {
-  const allUsers = await userModel
-    .find({})
-    // .populate({ path: "posted_recipes", select: ["name", "method"] });
   try {
+    const allUsers = await userModel.find({});
     if (allUsers.length === 0) {
-      req.status(200).json({
-        error: "No users found"
-      })
-    } else {
-      res.status(200).json(
-        allUsers
-      )
-    }
+      return req.status(204).json({ msg: "It's deserted." })
+    } 
+    return res.status(200).json(allUsers);
   } catch (error) {
-    res.status(500).json({
-      msg: "Server failed",
-      error: error
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 
 const getUserByID = async (req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
+    return res.status(406).json({ error: "Invalid ID" })
   }
-  const requested = await userModel
-    .find({ _id: id })
-    .populate({ path: "posted_recipes" });
-  if (requested.length === 0) {
-    res.status(200).json({
-      msg: "No user with ID " + id
-    })
-  } else {
-    try {
-      res.status(200).json(
-        requested
-      )
-    } catch(error) {
-      res.status(500).json({
-        msg: "Server failed",
-        error: error
-      })
-    } 
-  }
-};
+  try {
+    const requested = await userModel.find({ _id: id })
+      .populate({ path: "posted_recipes" });
+    if (!requested) {
+      return res.status(404).json({ error: "No user with ID " + id });
+    }
+    return res.status(200).json(requested);
+  } catch(error) {
+    res.status(500).json({ error: error.message })
+  } 
+}
 
 const uploadImage = async(req, res) => {
   try {
@@ -59,33 +41,42 @@ const uploadImage = async(req, res) => {
       folder: "user_avatars",
       return_delete_token: true,
     });
-    res.status(200).json({
+    return res.status(200).json({
       url: uploadResult.url,
       public_id: uploadResult.public_id
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 }
 
 const deleteImage = async(req, res) => {
   try {
     const deleteResult = await cloudinary.uploader.destroy(req.body.public_id);
-    res.status(200).json(deleteResult);
+    return res.status(200).json(deleteResult);
   } catch (error) {
-    res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 }
 
 const newUser = async(req, res) => {
+  if (!req.body.email || !req.body.username || !req.body.password) {
+    return res.status(406).json({ error: "Email, password, and a username are required." });
+  }
+  if (req.body.username.trim() === "") {
+    return res.status(406).json({ error: "Username can't be nothing." });
+  }
+  if (!validator.isEmail(req.body.email)) {
+    return res.status(406).json({ error: "Email not valid." });
+  }
+  if (!validator.isStrongPassword(req.body.password, { minLength: 6, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 0, returnScore: false} )) {
+    return res.status(406).json({ error: "Password not strong enough: minimum 6 characters, upper and lowercase letters, and a number." });
+  }
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(409).json({ error: "User with this email already exists." })
     }
-    // insert validation here
     const hashedPassword = await encryptPassword(req.body.password);
     const user = new userModel({
       username: req.body.username,
@@ -95,90 +86,105 @@ const newUser = async(req, res) => {
     })
     try {
         await user.save();
-        res.status(201).json({
+        return res.status(201).json({
           createdAt: user.createdAt,
           email: user.email,
           posted_recipes: user.posted_recipes,
           profile_picture: user.profile_picture,
           username: user.username,
+          description: user.description,
           _id: user._id
         })
       } catch (error) { 
-        res.status(500).json({ error: error.message })}
+        return res.status(500).json({ error: error.message })}
   } catch(error) {
-    res.status(401).json({ error: error.message })
+    return res.status(500).json({ error: error.message })
   }
 }
 
 const deleteUser = async(req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
+    return res.status(406).json({ error: "Invalid ID" })
   }
-  const user = await userModel.findOneAndDelete({ _id: id });
-  if (!user) {
-    return res.status(400).json({ error: "No user with ID " + id})
+  try {
+    const user = await userModel.findOneAndDelete({ _id: id });
+    if (!user) {
+      return res.status(404).json({ error: "No user with ID " + id})
+    }
+    const recipesResult = deleteUserRecipes(id);
+    if (!recipesResult) {
+      return res.status(206).json({ msg: "User delete, but recipes remain." })
+    }
+    return res.status(200).json({ msg: "User deleted" })
+  } catch (error) {
+    return res.status(500).json({ error: error.message })
   }
-  const recipesResult = deleteUserRecipes(id);
-  res.status(200).json({ msg: "User deleted", recipesResult})
 }
 
 const deleteUserRecipes = async(id) => {
   try {
     await recipeModel.deleteMany({ posted_by: id });
-    return "Recipes deleted";
+    return true
   } catch (error) {
-    return "error: ", error;
+    return false
   }
 }
 
 const updateUser = async(req, res) => {
   const id = req.user._id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
+    return res.status(406).json({ error: "Invalid ID" })
   }
   const user = await userModel.findOneAndUpdate({ _id: id }, {
     ...req.body
   }, { new: true })
   if (!user) {
-    return res.status(400).json({ error: "ID not found." })
+    return res.status(404).json({ error: "ID not found." })
   }
-  res.status(200).json({
+  res.status(202).json({
     createdAt: user.createdAt,
     email: user.email,
     posted_recipes: user.posted_recipes,
     profile_picture: user.profile_picture,
     username: user.username,
+    description: user.description,
     _id: user._id
   });
 }
 
 const login = async(req, res) => {
+  if (!req.body.email || !req.body.password) {
+    return res.status(406).json({ error: "Email and password are required." });
+  }
+  if (!validator.isEmail(req.body.email)) {
+    return res.status(406).json({ error: "Email not valid." });
+  }
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (!existingUser) { 
-      res.status(401).json({ error: "No user registered with that email" })
+      return res.status(404).json({ error: "No user registered with that email" })
+    }
+    const verified = await verifyPassword(req.body.password, existingUser.password);
+    if (!verified) {
+      return res.status(401).json({ error: "Password doesn't match" });
     } else {
-      const verified = await verifyPassword(req.body.password, existingUser.password);
-      if (verified) {
-        const token = issueToken(existingUser.id);
-        res.status(201).json({
-          user: {
-            createdAt: existingUser.createdAt,
-            email: existingUser.email,
-            posted_recipes: existingUser.posted_recipes,
-            profile_picture: existingUser.profile_picture,
-            username: existingUser.username,
-            _id: existingUser._id
-          },
-          token: token
-        });
-      } else {
-        res.status(401).json({ error: "Password doesn't match" });
-      }
+      const token = issueToken(existingUser.id);
+      return res.status(201).json({
+        user: {
+          createdAt: existingUser.createdAt,
+          email: existingUser.email,
+          posted_recipes: existingUser.posted_recipes,
+          profile_picture: existingUser.profile_picture,
+          username: existingUser.username,
+          description: existingUser.description,
+          _id: existingUser._id
+        },
+        token: token
+      });
     }
   } catch(error) {
-    console.log("login error: ", error)
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -189,34 +195,36 @@ const getMyProfile = async (req, res) => {
     posted_recipes: req.user.posted_recipes,
     profile_picture: req.user.profile_picture,
     username: req.user.username,
+    description: req.user.description,
     _id: req.user._id
   });
 }
 
-const passwordVerification = async (req, res) => {
+const verifyAndUpdatePW = async (req, res) => {
   const id = req.user._id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
+    return res.status(406).json({ error: "Invalid ID" })
   }
   try {
     const user = await userModel.findOne({ _id: req.user._id });
+    if (!user) { 
+      return res.status(404).json({ error: "No user found" })
+    }
     const verified = await verifyPassword(req.body.old_password, user.password);
-    if (verified) {
-      try {
-        const hashedPassword = await encryptPassword(req.body.new_password);
-        user.update({ password: hashedPassword }, (error, result) => {
-          if (error) {
-            console.log(error);
-            res.status(500).json({ error: error });
-          } else {
-            res.status(200).json("Password updated");
-          }
-        })
-      } catch (error) {
-        res.status(401).json({ error: error });
-      }
-    } else {
-      res.status(401).json({ error: "Password not verified"});
+    if (!verified) {
+      return res.status(401).json({ error: "Password doesn't match" });
+    }
+    try {
+      const hashedPassword = await encryptPassword(req.body.new_password);
+      user.update({ password: hashedPassword }, (error, result) => {
+        if (error) {
+          res.status(500).json({ error: error });
+        } else {
+          res.status(200).json("Password updated");
+        }
+      })
+    } catch (error) {
+      res.status(500).json({ error: error });
     }
   } catch (error) {
     res.status(500).json({ error: error })
@@ -224,4 +232,4 @@ const passwordVerification = async (req, res) => {
 }
 
 export { getAllUsers, newUser, getUserByID, uploadImage, deleteImage, deleteUser, 
-  updateUser, login, getMyProfile, passwordVerification }
+  updateUser, login, getMyProfile, verifyAndUpdatePW }

@@ -11,6 +11,7 @@ import SignUp from './views/SignUp';
 import { RecipesContextProvider } from './context/RecipesContext';
 import NewRecipe from './views/NewRecipe';
 import ViewRecipe from './views/ViewRecipe';
+import ViewUser from './views/ViewUser';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path='/my-profile' element={ <ProtectedRoute> <MyProfile/> </ProtectedRoute> } />
               <Route path='/new-recipe' element={ <ProtectedRoute> <NewRecipe/> </ProtectedRoute> } />
               <Route path='/view-recipe' element={ <ViewRecipe/> } />
+              <Route path='/view-user' element={ <ViewUser/> } />
             </Routes>
           </RecipesContextProvider>
         </AuthContextProvider>

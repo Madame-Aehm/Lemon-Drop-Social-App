@@ -28,7 +28,12 @@ function SignUp() {
     const validPassword = passwordValidation(inputInfo.password);
     if (validPassword) {
       e.preventDefault();
-      signUp();
+      const trimmed = inputInfo.username.trim()
+      if (trimmed === "") {
+        alert("Username can't be nothing");
+      } else {
+        signUp();
+      }
     } else {
       e.preventDefault();
       e.stopPropagation();
@@ -76,7 +81,7 @@ function SignUp() {
           </FloatingLabel>
 
           <FloatingLabel controlId="floatingInputUsername" label="Choose a username*" style={{width: "80%"}}>
-            <Form.Control type="username" name="username" placeholder="Username" onChange={handleChanges} required/>
+            <Form.Control type="username" name="username" placeholder="Username" onChange={handleChanges} autoCorrect={false} required/>
           </FloatingLabel>
 
           <PasswordInput handleChanges={handleChanges} PWinvalid={PWinvalid} styling={{width: "80%"}} 

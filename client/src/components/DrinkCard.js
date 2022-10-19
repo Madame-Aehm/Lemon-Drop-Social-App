@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/esm/Button';
 import { RecipesContext } from '../context/RecipesContext.js'
 import { deleteImage } from '../utils/imageMangement.js';
-import { displayNicely } from '../utils/JSFunctions';
+import { displayNicely, formatImage500px } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { Link } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
@@ -12,6 +12,8 @@ import * as Icon from 'react-bootstrap-icons';
 function DrinkCard({ drink }) {
   const { deleteRecipe, recipesList, setRecipesList } = useContext(RecipesContext);
   const { user } = useContext(AuthContext);
+
+  const formattedPicture = formatImage500px(drink.image.url)
 
   const handleDeleteRecipe = async (drink) => {
     if (window.confirm("You're sure you want to delete this recipe? This is cannot be undone.")) {
@@ -43,7 +45,7 @@ function DrinkCard({ drink }) {
         }
       
       <Link to={'/view-recipe'} state={{ drinkId: drink._id }}>
-        <Card.Img variant="top" src={drink.image.url} />
+        <Card.Img variant="top" src={formattedPicture} />
       </Link>
       
       <Card.Header>

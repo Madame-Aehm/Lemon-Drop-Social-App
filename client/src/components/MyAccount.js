@@ -6,7 +6,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
 import getToken from '../utils/getToken'
 import { AuthContext } from '../context/AuthContext.js'
-import { emailValidation, passwordValidation } from '../utils/JSFunctions';
+import { emailValidation, formatImage500px, passwordValidation } from '../utils/JSFunctions';
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
 import PageLoader from './PageLoader';
@@ -14,6 +14,7 @@ import * as Icon from 'react-bootstrap-icons';
 
 function MyAccount({ loading, setLoading }) {
   const { user, setUser } = useContext(AuthContext);
+  const formattedPicture = formatImage500px(user.profile_picture.url)
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState("none");
@@ -25,14 +26,16 @@ function MyAccount({ loading, setLoading }) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPWinvalid, setNewPWinvalid] = useState(false);
   const [oldPWinvalid, setOldPWinvalid] = useState(false);
+  const [desc, setDesc] = useState("");
 
   const handleEditSwitch = () => {
     if (editMode) {
-      setEditMode(false)
+      setEditMode(false);
     } else {
-      setEditMode(true)
-      setUsername(user.username)
-      setEmail(user.email)
+      setEditMode(true);
+      setUsername(user.username);
+      setEmail(user.email);
+      setDesc(user.description);
     }
   }
 
@@ -51,14 +54,15 @@ function MyAccount({ loading, setLoading }) {
   }
 
   const handleUsernameClick = async() => {
-    if (username === "") {
+    const trimmed = username.trim()
+    if (trimmed === "") {
       alert("Username can't be nothing.")
-    } else if (user.username === username) {
-      alert(username + " is already your username.")
+    } else if (user.username === trimmed) {
+      alert(trimmed + " is already your username.")
     } else {
-      if (window.confirm("Are you sure you want to change your username from " + user.username + " to " + username + "?")) {
+      if (window.confirm("Are you sure you want to change your username from " + user.username + " to " + trimmed + "?")) {
         setLoading(true);
-        await updateUser({username: username});
+        await updateUser({ username: trimmed });
         setLoading(false);
       }
     }
@@ -76,7 +80,7 @@ function MyAccount({ loading, setLoading }) {
     } else {
       if (window.confirm("Are you sure you want to change your email from " + user.email + " to " + email + "?")) {
         setLoading(true);
-        await updateUser({email: email});
+        await updateUser({ email: email });
         setLoading(false);
       }
     }
@@ -185,6 +189,26 @@ function MyAccount({ loading, setLoading }) {
     }
   }
 
+  const handleDescChange = (e) => {
+    setDesc(e.target.value);
+  }
+
+  const handleDescClick = async() => {
+    const trimmed = desc.trim();
+    console.log(trimmed);
+    let message = "";
+    if (trimmed === "") {
+      message = "Your description is blank. Is this correct?"
+    } else {
+      message = "Are you sure you'd like to update your description?"
+    }
+    if (window.confirm(message)) {
+      setLoading(true);
+      await updateUser({ description: trimmed });
+      setLoading(false);
+    }
+  }
+
   const updateUser = async (item) => {
     const token = getToken();
     if (token) {
@@ -217,7 +241,8 @@ function MyAccount({ loading, setLoading }) {
 
   const currentDisplay = {
     display: hideOnEdit,
-    width: "fit-content",
+    width: "500px",
+    maxWidth: "90%",
     flexDirection: "column", 
     gap: "0.5em", 
     border: "solid 1px #1b8f47", 
@@ -239,7 +264,7 @@ function MyAccount({ loading, setLoading }) {
             </Button>
           </div>
 
-          <img className='profile-img' src={user.profile_picture.url} alt={`${user.username}'s profile`}/>
+          <img className='profile-img' src={formattedPicture} alt={`${user.username}'s profile`}/>
 
           <div style={currentDisplay}>
             <h5 className='account-mini-title'>{user.username}</h5>
@@ -258,6 +283,14 @@ function MyAccount({ loading, setLoading }) {
               <h6 className='account-mini-title'>Recipes posted: </h6>
               <h6 className='sub-title'>{user.posted_recipes.length}</h6>
             </div>
+
+            {user.description !== "" && 
+              <div className='simple-align'>
+                <h6 className='account-mini-title'>Description: </h6>
+                <p>{user.description}</p>
+              </div>
+            }
+            
           </div>
 
           
@@ -316,6 +349,17 @@ function MyAccount({ loading, setLoading }) {
                 <td style={{verticalAlign: "top"}}>
                   <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant="warning" title="Change Password" 
                     onClick={handlePWClick}>
+                      <Icon.Pencil style={{fontSize: "large"}}/>
+                  </Button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <Form.Control as="textarea" rows={3} value={desc} onChange={handleDescChange}/>
+                </td>
+                <td>
+                  <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant="warning" title="Change Description" 
+                    onClick={handleDescClick}>
                       <Icon.Pencil style={{fontSize: "large"}}/>
                   </Button>
                 </td>

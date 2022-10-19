@@ -4,50 +4,32 @@ import { userModel } from "../models/usersModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
 const getAllRecipes = async (req, res) => {
-  const all = await recipeModel
-    .find({})
-    .sort({createdAt: -1})
-    // .populate({ path: "posted_by", select: "username"});
   try {
+    const all = await recipeModel.find({}).sort({createdAt: -1});
     if (all.length === 0) {
-      req.status(200).json({
-        msg: "Menu empty"
-      })
-    } else {
-      res.status(200).json(
-        all
-      )
-    }
+      return res.status(204).json({ msg: "Menu empty" });
+    } 
+    return res.status(200).json(all);
   } catch (error) {
-    res.status(500).json({
-      msg: "Server failed",
-      error: error
-    });
+    return res.status(500).json({ error: error });
   }
 };
 
 const getByID = async (req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({msg: "Invalid ID"})
+    return res.status(406).json({ error: "Invalid ID" })
   }
-  const requested = await recipeModel
-    .findOne({ _id: id })
-    .populate({ path: "posted_by", select: ["username", "profile_picture.url"] })
-    .populate({ path: "comments.posted_by", select: ["username", "profile_picture.url"] })
-  if (requested.length === 0) {
-    res.status(200).json({
-      msg: "No recipe with ID " + id
-    })
-  } else {
-    try {
-      res.status(200).json(requested);
-    } catch(error) {
-      res.status(500).json({
-        msg: "Server failed",
-        error: error
-      })
-    }
+  try {
+    const requested = await recipeModel.findOne({ _id: id })
+      .populate({ path: "posted_by", select: ["username", "profile_picture.url"] })
+      .populate({ path: "comments.posted_by", select: ["username", "profile_picture.url"] });
+    if (!requested) {
+      return res.status(404).json({ error: "No recipe with ID " + id });
+    } 
+    return res.status(200).json(requested);
+  } catch(error) {
+    res.status(500).json({ error: error })
   }
 }
 
@@ -57,10 +39,8 @@ const uploadImage = async(req, res) => {
       folder: "recipe_images",
       return_delete_token: true,
     });
-    const uploadIndex = uploadResult.url.indexOf("upload/") + 7;
-    const transformedImage = uploadResult.url.slice(0, uploadIndex) + "w_500,h_500,c_fill/" + uploadResult.url.slice(uploadIndex);
-    res.status(200).json({
-      url: transformedImage,
+    return res.status(200).json({
+      url: uploadResult.url,
       public_id: uploadResult.public_id
     });
   } catch (error) {
@@ -71,10 +51,16 @@ const uploadImage = async(req, res) => {
 const postNewRecipe = async(req, res) => {
   try {
     const recipe = await recipeModel.create({ ...req.body, posted_by: req.user._id });
-    res.status(200).json(recipe);
-    await userModel.findOneAndUpdate({ _id: req.user._id }, {
+    if (!recipe) {
+      return res.status(501).json({ error: "Recipe not submitted"})
+    }
+    const user = await userModel.findOneAndUpdate({ _id: req.user._id }, {
       $push: { posted_recipes: recipe._id, }
     })
+    if (!user) {
+      return res.status(206).json({ recipe: recipe, error: "Could not connect recipe with user" })
+    }
+    return res.status(200).json(recipe);
   } catch (error) { 
     res.status(500).json({ error: error })}
 }
@@ -82,17 +68,20 @@ const postNewRecipe = async(req, res) => {
 const deleteRecipe = async(req, res) => {
   const id = req.body._id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
+    return res.status(406).json({ error: "Invalid ID" })
   }
   try {
     const recipe = await recipeModel.findOneAndDelete({ _id: id });
     if (!recipe) {
-      return res.status(400).json({ error: "No recipe with ID " + id})
+      return res.status(404).json({ error: "No recipe with ID " + id})
     }
-    await userModel.findOneAndUpdate({ _id: recipe.posted_by }, {
+    const user = await userModel.findOneAndUpdate({ _id: recipe.posted_by }, {
       $pull: { posted_recipes: recipe._id, }
     })
-    res.status(200).json({ msg: "Recipe deleted" });
+    if (!user) {
+      return res.status(206).json({ error: "Recipe deleted, but could not connect with user" });
+    }
+    return res.status(200).json({ msg: "Recipe deleted" });
   } catch (error) {
     res.status(500).json({ error: error })
   }
@@ -101,30 +90,38 @@ const deleteRecipe = async(req, res) => {
 const addComment = async(req, res) => {
   const recipeID = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(recipeID)) {
-    return res.status(500).json({ error: "Invalid ID" })
+    return res.status(406).json({ error: "Invalid ID" })
   }
-  const toSubmit = { ...req.body, posted_by: req.user._id }
-  const recipe = await recipeModel.findOneAndUpdate({ _id: recipeID }, {
-    $push: { comments: toSubmit }
-  }, { new: true });
-  if (!recipe) {
-    return res.status(400).json({ error: "ID not found." })
+  try {
+    const toSubmit = { ...req.body, posted_by: req.user._id }
+    const recipe = await recipeModel.findOneAndUpdate({ _id: recipeID }, {
+      $push: { comments: toSubmit }
+    }, { new: true });
+    if (!recipe) {
+      return res.status(404).json({ error: "ID not found." })
+    }
+    return res.status(200).json(recipe);
+  } catch (error) {
+    return res.status(500).json({ error: error })
   }
-  res.status(200).json(recipe);
 }
 
 const deleteComment = async(req, res) => {
   const recipeID = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(recipeID)) {
-    return res.status(500).json({ error: "Invalid ID" })
+    return res.status(406).json({ error: "Invalid ID" })
   }
-  const recipe = await recipeModel.findOneAndUpdate({ _id: recipeID }, {
-    $pull: { comments: { _id: req.body._id } }
-  }, { new: true });
-  if (!recipe) {
-    return res.status(400).json({ error: "ID not found." })
+  try {
+    const recipe = await recipeModel.findOneAndUpdate({ _id: recipeID }, {
+      $pull: { comments: { _id: req.body._id } }
+    }, { new: true });
+    if (!recipe) {
+      return res.status(404).json({ error: "ID not found." })
+    }
+    return res.status(200).json(recipe);
+  } catch (error) {
+    return res.status(500).json({ error: error });
   }
-  res.status(200).json(recipe);
 }
 
 // const getByMethod = async (req, res) => {
