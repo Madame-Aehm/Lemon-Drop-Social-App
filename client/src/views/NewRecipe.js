@@ -6,6 +6,7 @@ import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
 import { RecipesContext } from '../context/RecipesContext.js'
 import getToken from '../utils/getToken';
 import PageLoader from '../components/PageLoader';
+import RecipeForm from '../components/RecipeForm';
 
 function NewRecipe() {
 
@@ -13,50 +14,50 @@ function NewRecipe() {
   const [loading, setLoading] = useState(false);
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
   const [stepsList, setStepsList] = useState([""]);
-  const [inputInfo, setInputInfo] = useState({})
+  const [inputInfo, setInputInfo] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleFileAttach = (e) => {
-    setSelectedFile(e.target.files[0]);
-  }
+  // const handleFileAttach = (e) => {
+  //   setSelectedFile(e.target.files[0]);
+  // }
 
-  const handleInputChanges = (e) => {
-    setInputInfo({ ...inputInfo, [e.target.name]: e.target.value});
-  }
+  // const handleInputChanges = (e) => {
+  //   setInputInfo({ ...inputInfo, [e.target.name]: e.target.value});
+  // }
 
-  const handleIngredientChange = (e, i) => {
-    const { name, value } = e.target;
-    const list = [...ingredientsList];
-    list[i][name] = value;
-    setIngredientsList(list);
-  }
+  // const handleIngredientChange = (e, i) => {
+  //   const { name, value } = e.target;
+  //   const list = [...ingredientsList];
+  //   list[i][name] = value;
+  //   setIngredientsList(list);
+  // }
 
-  const handleIngredientRemove = (i) => {
-    const list = [...ingredientsList];
-    list.splice(i, 1);
-    setIngredientsList(list);
-  }
+  // const handleIngredientRemove = (i) => {
+  //   const list = [...ingredientsList];
+  //   list.splice(i, 1);
+  //   setIngredientsList(list);
+  // }
 
-  const handleAddIngredient = () => {
-    setIngredientsList([...ingredientsList, { ingredient: "", quantity: 0, measure: "" }]);
-  }
+  // const handleAddIngredient = () => {
+  //   setIngredientsList([...ingredientsList, { ingredient: "", quantity: 0, measure: "" }]);
+  // }
 
-  const handleStepsChange = (e, i) => {
-    const { value } = e.target;
-    const list = [...stepsList];
-    list[i] = value;
-    setStepsList(list);
-  }
+  // const handleStepsChange = (e, i) => {
+  //   const { value } = e.target;
+  //   const list = [...stepsList];
+  //   list[i] = value;
+  //   setStepsList(list);
+  // }
 
-  const handleStepsRemove = (i) => {
-    const list = [...stepsList];
-    list.splice(i, 1);
-    setStepsList(list);
-  }
+  // const handleStepsRemove = (i) => {
+  //   const list = [...stepsList];
+  //   list.splice(i, 1);
+  //   setStepsList(list);
+  // }
 
-  const handleAddStep = () => {
-    setStepsList([...stepsList, ""]);
-  }
+  // const handleAddStep = () => {
+  //   setStepsList([...stepsList, ""]);
+  // }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -94,14 +95,14 @@ function NewRecipe() {
               deleteImage(image);
             }
             setLoading(false);
-            alert("Something went wrong. Please check all fields and try again.")
+            alert("Something went wrong adding recipe to collection: " + result.error)
           }
         } catch (error) {
-          console.log(error);
           if (image.public_id) {
             deleteImage(image);
           }
           setLoading(false);
+          alert("Something went wrong adding recipe to collection: " + error)
         }
       } else {
         setLoading(false);
@@ -127,7 +128,7 @@ function NewRecipe() {
         <q>I've come up with a new recipeeh!</q> - Ignis Scientia
       </div>
 
-      <Form id='new-recipe-form' className='form-container' onSubmit={handleSubmit}>
+      {/* <Form id='new-recipe-form' className='form-container' onSubmit={handleSubmit}>
 
         <Form.Group>
           <Form.Label className='new-rec-label'>Drink Name:</Form.Label>
@@ -199,7 +200,10 @@ function NewRecipe() {
 
         <Button variant='warning' type='submit'>Post New Recipe</Button>
 
-      </Form>
+      </Form> */}
+
+      <RecipeForm setSelectedFile={setSelectedFile} inputInfo={inputInfo} setInputInfo={setInputInfo} ingredientsList={ingredientsList} 
+        setIngredientsList={setIngredientsList} stepsList={stepsList} setStepsList={setStepsList} handleSubmit={handleSubmit} />
 
 
       
