@@ -4,7 +4,7 @@ import PageLoader from '../components/PageLoader';
 import { RecipesContext } from '../context/RecipesContext.js'
 import RecipeForm from '../components/RecipeForm';
 import getToken from '../utils/getToken';
-import { recipeImageUpload } from '../utils/imageMangement';
+import { deleteImage, recipeUpdateImage } from '../utils/imageMangement';
 
 function UpdateRecipe() {
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ function UpdateRecipe() {
     const token = getToken();
     if (token) {
       try {
-        const image = await recipeImageUpload(selectedFile);
+        const image = await recipeUpdateImage(selectedFile, recipe.image);
         if (!image.error) {
           const recipeObject = { 
             ...inputInfo, 
@@ -53,9 +53,13 @@ function UpdateRecipe() {
             const response = await fetch("http://localhost:5000/recipes/update-recipe/" + recipe._id, reqOptions);
             const result = await response.json();
             if (!result.error) {
+              if (selectedFile && recipe.image.public_id) {
+                await deleteImage(recipe.image);
+              }
               const updateList = recipesList.filter((item) => item._id !== result._id);
               setRecipesList([result].concat(updateList));
               setLoading(false);
+              alert("Recipe updated!")
             }
           } catch (error) {
             setLoading(false);

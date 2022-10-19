@@ -126,7 +126,7 @@ function RecipeForm({
 
         <hr/>
 
-        <Button variant='warning' type='submit'>Post New Recipe</Button>
+        <Button variant='warning' type='submit'>Submit</Button>
 
       </Form>
   )

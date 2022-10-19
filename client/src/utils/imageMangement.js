@@ -44,6 +44,16 @@ const recipeImageUpload = async (selectedFile) => {
   }
 }
 
+const recipeUpdateImage = async (selectedFile, original) => {
+  if (!selectedFile) {
+    return original
+  } else {
+    const image = await uploadImage(selectedFile, "http://localhost:5000/recipes/upload-image")
+    return image
+  }
+
+}
+
 const signUpImageUpload = async (selectedFile) => {
   if (!selectedFile) {
     return {
@@ -56,4 +66,4 @@ const signUpImageUpload = async (selectedFile) => {
   }
 }
 
-export { uploadImage, deleteImage, signUpImageUpload, recipeImageUpload }
+export { uploadImage, deleteImage, signUpImageUpload, recipeImageUpload, recipeUpdateImage }
