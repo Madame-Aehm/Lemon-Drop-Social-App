@@ -12,6 +12,7 @@ import { RecipesContextProvider } from './context/RecipesContext';
 import NewRecipe from './views/NewRecipe';
 import ViewRecipe from './views/ViewRecipe';
 import ViewUser from './views/ViewUser';
+import UpdateRecipe from './views/UpdateRecipe';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route path='/sign-up' element={ <SignUp/> } />
               <Route path='/my-profile' element={ <ProtectedRoute> <MyProfile/> </ProtectedRoute> } />
               <Route path='/new-recipe' element={ <ProtectedRoute> <NewRecipe/> </ProtectedRoute> } />
+              <Route path='/update-recipe' element={ <ProtectedRoute> <UpdateRecipe/> </ProtectedRoute> } />
               <Route path='/view-recipe' element={ <ViewRecipe/> } />
               <Route path='/view-user' element={ <ViewUser/> } />
             </Routes>

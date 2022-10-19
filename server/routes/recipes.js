@@ -5,12 +5,12 @@ import jwtAuth from "../utils/jwtAuth.js";
 
 const router = express.Router()
 
-
 router.get("/", getAllRecipes);
 router.get("/:id", getByID);
+
 router.post('/upload-image', multerUploads.single("image"), uploadImage);
 router.post('/new-recipe', jwtAuth, postNewRecipe);
-router.patch('/:id', jwtAuth, updateRecipe);
+router.patch('/update-recipe/:id', jwtAuth, updateRecipe);
 router.post('/add-comment/:id', jwtAuth, addComment);
 router.patch('/delete-comment/:id', jwtAuth, deleteComment);
 router.delete('/delete-recipe', jwtAuth, deleteRecipe);

@@ -8,7 +8,6 @@ import { RecipesContext } from '../context/RecipesContext.js'
 function Home() {
   const { user } = useContext(AuthContext);
   const { recipesList, loading } = useContext(RecipesContext);
-  console.log(user)
 
   return (
     <div className='simple-display'>

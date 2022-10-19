@@ -56,18 +56,18 @@ function RecipeForm({
 
 
   return (
-    <Form id='new-recipe-form' className='form-container' onSubmit={handleSubmit}>
+    <Form id='recipe-form' className='form-container' onSubmit={handleSubmit}>
 
         <Form.Group>
           <Form.Label className='new-rec-label'>Drink Name:</Form.Label>
-          <Form.Control name='name' placeholder="Enter a name for your drink" spellCheck="false" onChange={handleInputChanges} required/>
+          <Form.Control name='name' placeholder="Enter a name for your drink" spellCheck="false" value={inputInfo.name} onChange={handleInputChanges} required/>
         </Form.Group>
 
         <hr/>
 
         <Form.Group >
           <Form.Label className='new-rec-label'>Method:</Form.Label>
-          <Form.Control name='method' placeholder="Enter the preparation method" onChange={handleInputChanges} required/>
+          <Form.Control name='method' placeholder="Enter the preparation method" value={inputInfo.method} onChange={handleInputChanges} required/>
         </Form.Group>
 
         <hr/>

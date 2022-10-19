@@ -293,8 +293,6 @@ function MyAccount({ loading, setLoading }) {
             
           </div>
 
-          
-
           <div style={inputDisplay}>
           <h5 className='account-mini-title'>{user.username}</h5>
           <table>

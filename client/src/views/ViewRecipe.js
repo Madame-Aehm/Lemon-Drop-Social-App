@@ -9,12 +9,20 @@ import '../css/viewRecipe.css'
 import CommentCard from '../components/CommentCard';
 import getToken from '../utils/getToken';
 import { AuthContext } from '../context/AuthContext.js'
+import { RecipesContext } from '../context/RecipesContext.js'
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
+  const { handleDeleteRecipe } = useContext(RecipesContext);
   const location = useLocation();
   const { drinkId } = location.state;
-  const { recipe, comments, setComments, loading, error } = useRecipeFetch(drinkId);
+  const { 
+    recipe, 
+    comments,
+    setComments,
+    loading, 
+    setLoading, 
+    error } = useRecipeFetch(drinkId);
   const [commentText, setCommentText] = useState("");
 
   const handleTextChange = (e) => {
@@ -70,8 +78,12 @@ function ViewRecipe() {
             <h1 className='page-title'>{recipe.name}</h1>
 
             {user && (user._id === recipe.posted_by._id) &&
-            <div style={{marginBottom: "0.5em", textAlign: "right"}}>
-              <Button variant="danger" size="sm">
+            <div style={{marginBottom: "0.5em", display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
+              <Link to={'/update-recipe'} className='edit-link' 
+                state={{ recipe: recipe }}>
+                <Icon.Pencil style={{fontSize: "large"}} title='Edit Recipe' />
+              </Link>
+              <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(recipe)}>
                 <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
               </Button>
             </div>}

@@ -5,7 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 
 const getAllRecipes = async (req, res) => {
   try {
-    const all = await recipeModel.find({}).sort({createdAt: -1});
+    const all = await recipeModel.find({}).sort({ updatedAt: -1 });
     if (all.length === 0) {
       return res.status(204).json({ msg: "Menu empty" });
     } 
@@ -124,6 +124,22 @@ const deleteComment = async(req, res) => {
   }
 }
 
+const updateRecipe = async(req, res) => {
+  const id = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(406).json({ error: "Invalid ID" })
+  }
+  try {
+    const recipe = await recipeModel.findOneAndUpdate({ _id: id }, { ...req.body }, { new: true });
+    if (!recipe) {
+      return res.status(404).json({ error: "ID not found." })
+    }
+    return res.status(200).json(recipe);
+  } catch (error) {
+    return res.status(500).json({ error: error.message })
+  }
+}
+
 // const getByMethod = async (req, res) => {
 //   const requested = await recipeModel
 //     .find({ method: req.params.method })
@@ -145,20 +161,6 @@ const deleteComment = async(req, res) => {
 //     }
 //   }
 // }
-
-const updateRecipe = async(req, res) => {
-  const id = req.params.id;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(500).json({ error: "Invalid ID" })
-  }
-  const recipe = await recipeModel.findOneAndUpdate({ _id: id }, {
-    ...req.body
-  }, { new: true })
-  if (!recipe) {
-    return res.status(400).json({ error: "ID not found." })
-  }
-  res.status(200).json(recipe);
-}
 
 export { getAllRecipes, getByID, postNewRecipe, deleteRecipe, updateRecipe, 
   uploadImage, addComment, deleteComment }

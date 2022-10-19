@@ -3,41 +3,25 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/esm/Button';
 import { RecipesContext } from '../context/RecipesContext.js'
-import { deleteImage } from '../utils/imageMangement.js';
 import { displayNicely, formatImage500px } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { Link } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
 
 function DrinkCard({ drink }) {
-  const { deleteRecipe, recipesList, setRecipesList } = useContext(RecipesContext);
+  const { handleDeleteRecipe } = useContext(RecipesContext);
   const { user } = useContext(AuthContext);
 
   const formattedPicture = formatImage500px(drink.image.url)
-
-  const handleDeleteRecipe = async (drink) => {
-    if (window.confirm("You're sure you want to delete this recipe? This is cannot be undone.")) {
-      try {
-        const deleted = await deleteRecipe(drink._id);
-        console.log(deleted.msg);
-        setRecipesList(recipesList.filter((recipe) => recipe._id !== drink._id));
-        try {
-          const deletedImage = await deleteImage(drink.image);
-          console.log(deletedImage);
-        } catch (error) {
-          console.log("Recipe deleted, but problem deleting image: ", error);
-        }
-      } catch (error) {
-        alert("Something went wrong: " + error);
-      }
-    }
-  }
 
   return (
 
     <Card style={{maxWidth: "30em"}}>
         {user && (user._id === drink.posted_by) && 
-          <Card.Header style={{textAlign: "right"}}>
+          <Card.Header style={{display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
+            <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }}>
+              <Icon.Pencil style={{fontSize: "large"}}/>
+            </Link>
             <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
               <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
             </Button>
@@ -52,7 +36,7 @@ function DrinkCard({ drink }) {
         <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
           <Card.Title style={{color: "#1b8f47", marginBottom: 0}}>{drink.name}</Card.Title>
           <Card.Subtitle className="text-muted">
-            { formatDistanceToNow(new Date(drink.createdAt), { addSuffix: true }) }
+            { formatDistanceToNow(new Date(drink.updatedAt), { addSuffix: true }) }
           </Card.Subtitle>
         </span>
       </Card.Header>

@@ -218,10 +218,9 @@ const verifyAndUpdatePW = async (req, res) => {
       const hashedPassword = await encryptPassword(req.body.new_password);
       user.update({ password: hashedPassword }, (error, result) => {
         if (error) {
-          res.status(500).json({ error: error });
-        } else {
-          res.status(200).json("Password updated");
+          return res.status(500).json({ error: error.message });
         }
+          return res.status(200).json("Password updated");
       })
     } catch (error) {
       res.status(500).json({ error: error });

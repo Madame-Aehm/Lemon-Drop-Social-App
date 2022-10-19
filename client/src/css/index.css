@@ -50,6 +50,19 @@ code {
   padding: 1em;
 }
 
+.edit-link {
+  background-color: #ffc107;
+  color: black;
+  border-radius: 0.2em;
+  padding: 0.1em 0.5em 0.4em
+}
+
+.edit-link:hover {
+  color: black;
+  background-color: #E4A11B;
+}
+
+
 .p-type-1 {
   text-align: center;
   color: #754423;
