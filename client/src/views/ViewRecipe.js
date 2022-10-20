@@ -10,6 +10,7 @@ import CommentCard from '../components/CommentCard';
 import getToken from '../utils/getToken';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
+import SeeUserLink from '../components/SeeUserLink';
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
@@ -21,7 +22,6 @@ function ViewRecipe() {
     comments,
     setComments,
     loading, 
-    setLoading, 
     error } = useRecipeFetch(drinkId);
   const [commentText, setCommentText] = useState("");
 
@@ -90,11 +90,7 @@ function ViewRecipe() {
 
             <img src={recipe.image.url} alt={recipe.name} style={{maxWidth: '500px', minWidth: '200px', width: '90%', alignSelf: "center"}}/>
 
-            <Link className='simple-align' style={{alignSelf: "flex-end", padding: "0.2em 1em", textDecoration: "none"}}
-              to={'/view-user'} state={{userId: recipe.posted_by}}>
-              <h5 className='account-mini-title'>{recipe.posted_by.username}</h5>
-              <img src={recipe.posted_by.profile_picture.url} alt="Recipe Author" className='thumbnail-image'/>
-            </Link>
+            <SeeUserLink user={ recipe.posted_by }  />
 
             <div className='simple-align'>
               <h4 className='sub-title'>Method:</h4>

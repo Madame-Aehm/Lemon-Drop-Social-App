@@ -5,7 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 
 const getAllRecipes = async (req, res) => {
   try {
-    const all = await recipeModel.find({}).sort({ updatedAt: -1 });
+    const all = await recipeModel.find({}).sort({ createdAt: -1 });
     if (all.length === 0) {
       return res.status(204).json({ msg: "Menu empty" });
     } 

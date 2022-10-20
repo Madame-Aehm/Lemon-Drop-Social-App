@@ -5,6 +5,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { AuthContext } from '../context/AuthContext.js';
 import Button from 'react-bootstrap/esm/Button';
 import * as Icon from 'react-bootstrap-icons';
+import SeeUserLink from './SeeUserLink';
 
 function CommentCard({ comment, comments, setComments, recipeID }) {
   const { user } = useContext(AuthContext);
@@ -33,15 +34,14 @@ function CommentCard({ comment, comments, setComments, recipeID }) {
     }
   }
 
+  console.log(comment);
+
   return (
 
     <Card style={{ width: '100%' }} className='mb-3'>
     <Card.Body>
       <Card.Title style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-        <div className='simple-align'>
-          <img src={comment.posted_by.profile_picture.url} alt={comment.posted_by.username} className='thumbnail-image' />
-          {comment.posted_by.username}
-        </div>
+        <SeeUserLink user={ comment.posted_by } />
         {user && <>
           {user._id === comment.posted_by._id && 
             <Button variant="danger" size="sm" onClick={deleteComment}>

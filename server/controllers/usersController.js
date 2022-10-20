@@ -24,12 +24,12 @@ const getUserByID = async (req, res) => {
     return res.status(406).json({ error: "Invalid ID" })
   }
   try {
-    const requested = await userModel.find({ _id: id })
+    const requested = await userModel.findOne({ _id: id })
       .populate({ path: "posted_recipes" });
     if (!requested) {
       return res.status(404).json({ error: "No user with ID " + id });
     }
-    return res.status(200).json(requested);
+    return res.status(200).json({ user: requested });
   } catch(error) {
     res.status(500).json({ error: error.message })
   } 

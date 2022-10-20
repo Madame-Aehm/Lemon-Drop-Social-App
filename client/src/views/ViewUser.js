@@ -1,8 +1,14 @@
 import React from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { useLocation } from 'react-router-dom';
+import useSingleUserFetch from '../hooks/useSingleUserFetch';
 
 function ViewUser() {
+  const location = useLocation();
+  const { userId } = location.state;
+  const { userToView } = useSingleUserFetch(userId);
+  console.log(userToView);
 
   return (
     <div className='simple-display no-padding'>
@@ -15,7 +21,7 @@ function ViewUser() {
           justify>
 
           <Tab eventKey="account" title="Account">
-            user account info
+            
           </Tab>
 
           <Tab eventKey="recipes" title="Recipes" className='test'>

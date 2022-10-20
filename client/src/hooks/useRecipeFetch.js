@@ -5,9 +5,6 @@ function useRecipeFetch(id) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);
-  const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
-  const [stepsList, setStepsList] = useState([""]);
-  const [inputInfo, setInputInfo] = useState({});
 
   const getRecipe = async() => {
     try {
@@ -16,9 +13,6 @@ function useRecipeFetch(id) {
       console.log(result);
       setRecipe(result);
       setComments(result.comments);
-      setIngredientsList(result.ingredients);
-      setStepsList(result.instructions);
-      setInputInfo({ name: result.name, method: result.method })
       setLoading(false);
     } catch(error) {
       setError(error)
@@ -31,19 +25,7 @@ function useRecipeFetch(id) {
       getRecipe();
   }, [id]);
 
-  return ({ 
-    recipe, 
-    ingredientsList, 
-    setIngredientsList, 
-    stepsList, 
-    setStepsList, 
-    inputInfo, 
-    setInputInfo, 
-    comments, 
-    setComments, 
-    loading, 
-    setLoading, 
-    error })
+  return ({ recipe, comments, setComments, loading, setLoading, error })
 }
 
 export default useRecipeFetch
