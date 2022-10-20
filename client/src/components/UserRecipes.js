@@ -1,32 +1,32 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Button from 'react-bootstrap/esm/Button.js';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 import DrinkCard from './DrinkCard.js';
+import { AuthContext } from '../context/AuthContext.js'
 
 
-function MyRecipes() {
-  const { recipesList } = useContext(RecipesContext);
+function UserRecipes({ userToView }) {
   const { user } = useContext(AuthContext);
-  const [myList, setMyList] = useState([]);
+  const { recipesList } = useContext(RecipesContext);
+  const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    setMyList(recipesList.filter((recipe) => recipe.posted_by === user._id));
+    setUserList(recipesList.filter((recipe) => recipe.posted_by === userToView._id));
   }, [recipesList]);
   
   return (
     <>
-      {myList && 
+      {userList && 
         <div className='simple-display'>
-          {myList.length === 0 && <p>It looks like you haven't posted any recipes yet. Give it a shot!</p>}
-          <Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link>
-          {myList.length > 0 && 
+          {userList.length === 0 && <p>It looks like there aren't any recipes yet.</p>}
+          {user && (user._id === userToView._id) && <Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link>}
+          {userList.length > 0 && 
             <>
               <div className='recipe-search'>
                 <div>
-                  {myList.map((drink) => {
-                    return <DrinkCard key={drink._id} drink={drink} myList={myList} setMyList={setMyList} />
+                  {userList.map((drink) => {
+                    return <DrinkCard key={drink._id} drink={drink} />
                   })}
                 </div>
                 <div className='search-bar'>
@@ -41,4 +41,4 @@ function MyRecipes() {
   )
 }
 
-export default MyRecipes
+export default UserRecipes

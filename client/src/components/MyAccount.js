@@ -1,20 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/esm/Button';
 import getToken from '../utils/getToken'
 import { AuthContext } from '../context/AuthContext.js'
-import { emailValidation, formatImage500px, passwordValidation } from '../utils/JSFunctions';
+import { emailValidation, passwordValidation } from '../utils/JSFunctions';
 import { deleteImage, uploadImage } from '../utils/imageMangement';
 import PasswordInput from './PasswordInput';
 import PageLoader from './PageLoader';
 import * as Icon from 'react-bootstrap-icons';
+import UserPlainView from './UserPlainView';
 
 function MyAccount({ loading, setLoading }) {
   const { user, setUser } = useContext(AuthContext);
-  const formattedPicture = formatImage500px(user.profile_picture.url)
   const [editMode, setEditMode] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [inputs, setInputs] = useState("none");
@@ -239,15 +238,8 @@ function MyAccount({ loading, setLoading }) {
     alignItems: "center",
   }
 
-  const currentDisplay = {
+  const plainDisplay = {
     display: hideOnEdit,
-    width: "500px",
-    maxWidth: "90%",
-    flexDirection: "column", 
-    gap: "0.5em", 
-    border: "solid 1px #1b8f47", 
-    padding: "1em", 
-    borderRadius: "0.5em"
   }
 
   return (
@@ -264,34 +256,7 @@ function MyAccount({ loading, setLoading }) {
             </Button>
           </div>
 
-          <img className='profile-img' src={formattedPicture} alt={`${user.username}'s profile`}/>
-
-          <div style={currentDisplay}>
-            <h5 className='account-mini-title'>{user.username}</h5>
-
-            <div className='simple-align'>
-              <h6 className='account-mini-title'>Email: </h6>
-              <h6 className='sub-title'>{user.email}</h6>
-            </div>
-
-            <div className='simple-align'>
-              <h6 className='account-mini-title'>User for: </h6>
-              <h6 className='sub-title'>{formatDistanceToNow(new Date(user.createdAt))}</h6>
-            </div>
-
-            <div className='simple-align'>
-              <h6 className='account-mini-title'>Recipes posted: </h6>
-              <h6 className='sub-title'>{user.posted_recipes.length}</h6>
-            </div>
-
-            {user.description !== "" && 
-              <div className='simple-align'>
-                <h6 className='account-mini-title'>Description: </h6>
-                <p>{user.description}</p>
-              </div>
-            }
-            
-          </div>
+          <UserPlainView userToView={user} display={plainDisplay} />
 
           <div style={inputDisplay}>
           <h5 className='account-mini-title'>{user.username}</h5>

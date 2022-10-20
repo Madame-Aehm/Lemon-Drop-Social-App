@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function useSingleUserFetch(id) {
   const [userToView, setUserToView] = useState({});
@@ -7,7 +7,7 @@ function useSingleUserFetch(id) {
     try{
       const response = await fetch("http://localhost:5000/users/user/" + id);
       const result = await response.json();
-      setUserToView(result.user);
+      setUserToView(result);
     } catch (error) {
       alert("Problem retrieving user account: " + error)
     }
@@ -15,6 +15,7 @@ function useSingleUserFetch(id) {
 
   useEffect(() => {
     fetchById();
+    console.log(userToView)
   }, [id])
   
 

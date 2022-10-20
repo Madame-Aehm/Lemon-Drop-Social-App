@@ -23,7 +23,8 @@ const userSchema = new Schema({
     type: Object,
     required: true
   },
-  posted_recipes: [{ type: Schema.Types.ObjectId, ref: "cocktail" }]
+  posted_recipes: [{ type: Schema.Types.ObjectId, ref: "cocktail" }],
+  favourite_recipes: [{ type: Schema.Types.ObjectId, ref: "cocktail" }]
 }, { timestamps: true })
 
 const userModel = mongoose.model("user", userSchema);

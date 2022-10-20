@@ -82,3 +82,13 @@ code {
   height: 50px; 
   border-radius: 50%;
 }
+
+.plain-user-info {
+  width: 500px;
+  max-width: 90%;
+  flex-direction: column; 
+  gap: 0.5em;
+  border: solid 1px #1b8f47;
+  padding: 1em;
+  border-radius: 0.5em;
+}

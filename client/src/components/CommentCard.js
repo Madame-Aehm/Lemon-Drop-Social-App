@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/esm/Button';
 import * as Icon from 'react-bootstrap-icons';
 import SeeUserLink from './SeeUserLink';
 
-function CommentCard({ comment, comments, setComments, recipeID }) {
+function CommentCard({ comment, comments, setComments, recipe }) {
   const { user } = useContext(AuthContext);
 
   const deleteComment = async() => {
@@ -17,13 +17,13 @@ function CommentCard({ comment, comments, setComments, recipeID }) {
         const myHeaders = new Headers();
         myHeaders.append("Authorization", "Bearer " + token);
         myHeaders.append("Content-Type", "application/json");
-        const body = JSON.stringify({ _id: comment._id });
+        const body = JSON.stringify({ comment: comment, recipePoster: recipe.posted_by });
         const reqOptions = {
           method: "PATCH",
           headers: myHeaders,
           body: body
         }
-        const response = await fetch("http://localhost:5000/recipes/delete-comment/" + recipeID, reqOptions);
+        const response = await fetch("http://localhost:5000/recipes/delete-comment/" + recipe._id, reqOptions);
         const result = await response.json();
         console.log(result);
         setComments(comments.filter((item) => item._id !== comment._id));
@@ -33,8 +33,6 @@ function CommentCard({ comment, comments, setComments, recipeID }) {
       }
     }
   }
-
-  console.log(comment);
 
   return (
 

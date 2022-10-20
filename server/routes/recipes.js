@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllRecipes, getByID, postNewRecipe, deleteRecipe, updateRecipe, uploadImage, addComment, deleteComment } from "../controllers/recipesController.js";
+import { getAllRecipes, getByID, uploadImage, postNewRecipe, updateRecipe, deleteRecipe, addComment, deleteComment, addFavourite, deleteFavourite } from "../controllers/recipesController.js";
 import { multerUploads } from "../middlewares/multer.js";
 import jwtAuth from "../utils/jwtAuth.js";
 
@@ -11,9 +11,16 @@ router.get("/:id", getByID);
 router.post('/upload-image', multerUploads.single("image"), uploadImage);
 router.post('/new-recipe', jwtAuth, postNewRecipe);
 router.patch('/update-recipe/:id', jwtAuth, updateRecipe);
+router.delete('/delete-recipe', jwtAuth, deleteRecipe);
+
 router.post('/add-comment/:id', jwtAuth, addComment);
 router.patch('/delete-comment/:id', jwtAuth, deleteComment);
-router.delete('/delete-recipe', jwtAuth, deleteRecipe);
+
+router.post('/add-favourite/:id', jwtAuth, addFavourite);
+router.patch('/delete-favourite/:id', jwtAuth, deleteFavourite);
+
+
+
 
 // router.get("method/:method", getByMethod);
 

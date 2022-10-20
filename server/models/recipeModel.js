@@ -18,6 +18,7 @@ const recipeSchema = new Schema({
   }],
   instructions: [{ type: String, required: true }],
   posted_by: { type: Schema.Types.ObjectId, ref: "user", required: true },
+  favourited_by: [{ type: Schema.Types.ObjectId }],
   comments: [commentSchema]
 }, { timestamps: true });
 

@@ -11,18 +11,14 @@ import getToken from '../utils/getToken';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 import SeeUserLink from '../components/SeeUserLink';
+import FavouriteButton from '../components/FavouriteButton';
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
   const { handleDeleteRecipe } = useContext(RecipesContext);
   const location = useLocation();
   const { drinkId } = location.state;
-  const { 
-    recipe, 
-    comments,
-    setComments,
-    loading, 
-    error } = useRecipeFetch(drinkId);
+  const { recipe, comments, setComments, loading, error } = useRecipeFetch(drinkId);
   const [commentText, setCommentText] = useState("");
 
   const handleTextChange = (e) => {
@@ -74,6 +70,7 @@ function ViewRecipe() {
       {(!loading && !error && recipe) && 
         <>
           <div className='recipe-div'>
+            <FavouriteButton recipe={recipe} />
 
             <h1 className='page-title'>{recipe.name}</h1>
 
@@ -114,7 +111,7 @@ function ViewRecipe() {
             <h4 className='sub-title'>Comments: </h4>
             {comments.length === 0 && <p style={{textAlign: "center"}}>No comments yet :( </p>}
             {comments.length > 0 && comments.map((comment) => {
-              return <CommentCard key={comment._id} comment={comment} comments={comments} setComments={setComments} recipeID={recipe._id}/>
+              return <CommentCard key={comment._id} comment={comment} comments={comments} setComments={setComments} recipe={recipe} />
             })}
 
             <hr/>

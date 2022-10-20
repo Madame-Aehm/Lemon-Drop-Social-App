@@ -35,4 +35,14 @@ function formatImage500px (imageURL) {
   return result
 }
 
-export { passwordValidation, emailValidation, displayNicely, formatImage500px }
+function checkIf (ID, array) {
+  let result = false;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i].toString() === ID) {
+      result = true;
+    }
+  }
+  return result;
+}
+
+export { passwordValidation, emailValidation, displayNicely, checkIf, formatImage500px }

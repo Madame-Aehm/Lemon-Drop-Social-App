@@ -24,12 +24,20 @@ const getUserByID = async (req, res) => {
     return res.status(406).json({ error: "Invalid ID" })
   }
   try {
-    const requested = await userModel.findOne({ _id: id })
+    const user = await userModel.findOne({ _id: id })
       .populate({ path: "posted_recipes" });
-    if (!requested) {
+    if (!user) {
       return res.status(404).json({ error: "No user with ID " + id });
     }
-    return res.status(200).json({ user: requested });
+    res.status(202).json({
+      createdAt: user.createdAt,
+      posted_recipes: user.posted_recipes,
+      profile_picture: user.profile_picture,
+      username: user.username,
+      description: user.description,
+      favourite_recipes: user.favourite_recipes,
+      _id: user._id
+    });
   } catch(error) {
     res.status(500).json({ error: error.message })
   } 
@@ -89,7 +97,6 @@ const newUser = async(req, res) => {
         return res.status(201).json({
           createdAt: user.createdAt,
           email: user.email,
-          posted_recipes: user.posted_recipes,
           profile_picture: user.profile_picture,
           username: user.username,
           description: user.description,
@@ -149,6 +156,7 @@ const updateUser = async(req, res) => {
     profile_picture: user.profile_picture,
     username: user.username,
     description: user.description,
+    favourite_recipes: user.favourite_recipes,
     _id: user._id
   });
 }
@@ -178,6 +186,7 @@ const login = async(req, res) => {
           profile_picture: existingUser.profile_picture,
           username: existingUser.username,
           description: existingUser.description,
+          favourite_recipes: existingUser.favourite_recipes,
           _id: existingUser._id
         },
         token: token
@@ -196,6 +205,7 @@ const getMyProfile = async (req, res) => {
     profile_picture: req.user.profile_picture,
     username: req.user.username,
     description: req.user.description,
+    favourite_recipes: req.user.favourite_recipes,
     _id: req.user._id
   });
 }

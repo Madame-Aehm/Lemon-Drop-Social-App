@@ -4,7 +4,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import MyAccount from '../components/MyAccount';
 import { AuthContext } from '../context/AuthContext.js'
-import MyRecipes from '../components/MyRecipes';
+import UserRecipes from '../components/UserRecipes';
 
 function MyProfile() {
   const { user } = useContext(AuthContext);
@@ -21,11 +21,11 @@ function MyProfile() {
             justify>
 
             <Tab eventKey="account" title="Account">
-              <MyAccount user={user} loading={loading} setLoading={setLoading} />
+              <MyAccount loading={loading} setLoading={setLoading} />
             </Tab>
 
             <Tab eventKey="recipes" title="Recipes" className='test'>
-              <MyRecipes />
+              <UserRecipes userToView={user} />
             </Tab>
 
             <Tab eventKey="favourites" title="Favourites">
