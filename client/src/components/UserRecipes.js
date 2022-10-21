@@ -20,28 +20,24 @@ function UserRecipes({ userToView, filter }) {
   }, [recipesList]);
   
   return (
-    <>
-      {userList && 
-        <div className='simple-display'>
-          {userList.length === 0 && <p>It looks like there aren't any recipes yet.</p>}
-          {user && (user._id === userToView._id) && <Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link>}
-          {userList.length > 0 && 
-            <>
-              <div className='recipe-search'>
-                <div>
-                  {userList.map((drink) => {
-                    return <DrinkCard key={drink._id} drink={drink} />
-                  })}
-                </div>
-                <div className='search-bar'>
-                  <Button>Search</Button>
-                </div>
-              </div>
-            </>
-          }
-        </div>
+    <div className='simple-display'>
+      {userList.length === 0 && <p>It looks like there aren't any recipes yet.</p>}
+      {user && (user._id === userToView._id) && <Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link>}
+      {userList.length > 0 && 
+        <>
+          <div className='recipe-search'>
+            <div>
+              {userList.map((drink) => {
+                return <DrinkCard key={drink._id} drink={drink} />
+              })}
+            </div>
+            <div className='search-bar'>
+              <Button>Search</Button>
+            </div>
+          </div>
+        </>
       }
-    </>
+    </div>
   )
 }
 

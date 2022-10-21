@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import * as Icon from 'react-bootstrap-icons';
@@ -15,6 +15,7 @@ import FavouriteButton from '../components/FavouriteButton';
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
+  const redirect = useNavigate();
   const { handleDeleteRecipe } = useContext(RecipesContext);
   const location = useLocation();
   const { drinkId } = location.state;
@@ -25,7 +26,7 @@ function ViewRecipe() {
     setCommentText(e.target.value);
   }
 
-  const handleSubmit = async(e) => {
+  const handleSubmitComment = async(e) => {
     e.preventDefault();
     const token = getToken();
     if (token) {
@@ -63,15 +64,21 @@ function ViewRecipe() {
     }
   }
 
+  const deleteOnClick = async() => {
+    await handleDeleteRecipe(recipe);
+    alert(recipe.name + " has been deleted");
+    redirect("/home", {replace: true});
+  }
+
   return (
     <div className='simple-display'>
       {loading && <PageLoader/>}
-      {error && <p>error</p>}
+      {error && <p>{error}</p>}
       {!recipe && <p>There nothing here?</p>}
       {(!loading && !error && recipe) && 
         <>
           <div className='recipe-div'>
-            <FavouriteButton recipe={recipe} />
+            {(user && user._id !== recipe.posted_by._id) && <FavouriteButton recipe={recipe} />}
 
             <h1 className='page-title'>{recipe.name}</h1>
 
@@ -81,7 +88,7 @@ function ViewRecipe() {
                 state={{ recipe: recipe }}>
                 <Icon.Pencil style={{fontSize: "large"}} title='Edit Recipe' />
               </Link>
-              <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(recipe)}>
+              <Button variant="danger" size="sm" onClick={deleteOnClick}>
                 <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
               </Button>
             </div>}
@@ -118,7 +125,7 @@ function ViewRecipe() {
             <hr/>
 
             {user && 
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmitComment}>
                 <Form.Label className='sub-title'>Leave a comment: </Form.Label>
                 <Form.Control className='mb-3' as="textarea" rows={3} value={commentText} onChange={handleTextChange}/>
                 <Button variant='success' type='submit'>Post comment</Button>

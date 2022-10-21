@@ -1,7 +1,21 @@
 import { useEffect, useState } from 'react'
 
 function useRecipeFetch(id) {
-  const [recipe, setRecipe] = useState(null);
+  const [recipe, setRecipe] = useState({
+    comments: [],
+    createdAt: "",
+    image: {
+      url: "",
+      public_id: null
+    },
+    ingredients: [],
+    instructions: [],
+    method: "",
+    name: "",
+    posted_by: {_id: ""},
+    updated_at: "",
+    _id: ""
+  });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);

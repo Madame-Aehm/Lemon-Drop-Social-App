@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
 import getToken from '../utils/getToken';
 import { deleteImage } from '../utils/imageMangement';
+import { resetSubArray } from '../utils/JSFunctions.js';
 
 export const RecipesContext = createContext();
 
@@ -44,9 +45,8 @@ export const RecipesContextProvider = (props) => {
       try {
         const deleted = await deleteRecipe(drink._id);
         console.log(deleted.msg);
-        setRecipesList(recipesList.filter((recipe) => recipe._id !== drink._id));
-        const postedIndex = user.posted_recipes.findIndex( item => item === drink._id );
-        user.posted_recipes.splice(postedIndex, 1);
+        setRecipesList(recipesList.filter(e => e._id !== drink._id));
+        resetSubArray(user.posted_recipes, drink._id);
         setUser(user);
         if (drink.image.public_id) {
           try {
@@ -61,16 +61,9 @@ export const RecipesContextProvider = (props) => {
     }
   }
 
-  // const removeFromFavourites = async (drink) => {
-  //   drink.favourited_by.forEach(e => {
-      
-  //   });
-  // }
-
   useEffect(() => {
     fetchAllRecipes();
   }, [])
-
 
   return (
     <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe, handleDeleteRecipe, loading }}>

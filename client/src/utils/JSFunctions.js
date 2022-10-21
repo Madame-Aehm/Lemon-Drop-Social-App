@@ -45,4 +45,10 @@ function checkIf (ID, array) {
   return result;
 }
 
-export { passwordValidation, emailValidation, displayNicely, checkIf, formatImage500px }
+function resetSubArray(array, comparisonId) {
+  const index = array.findIndex( e => e === comparisonId );
+  array.splice(index, 1);
+  return array
+}
+
+export { passwordValidation, emailValidation, displayNicely, checkIf, resetSubArray, formatImage500px }

@@ -3,7 +3,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 import { addFavourite, removeFavourite } from '../utils/favouritesManagement.js';
-import { checkIf } from '../utils/JSFunctions.js';
+import { checkIf, resetSubArray } from '../utils/JSFunctions.js';
 
 function FavouriteButton({ recipe }) {
 
@@ -31,14 +31,12 @@ function FavouriteButton({ recipe }) {
   const handleRemoveFav = async() => {
     if (alreadyFavourite) {
       try {
-        removeFavourite(recipe);
+        await removeFavourite(recipe);
         setAlreadyFavourite(false);
         const thisRecipeIndex = recipesList.findIndex( item => item._id === recipe._id);
-        const userFavIndex = recipesList[thisRecipeIndex].favourited_by.findIndex( item => item === user._id );
-        recipesList[thisRecipeIndex].favourited_by.splice(userFavIndex, 1);
+        resetSubArray(recipesList[thisRecipeIndex].favourited_by, user._id);
         setRecipesList(recipesList);
-        const favouritedIndex = user.favourite_recipes.findIndex( item => item === recipe._id );
-        user.favourite_recipes.splice(favouritedIndex, 1);
+        resetSubArray(user.favourite_recipes, recipe._id);
         setUser(user);
       } catch (error) {
         alert("Problem deleting favourite: " + error);
