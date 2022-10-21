@@ -7,8 +7,7 @@ function UserPlainView({ userToView, display }) {
 
   return (
 
-    <div className='simple-display'>
-
+    <>
       <img className='profile-img' src={formattedPicture} alt={`${userToView.username}'s profile`}/>
 
       <div className='plain-user-info' style={ display }>
@@ -39,7 +38,7 @@ function UserPlainView({ userToView, display }) {
           </div>
         }
       </div>
-    </div>
+    </>
   )
 }
 

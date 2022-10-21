@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 function useRecipeFetch(id) {
-  const [recipe, setRecipe] = useState({});
+  const [recipe, setRecipe] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);

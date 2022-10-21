@@ -1,40 +1,27 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import * as Icon from 'react-bootstrap-icons';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
-import getToken from '../utils/getToken.js';
+import { addFavourite, removeFavourite } from '../utils/favouritesManagement.js';
 import { checkIf } from '../utils/JSFunctions.js';
 
 function FavouriteButton({ recipe }) {
 
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const { recipesList, setRecipesList } = useContext(RecipesContext);
-  const poster = checkIf(recipe._id, user.posted_recipes);
-  const [alreadyFavourite, setAlreadyFavourite] = useState(checkIf(recipe._id, user.favourite_recipes));
+  const [poster, setPoster] = useState(false);
+  const [alreadyFavourite, setAlreadyFavourite] = useState(false);
 
   const handleAddFav = async() => {
-    const token = getToken();
-    if ((!poster || !alreadyFavourite) && token) {
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", "Bearer " + token);
-      const reqOptions = {
-        method: "POST",
-        headers: myHeaders,
-      }
+    if (!poster && !alreadyFavourite) {
       try {
-        const response = await fetch("http://localhost:5000/recipes/add-favourite/" + recipe._id, reqOptions);
-        const result= await response.json();
-        console.log(result);
+        addFavourite(recipe);
         setAlreadyFavourite(true);
-
-        const thisRecipe = recipesList.filter((item) => item._id === recipe._id);
         const thisRecipeIndex = recipesList.findIndex( item => item._id === recipe._id);
-        const updated = thisRecipe[0].favourited_by.push(user._id);
-
-        if (thisRecipeIndex !== -1) {
-          const newArray = recipesList.splice(thisRecipeIndex, 1, updated);
-          console.log(newArray);
-          setRecipesList(newArray); //still trying to replace updated with outdated at array position.....
-        }
+        recipesList[thisRecipeIndex].favourited_by.push(user._id);
+        setRecipesList(recipesList); 
+        user.favourite_recipes.push(recipe._id);
+        setUser(user);
       } catch(error) {
         alert("Problem adding favourite: " + error)
       }
@@ -42,33 +29,47 @@ function FavouriteButton({ recipe }) {
   }
 
   const handleRemoveFav = async() => {
-    const token = getToken();
-    if (alreadyFavourite && token) {
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", "Bearer " + token);
-      const reqOptions = {
-        method: "PATCH",
-        headers: myHeaders
-      }
+    if (alreadyFavourite) {
       try {
-        const response = await fetch("http://localhost:5000/recipes/delete-favourite/" + recipe._id, reqOptions);
-        const result = await response.json();
-        console.log(result);
+        removeFavourite(recipe);
         setAlreadyFavourite(false);
+        const thisRecipeIndex = recipesList.findIndex( item => item._id === recipe._id);
+        const userFavIndex = recipesList[thisRecipeIndex].favourited_by.findIndex( item => item === user._id );
+        recipesList[thisRecipeIndex].favourited_by.splice(userFavIndex, 1);
+        setRecipesList(recipesList);
+        const favouritedIndex = user.favourite_recipes.findIndex( item => item === recipe._id );
+        user.favourite_recipes.splice(favouritedIndex, 1);
+        setUser(user);
       } catch (error) {
         alert("Problem deleting favourite: " + error);
       }
     } 
   }
-  
+
+  useEffect(() => {
+    if (user) {
+      setPoster(checkIf(recipe._id, user.posted_recipes));
+      setAlreadyFavourite(checkIf(recipe._id, user.favourite_recipes));
+    }
+  }, [])
+
+  const buttonStyle = {
+    backgroundColor: "transparent",
+    border: "none"
+  }
 
   return (
     <>
       {(user && !poster) && 
         <>
-        {console.log(recipesList)}
-          {alreadyFavourite && <button onClick={handleRemoveFav}>Delete Favourite</button>}
-          {!alreadyFavourite && <button onClick={handleAddFav}>Add Favourite</button>}
+          {alreadyFavourite && 
+            <button style={buttonStyle} onClick={handleRemoveFav}>
+              <Icon.HeartFill style={{fontSize: "large"}}/>
+            </button>}
+          {!alreadyFavourite && 
+            <button style={buttonStyle} onClick={handleAddFav}>
+              <Icon.Heart style={{fontSize: "large"}}/>
+            </button>}
         </>
       }
     </>

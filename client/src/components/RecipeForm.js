@@ -54,7 +54,6 @@ function RecipeForm({
     setStepsList([...stepsList, ""]);
   }
 
-
   return (
     <Form id='recipe-form' className='form-container' onSubmit={handleSubmit}>
 

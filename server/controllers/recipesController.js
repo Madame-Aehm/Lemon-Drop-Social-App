@@ -76,13 +76,17 @@ const deleteRecipe = async(req, res) => {
     if (!recipe) {
       return res.status(404).json({ error: "No recipe with ID " + recipeID})
     }
-    const user = await userModel.findOneAndUpdate({ _id: recipe.posted_by }, {
+    const user = await userModel.updateOne({ _id: recipe.posted_by }, {
       $pull: { posted_recipes: recipe._id }
     })
     if (!user) {
       return res.status(206).json({ error: "Recipe deleted, but could not connect with user" });
     }
-    // await userModel.updateMany({ favourite_recipes: recipe._id }, )
+    recipe.favourited_by.forEach(async(e) => {
+      await userModel.updateOne({ _id: e }, {
+        $pull: { favourite_recipes: recipe._id }
+      })
+    });
     return res.status(200).json({ msg: "Recipe deleted" });
   } catch (error) {
     res.status(500).json({ error: error })
@@ -113,7 +117,7 @@ const deleteComment = async(req, res) => {
   if (!mongoose.Types.ObjectId.isValid(recipeID)) {
     return res.status(406).json({ error: "Invalid ID" })
   }
-  //attempted to check deleting user is either poster of recipe or comment.
+  //attempted to check user is either poster of recipe or comment.
   // if (
   //   (req.body.commentPoster._id.toString() !== req.user._id.toString()) || 
   //   (req.body.recipePoster._id.toString() !== req.user._id.toString())) {
@@ -218,6 +222,10 @@ const deleteFavourite = async(req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
+}
+
+const deleteFavsOnRecipeDelete = async() => {
+
 }
 
 // const getByMethod = async (req, res) => {

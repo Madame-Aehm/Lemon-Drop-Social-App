@@ -41,7 +41,7 @@ function CommentCard({ comment, comments, setComments, recipe }) {
       <Card.Title style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <SeeUserLink user={ comment.posted_by } />
         {user && <>
-          {user._id === comment.posted_by._id && 
+          {(user._id === comment.posted_by._id || user._id === recipe.posted_by._id) && 
             <Button variant="danger" size="sm" onClick={deleteComment}>
               <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
             </Button>}

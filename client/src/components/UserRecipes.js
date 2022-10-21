@@ -6,13 +6,17 @@ import DrinkCard from './DrinkCard.js';
 import { AuthContext } from '../context/AuthContext.js'
 
 
-function UserRecipes({ userToView }) {
+function UserRecipes({ userToView, filter }) {
   const { user } = useContext(AuthContext);
   const { recipesList } = useContext(RecipesContext);
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    setUserList(recipesList.filter((recipe) => recipe.posted_by === userToView._id));
+    if (filter === "posted") {
+      setUserList(recipesList.filter((recipe) => recipe.posted_by === userToView._id));
+    } else if (filter === "favourites") {
+      setUserList(recipesList.filter((recipe) => recipe.favourited_by.includes(userToView._id)));
+    }
   }, [recipesList]);
   
   return (

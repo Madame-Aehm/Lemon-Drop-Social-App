@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import '../css/newRecipe.css';
 import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
 import { RecipesContext } from '../context/RecipesContext.js'
+import { AuthContext } from '../context/AuthContext.js';
 import getToken from '../utils/getToken';
 import PageLoader from '../components/PageLoader';
 import RecipeForm from '../components/RecipeForm';
@@ -9,6 +10,7 @@ import RecipeForm from '../components/RecipeForm';
 function NewRecipe() {
 
   const { recipesList, setRecipesList } = useContext(RecipesContext);
+  const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
   const [stepsList, setStepsList] = useState([""]);
@@ -44,6 +46,8 @@ function NewRecipe() {
             console.log(result);
             resetForm();
             setRecipesList([result].concat(recipesList));
+            user.posted_recipes.push(result._id);
+            setUser(user);
             setLoading(false);
             alert("Recipe added to the collection!")
           } else {

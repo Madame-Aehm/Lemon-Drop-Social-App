@@ -7,6 +7,7 @@ import { displayNicely, formatImage500px } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { Link } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
+import FavouriteButton from './FavouriteButton.js';
 
 function DrinkCard({ drink }) {
   const { handleDeleteRecipe } = useContext(RecipesContext);
@@ -16,17 +17,23 @@ function DrinkCard({ drink }) {
 
   return (
 
-    <Card style={{maxWidth: "30em"}}>
-        {user && (user._id === drink.posted_by) && 
+    <Card style={{maxWidth: "30em"}}> 
           <Card.Header style={{display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
-            <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }}>
-              <Icon.Pencil style={{fontSize: "large"}}/>
-            </Link>
-            <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
-              <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
-            </Button>
+            {user && (user._id === drink.posted_by) &&
+              <>
+                <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }}>
+                  <Icon.Pencil style={{fontSize: "large"}}/>
+                </Link>
+                <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
+                  <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
+                </Button>
+                <FavouriteButton recipe={drink} />
+              </>
+            }
+            {user && (user._id !== drink.posted_by) &&
+              <FavouriteButton recipe={drink} />
+            }
           </Card.Header>
-        }
       
       <Link to={'/view-recipe'} state={{ drinkId: drink._id }}>
         <Card.Img variant="top" src={formattedPicture} />

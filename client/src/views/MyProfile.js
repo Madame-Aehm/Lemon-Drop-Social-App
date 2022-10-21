@@ -25,11 +25,11 @@ function MyProfile() {
             </Tab>
 
             <Tab eventKey="recipes" title="Recipes" className='test'>
-              <UserRecipes userToView={user} />
+              <UserRecipes userToView={user} filter={"posted"} />
             </Tab>
 
             <Tab eventKey="favourites" title="Favourites">
-              <p>testing3</p>
+              <UserRecipes userToView={user} filter={"favourites"} />
             </Tab>
           </Tabs>
         </div>

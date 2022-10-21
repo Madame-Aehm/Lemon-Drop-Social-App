@@ -67,6 +67,7 @@ function ViewRecipe() {
     <div className='simple-display'>
       {loading && <PageLoader/>}
       {error && <p>error</p>}
+      {!recipe && <p>There nothing here?</p>}
       {(!loading && !error && recipe) && 
         <>
           <div className='recipe-div'>

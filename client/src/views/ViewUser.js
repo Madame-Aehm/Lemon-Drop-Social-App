@@ -31,15 +31,17 @@ function ViewUser() {
 
               <Tab eventKey="account" title="Account">
                 <h4 className='sub-title' style={{textAlign: "center"}}>Account Details</h4>
-                <UserPlainView userToView={userToView} display={plainDisplay} />
+                <div className='simple-display'>
+                  <UserPlainView userToView={userToView} display={plainDisplay} />
+                </div>
               </Tab>
 
               <Tab eventKey="recipes" title="Recipes" className='test'>
-                <UserRecipes userToView={userToView} />
+                <UserRecipes userToView={userToView} filter={"posted"} />
               </Tab>
 
               <Tab eventKey="favourites" title="Favourites">
-                <p>testing3</p>
+              <UserRecipes userToView={userToView} filter={"favourites"} />
               </Tab>
             </Tabs>
           </div>
