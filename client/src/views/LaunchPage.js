@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import '../css/launchPage.css';
 import { useNavigate } from "react-router-dom";
-import lemonImage from "../lemon.png";
 
 function LaunchPage() {
 
@@ -28,8 +27,11 @@ function LaunchPage() {
   return (
     <div className='set-page'>
       <div className='container'>
-        <img id='lemon' src={lemonImage} alt="Lemon icon" className='stage1'/>
-        <h1 id='title' className='stage1' style={{color: "#ffe733"}}>Lemon Drop Drinks</h1>
+        <img id='lemon' src="https://res.cloudinary.com/cocktail-recipes/image/upload/v1666457159/assets/lemon_wnjxh9.png" 
+          alt='Lemon Drop'
+          title='Lemon Drop' 
+          className='stage1'/>
+        <h1 id='title' className='stage1 header-title'>lemon drop recipes</h1>
       </div>
     </div>
     

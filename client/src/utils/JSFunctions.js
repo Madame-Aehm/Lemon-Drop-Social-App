@@ -30,8 +30,18 @@ function displayNicely(string) {
 }
 
 function formatImage500px (imageURL) {
+  const result = sliceImageURL(imageURL, "w_500,h_500,c_fill/");
+  return result
+}
+
+function formatImageThumb (imageURL) {
+  const result = sliceImageURL(imageURL, "c_thumb,w_50,h_50,g_faces,r_max/");
+  return result
+}
+
+function sliceImageURL (imageURL, insert) {
   const uploadIndex = imageURL.indexOf("upload/") + 7;
-  const result = imageURL.slice(0, uploadIndex) + "w_500,h_500,c_fill/" + imageURL.slice(uploadIndex);
+  const result = imageURL.slice(0, uploadIndex) + insert + imageURL.slice(uploadIndex);
   return result
 }
 
@@ -51,4 +61,5 @@ function resetSubArray(array, comparisonId) {
   return array
 }
 
-export { passwordValidation, emailValidation, displayNicely, checkIf, resetSubArray, formatImage500px }
+export { passwordValidation, emailValidation, displayNicely, checkIf, resetSubArray,
+   formatImage500px, formatImageThumb }
