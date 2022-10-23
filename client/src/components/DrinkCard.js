@@ -17,33 +17,20 @@ function DrinkCard({ drink }) {
 
   return (
 
-    <Card style={{maxWidth: "30em"}}> 
-          <Card.Header style={{display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
-            {user && (user._id === drink.posted_by) &&
-              <>
-                <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }}>
-                  <Icon.Pencil style={{fontSize: "large"}}/>
-                </Link>
-                <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
-                  <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
-                </Button>
-                <FavouriteButton recipe={drink} />
-              </>
-            }
-            {user && (user._id !== drink.posted_by) &&
-              <FavouriteButton recipe={drink} />
-            }
-          </Card.Header>
-      
-      <Link to={'/view-recipe'} state={{ drinkId: drink._id }}>
-        <Card.Img variant="top" src={formattedPicture} />
-      </Link>
-      
-      <Card.Header>
+    <Card style={{maxWidth: "325px"}}>
+      {/* <Link to={'/view-recipe'} state={{ drinkId: drink._id }}> */}
+        <Card.Img variant='top' src={formattedPicture} />
+        <Card.ImgOverlay style={{textAlign: "right"}}>
+          <FavouriteButton recipe={drink} />
+        </Card.ImgOverlay>
+      {/* </Link> */}
+
+
+      <Card.Header bg="white" >
         <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-          <Card.Title style={{color: "#1b8f47", marginBottom: 0}}>{drink.name}</Card.Title>
+          <Card.Title className='header-title'>{drink.name}</Card.Title>
           <Card.Subtitle className="text-muted">
-            { formatDistanceToNow(new Date(drink.updatedAt), { addSuffix: true }) }
+            { formatDistanceToNow(new Date(drink.createdAt), { addSuffix: true }) }
           </Card.Subtitle>
         </span>
       </Card.Header>
@@ -62,6 +49,22 @@ function DrinkCard({ drink }) {
         </p>
       </Card.Body>
       <Link to={'/view-recipe'} state={{ drinkId: drink._id }} style={{textDecoration: "none", textAlign: "center"}}>
+      {/* <Card.Header style={{display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
+            {user && (user._id === drink.posted_by) &&
+              <>
+                <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }}>
+                  <Icon.Pencil style={{fontSize: "large"}}/>
+                </Link>
+                <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
+                  <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
+                </Button>
+                <FavouriteButton recipe={drink} />
+              </>
+            }
+            {user && (user._id !== drink.posted_by) &&
+              <FavouriteButton recipe={drink} />
+            }
+          </Card.Header> */}
         <Card.Footer style={{backgroundColor: "#1b8f47", color: "white", fontSize: "large"}}>
           View full recipe
         </Card.Footer>

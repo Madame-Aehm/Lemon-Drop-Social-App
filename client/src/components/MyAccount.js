@@ -306,8 +306,11 @@ function MyAccount({ loading, setLoading }) {
               </tr>
               <tr>
                 <td>
-                  <PasswordInput PWinvalid={newPWinvalid} placeholder={"Enter new password"} textStyling={{marginTop: "-0.8em"}} 
-                    handleChanges={handleNewPWChange}/>
+                  <form>
+                    <PasswordInput PWinvalid={newPWinvalid} placeholder={"Enter new password"} textStyling={{marginTop: "-0.8em"}} 
+                      handleChanges={handleNewPWChange}/>
+                  </form>
+                 
                 </td>
                 <td style={{verticalAlign: "top"}}>
                   <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant="warning" title="Change Password" 

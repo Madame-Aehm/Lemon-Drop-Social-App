@@ -34,8 +34,13 @@ function formatImage500px (imageURL) {
   return result
 }
 
+function formatProfileImage500px (imageURL) {
+  const result = sliceImageURL(imageURL, "w_500,h_500,c_fill,g_faces,r_max/");
+  return result
+}
+
 function formatImageThumb (imageURL) {
-  const result = sliceImageURL(imageURL, "c_thumb,w_50,h_50,g_faces,r_max/");
+  const result = sliceImageURL(imageURL, "c_thumb,w_30,h_30,c_fill,g_faces,r_max/");
   return result
 }
 
@@ -62,4 +67,4 @@ function resetSubArray(array, comparisonId) {
 }
 
 export { passwordValidation, emailValidation, displayNicely, checkIf, resetSubArray,
-   formatImage500px, formatImageThumb }
+   formatImage500px, formatImageThumb, formatProfileImage500px }

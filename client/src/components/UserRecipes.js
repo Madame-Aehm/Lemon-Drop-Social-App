@@ -12,9 +12,9 @@ function UserRecipes({ userToView, filter }) {
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    if (filter === "posted") {
+    if (recipesList && filter === "posted") {
       setUserList(recipesList.filter((recipe) => recipe.posted_by === userToView._id));
-    } else if (filter === "favourites") {
+    } else if (recipesList && filter === "favourites") {
       setUserList(recipesList.filter((recipe) => recipe.favourited_by.includes(userToView._id)));
     }
   }, [recipesList]);

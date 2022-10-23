@@ -52,8 +52,11 @@ function FavouriteButton({ recipe }) {
   }, [])
 
   const buttonStyle = {
-    backgroundColor: "transparent",
-    border: "none"
+    backgroundColor: "white",
+    padding: "0.4em 0.5em",
+    borderRadius: "50%",
+    border: "none",
+    color: "#DE4940"
   }
 
   return (
@@ -61,13 +64,13 @@ function FavouriteButton({ recipe }) {
       {(user && !poster) && 
         <>
           {alreadyFavourite && 
-            <button style={buttonStyle} onClick={handleRemoveFav}>
+            <span style={buttonStyle} title="Remove from favourites" onClick={handleRemoveFav}>
               <Icon.HeartFill style={{fontSize: "large"}}/>
-            </button>}
+            </span>}
           {!alreadyFavourite && 
-            <button style={buttonStyle} onClick={handleAddFav}>
+            <span style={buttonStyle} title="Add to favourites" onClick={handleAddFav}>
               <Icon.Heart style={{fontSize: "large"}}/>
-            </button>}
+            </span>}
         </>
       }
     </>

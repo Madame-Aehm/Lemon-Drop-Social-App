@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import '../css/launchPage.css';
+import '../css/launch&nav.css';
 import { useNavigate } from "react-router-dom";
 
 function LaunchPage() {

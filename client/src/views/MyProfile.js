@@ -1,18 +1,23 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import '../css/profile-page.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import MyAccount from '../components/MyAccount';
 import { AuthContext } from '../context/AuthContext.js'
 import UserRecipes from '../components/UserRecipes';
+import Fade from 'react-bootstrap/Fade';
 
 function MyProfile() {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const [mount, setMount] = useState(false);
+
+  useEffect(() => {
+    setMount(true);
+}, [])
 
   return (
-      <div className='simple-display no-padding'>
-        <h1 className='page-title'>My Profile</h1>
+    <Fade in={mount}>
         <div className='profile-tabs-container'>
           <Tabs
             defaultActiveKey="account"
@@ -33,8 +38,7 @@ function MyProfile() {
             </Tab>
           </Tabs>
         </div>
-        
-      </div>
+    </Fade>
   )
 }
 

@@ -1,8 +1,8 @@
 import React from 'react'
-import { formatImage500px } from '../utils/JSFunctions'
+import { formatProfileImage500px } from '../utils/JSFunctions'
 
 function UserPlainView({ userToView, display }) {
-  const formattedPicture = formatImage500px(userToView.profile_picture.url);
+  const formattedPicture = formatProfileImage500px(userToView.profile_picture.url);
   const date = new Date(userToView.createdAt).toDateString().substring(4);
 
   return (
