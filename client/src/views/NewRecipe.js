@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import '../css/newRecipe.css';
 import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
 import { RecipesContext } from '../context/RecipesContext.js'
@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext.js';
 import getToken from '../utils/getToken';
 import PageLoader from '../components/PageLoader';
 import RecipeForm from '../components/RecipeForm';
+import Fade from 'react-bootstrap/Fade';
 
 function NewRecipe() {
 
@@ -14,8 +15,14 @@ function NewRecipe() {
   const [loading, setLoading] = useState(false);
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
   const [stepsList, setStepsList] = useState([""]);
-  const [inputInfo, setInputInfo] = useState({});
+  const [name, setName] = useState("");
+  const [method, setMethod] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [mount, setMount] = useState(false);
+
+  useEffect(() => {
+    setMount(true);
+  }, [])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -25,7 +32,8 @@ function NewRecipe() {
       const image = await recipeImageUpload(selectedFile);
       if (!image.error) {
         const recipeObject = { 
-          ...inputInfo, 
+          name: name,
+          method: method,
           ingredients: ingredientsList, 
           instructions: stepsList, 
           image: image,
@@ -74,24 +82,27 @@ function NewRecipe() {
   function resetForm() {
     setIngredientsList([{ ingredient: "", quantity: 0, measure: "" }]);
     setStepsList([""]);
-    setInputInfo({})
+    setName("");
+    setMethod("");
     setSelectedFile(null);
     const recipeForm = document.getElementById('recipe-form');
     recipeForm.reset();
   }
 
   return (
-    <div className='simple-display'>
-      {loading && <PageLoader/>}
-      <h1 className='page-title'>New Recipe</h1>
-      <div style={{textAlign: "center", background: "rgba(148,211,51,0.3)", color: "#1b8f47", padding: "0.5em", borderRadius: "1em", width: "80%"}}>
-        <q>I've come up with a new recipeeh!</q> - Ignis Scientia
+    <Fade in={mount}>
+      <div className='simple-display'>
+        {loading && <PageLoader/>}
+        <h1 className='page-title'>New Recipe</h1>
+        <div style={{textAlign: "center", background: "rgba(148,211,51,0.3)", color: "#1b8f47", padding: "0.5em", borderRadius: "1em", width: "80%"}}>
+          <q>I've come up with a new recipeeh!</q> - Ignis Scientia
+        </div>
+
+        <RecipeForm setSelectedFile={setSelectedFile} name={name} setName={setName} method={method} setMethod={setMethod} ingredientsList={ingredientsList} 
+          setIngredientsList={setIngredientsList} stepsList={stepsList} setStepsList={setStepsList} handleSubmit={handleSubmit} />
+
       </div>
-
-      <RecipeForm setSelectedFile={setSelectedFile} inputInfo={inputInfo} setInputInfo={setInputInfo} ingredientsList={ingredientsList} 
-        setIngredientsList={setIngredientsList} stepsList={stepsList} setStepsList={setStepsList} handleSubmit={handleSubmit} />
-
-    </div>
+    </Fade>
   )
 }
 

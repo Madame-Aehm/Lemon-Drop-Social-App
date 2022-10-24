@@ -4,8 +4,10 @@ import Form from 'react-bootstrap/Form';
 
 function RecipeForm({ 
   setSelectedFile,
-  inputInfo,
-  setInputInfo,
+  name,
+  setName,
+  method,
+  setMethod,
   ingredientsList,
   setIngredientsList,
   stepsList,
@@ -16,8 +18,12 @@ function RecipeForm({
     setSelectedFile(e.target.files[0]);
   }
 
-  const handleInputChanges = (e) => {
-    setInputInfo({ ...inputInfo, [e.target.name]: e.target.value});
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  }
+
+  const handleMethodChange = (e) => {
+    setMethod(e.target.value);
   }
 
   const handleIngredientChange = (e, i) => {
@@ -55,18 +61,19 @@ function RecipeForm({
   }
 
   return (
-    <Form id='recipe-form' className='form-container' onSubmit={handleSubmit}>
+    <Form id='recipe-form' className='d-flex flex-column' style={{border: "solid 1px rgba(0,0,0,0.3)", borderRadius: "0.3em", padding: "1em"}} 
+      onSubmit={handleSubmit}>
 
         <Form.Group>
           <Form.Label className='new-rec-label'>Drink Name:</Form.Label>
-          <Form.Control name='name' placeholder="Enter a name for your drink" spellCheck="false" value={inputInfo.name} onChange={handleInputChanges} required/>
+          <Form.Control name='name' placeholder="Enter a name for your drink" spellCheck="false" value={name} onChange={handleNameChange} required/>
         </Form.Group>
 
         <hr/>
 
         <Form.Group >
           <Form.Label className='new-rec-label'>Method:</Form.Label>
-          <Form.Control name='method' placeholder="Enter the preparation method" value={inputInfo.method} onChange={handleInputChanges} required/>
+          <Form.Control name='method' placeholder="Enter the preparation method" value={method} onChange={handleMethodChange} required/>
         </Form.Group>
 
         <hr/>
@@ -125,9 +132,9 @@ function RecipeForm({
 
         <hr/>
 
-        <Button variant='warning' type='submit'>Submit</Button>
+        <Button variant='success' type='submit'>Submit</Button>
 
-      </Form>
+    </Form>
   )
 }
 

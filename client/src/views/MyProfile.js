@@ -25,15 +25,15 @@ function MyProfile() {
             className="mb-3"
             justify>
 
-            <Tab eventKey="account" title="Account">
+            <Tab eventKey="account" title="Account Details">
               <MyAccount loading={loading} setLoading={setLoading} />
             </Tab>
 
-            <Tab eventKey="recipes" title="Recipes" className='test'>
+            <Tab eventKey="recipes" title="My Recipes" className='test'>
               <UserRecipes userToView={user} filter={"posted"} />
             </Tab>
 
-            <Tab eventKey="favourites" title="Favourites">
+            <Tab eventKey="favourites" title="My Favourites">
               <UserRecipes userToView={user} filter={"favourites"} />
             </Tab>
           </Tabs>

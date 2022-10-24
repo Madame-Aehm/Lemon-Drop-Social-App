@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { Suspense, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import DrinkCard from '../components/DrinkCard';
 import PageLoader from '../components/PageLoader';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 import Fade from 'react-bootstrap/Fade';
-
+import PlaceholderCard from '../components/PlaceholderCard';
+import SortSelector from '../components/SortSelector';
+const DrinkCard =React.lazy(() => import('../components/DrinkCard'));
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -13,35 +14,47 @@ function Home() {
   const [mount, setMount] = useState(false);
 
   useEffect(() => {
-      setMount(true);
+    setMount(true);
   }, [])
 
   return (
     <Fade in={mount}>
       <div className='page-grid-4-1'>
-        {/* <div className='side-bar-button'><button>Open search</button></div> */}
         {loading && <PageLoader/>}
-        {/* {!user && <p>
-          Welcome to <strong style={{color: "#ffbc36"}}>Lemon Drop Drinks</strong>!
-          This page is for flavour enthusiasts. Check out our recipes below for some quick inspiration, or 
-          <Link to={"/sign-up"} style={{color: "#ffbc36", fontWeight: 700, textDecoration: "none"}}> sign up </Link> 
-          to join our community of stirrers and shakers! 🌞
-        </p>}
-        {user && <>
-          <p>Welcome back, <strong style={{color: "#ffbc36"}}>{user.username}</strong> 🌞</p>
-          <button style={{alignSelf: "flex-end", marginRight: "10em"}}>Search</button>
-        </>} */}
-        
-        {!recipesList && <p>Looks like there's no recipes :(</p>}
+        {(!recipesList || recipesList === 0) && <p>Looks like there's no recipes :(</p>}
         <div className='cards-container'>
           {recipesList && <>
             {recipesList.map((drink) => {
-              return <DrinkCard key={drink._id} drink={drink} />
+              return (
+              <>
+                <Suspense key={drink._id} fallback={<PlaceholderCard/>}>
+                  <DrinkCard drink={drink} />
+                </Suspense>
+              </>)
             })}
           </>}
         </div>
         <div className='search-column'>
-          <p>Search grid</p>
+          {!user &&
+            <p>
+              Welcome to <strong className='header-title'>Lemon Drop Drinks</strong>!
+              This page is for flavour enthusiasts. Check out our recipes below for some quick inspiration, 
+              or <Link to={"/sign-up"} className='p-link'>sign up</Link> to join our community of stirrers and shakers!
+              You'll be able to submit your own recipes, post comments, and save your favourites! 🌞
+            </p>
+          }
+          {user && 
+            <p>
+              Welcome to <strong className='header-title'>Lemon Drop Drinks</strong>!
+              Your home as a flavour enthusiast 🌞
+            </p>
+          }
+          <p><Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link></p>
+          <SortSelector />
+          {console.log(recipesList)}
+
+
+          
         </div>
       </div>
     </Fade>

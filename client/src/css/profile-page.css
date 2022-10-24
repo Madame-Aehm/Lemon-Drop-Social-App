@@ -1,9 +1,3 @@
-.profile-img {
-  border-radius: 50%;
-  border: solid 2px #1b8f47;
-  max-width: 90%;
-}
-
 .no-padding {
   padding: 0;
 }
@@ -18,12 +12,18 @@
   gap: 1em
 }
 
-.account-mini-title {
-  color: #1b8f47
-}
-
 td {
   padding: 0.5em 1em;
+}
+
+.plain-user-info {
+  width: 500px;
+  max-width: 90%;
+  flex-direction: column; 
+  gap: 0.5em;
+  border: solid 1px rgba(0,0,0,0.3);
+  padding: 1em;
+  border-radius: 0.5em;
 }
 
 .link-button:hover {

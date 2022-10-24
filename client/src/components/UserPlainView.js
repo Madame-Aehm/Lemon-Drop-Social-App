@@ -8,10 +8,10 @@ function UserPlainView({ userToView, display }) {
   return (
 
     <>
-      <img className='profile-img' src={formattedPicture} alt={`${userToView.username}'s profile`}/>
+      <img  style={{border: "solid 1px rgba(0,0,0,0.3)", borderRadius: "50%"}} src={formattedPicture} alt={`${userToView.username}'s profile`}/>
 
       <div className='plain-user-info' style={ display }>
-        <h5 className='account-mini-title'>{userToView.username}</h5>
+        <h5>{userToView.username}</h5>
 
         {userToView.email && 
           <div className='simple-align'>

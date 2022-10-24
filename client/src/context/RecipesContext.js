@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext.js';
 import getToken from '../utils/getToken';
 import { deleteImage } from '../utils/imageMangement';
 import { resetSubArray } from '../utils/JSFunctions.js';
+import arraySort from 'array-sort';
 
 export const RecipesContext = createContext();
 
@@ -10,6 +11,7 @@ export const RecipesContextProvider = (props) => {
   const [recipesList, setRecipesList] = useState(null);
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useContext(AuthContext);
+  const [sort, setSort] = useState("newest");
 
   const fetchAllRecipes = async () => {
     const response = await fetch("http://localhost:5000/recipes/")
@@ -44,7 +46,6 @@ export const RecipesContextProvider = (props) => {
     if (window.confirm("You're sure you want to delete this recipe? This is cannot be undone.")) {
       try {
         const deleted = await deleteRecipe(drink._id);
-        console.log(deleted.msg);
         setRecipesList(recipesList.filter(e => e._id !== drink._id));
         resetSubArray(user.posted_recipes, drink._id);
         setUser(user);
@@ -55,6 +56,7 @@ export const RecipesContextProvider = (props) => {
             console.log("Recipe deleted, but problem deleting image: ", error);
           }
         }
+        alert(deleted.msg);
       } catch (error) {
         alert("Something went wrong: " + error);
       }
@@ -65,8 +67,23 @@ export const RecipesContextProvider = (props) => {
     fetchAllRecipes();
   }, [])
 
+  useEffect(() => {
+    if (recipesList && sort === "newest") {
+      setRecipesList(arraySort(recipesList, 'createdAt'));
+    }
+    if (recipesList && sort === "oldest") {
+      setRecipesList(arraySort(recipesList, 'createdAt', { reverse: true }));
+    }
+    if (recipesList && sort === "popular") {
+      setRecipesList(arraySort(recipesList, 'favourited_by.length'));
+    }
+    if (recipesList && sort === "recently-updated") {
+      setRecipesList(arraySort(recipesList, 'updatedAt'));
+    } 
+  }, [sort]);
+
   return (
-    <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe, handleDeleteRecipe, loading }}>
+    <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe, handleDeleteRecipe, loading, sort, setSort }}>
       { props.children }
     </RecipesContext.Provider>
   )

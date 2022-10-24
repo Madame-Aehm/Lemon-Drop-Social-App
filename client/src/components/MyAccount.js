@@ -257,6 +257,7 @@ function MyAccount({ loading, setLoading }) {
           </div>
 
           <UserPlainView userToView={user} display={plainDisplay} />
+          <Button variant="warning" onClick={handleEditSwitch} style={plainDisplay}>Edit Mode</Button>
 
           <div style={inputDisplay}>
           <h5 className='account-mini-title'>{user.username}</h5>
@@ -332,7 +333,7 @@ function MyAccount({ loading, setLoading }) {
               </tr>
               <tr>
                 <td colSpan={2} style={{textAlign: "center"}} >
-                  <Button variant="success" onClick={handleEditSwitch}>Close</Button>
+                  <Button variant="success" onClick={handleEditSwitch}>Done</Button>
                 </td>
               </tr>
             </tbody>

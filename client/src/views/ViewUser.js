@@ -1,21 +1,32 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import UserPlainView from '../components/UserPlainView';
 import UserRecipes from '../components/UserRecipes';
 import useSingleUserFetch from '../hooks/useSingleUserFetch';
+import { AuthContext } from '../context/AuthContext.js'
 
 function ViewUser() {
   const location = useLocation();
+  const redirect = useNavigate();
+  const { user } = useContext(AuthContext);
   const { userId } = location.state;
   const { userToView } = useSingleUserFetch(userId);
-  console.log(userToView);
-
 
   const plainDisplay = {
     display: "flex"
   }
+
+ function profileRedirect() {
+  if (user && (userId === user._id)) {
+        redirect("/my-profile", {replace: true});
+      }
+ }
+ useEffect(() => {
+   profileRedirect();
+ }, [])
+ 
 
   return (
     <>
@@ -45,8 +56,8 @@ function ViewUser() {
               </Tab>
             </Tabs>
           </div>
-          
         </div>
+        
       }
     </>
     

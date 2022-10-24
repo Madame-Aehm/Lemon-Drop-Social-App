@@ -1,44 +1,63 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/esm/Button';
-import { RecipesContext } from '../context/RecipesContext.js'
 import { displayNicely, formatImage500px } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { Link } from 'react-router-dom';
 import * as Icon from 'react-bootstrap-icons';
 import FavouriteButton from './FavouriteButton.js';
+import DeleteButton from './DeleteButton.js';
 
 function DrinkCard({ drink }) {
-  const { handleDeleteRecipe } = useContext(RecipesContext);
   const { user } = useContext(AuthContext);
-
   const formattedPicture = formatImage500px(drink.image.url)
+  const [floats, setFloats] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      setFloats('d-flex flex-column align-items-end justify-content-between');
+    }
+    if (!user) {
+      setFloats('d-flex flex-column align-items-end justify-content-end')
+    }
+  }, [user])
+  
 
   return (
-
     <Card style={{maxWidth: "325px"}}>
-      {/* <Link to={'/view-recipe'} state={{ drinkId: drink._id }}> */}
-        <Card.Img variant='top' src={formattedPicture} />
-        <Card.ImgOverlay style={{textAlign: "right"}}>
+      <Card.Img variant='top' src={formattedPicture} />
+      <Card.ImgOverlay className={floats}>
+        <>
+        {user && (user._id !== drink.posted_by) &&
           <FavouriteButton recipe={drink} />
-        </Card.ImgOverlay>
-      {/* </Link> */}
+        }
+        {user && (user._id === drink.posted_by) &&
+            <span>
+              <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }} style={{marginRight: "0.5em"}}>
+                <Icon.Pencil style={{fontSize: "large"}}/>
+              </Link>
+              <DeleteButton toDelete={drink} />
+            </span>
+        }
+        </>
+      <Link className='view-link-button' to='/view-recipe' state={{ drinkId: drink._id }}>
+          View full recipe
+      </Link>
+      </Card.ImgOverlay>
 
-
-      <Card.Header bg="white" >
-        <span style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      <Card.Header bg="white" className='d-flex align-items-center justify-content-between'>
           <Card.Title className='header-title'>{drink.name}</Card.Title>
           <Card.Subtitle className="text-muted">
             { formatDistanceToNow(new Date(drink.createdAt), { addSuffix: true }) }
           </Card.Subtitle>
-        </span>
       </Card.Header>
       
       <Card.Body>
         <p>
           <strong className='sub-title'>Method: </strong>{drink.method}
-          <br/><strong className='sub-title'>Ingredients: </strong>
+        </p>
+        <p>
+          <strong className='sub-title'>Ingredients: </strong>
           {drink.ingredients.map((ingredient, i, arr) => {
             if (i + 1 === arr.length) {
               return <React.Fragment key={i}>{displayNicely(ingredient.ingredient)}</React.Fragment>
@@ -47,28 +66,17 @@ function DrinkCard({ drink }) {
             }
           })}
         </p>
+        <p>Last updated { formatDistanceToNow(new Date(drink.updatedAt), { addSuffix: true }) }</p>
+        <p>Favourited {drink.favourited_by.length} times</p>
+        <br/>
+        <br/>
       </Card.Body>
-      <Link to={'/view-recipe'} state={{ drinkId: drink._id }} style={{textDecoration: "none", textAlign: "center"}}>
-      {/* <Card.Header style={{display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
-            {user && (user._id === drink.posted_by) &&
-              <>
-                <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }}>
-                  <Icon.Pencil style={{fontSize: "large"}}/>
-                </Link>
-                <Button variant="danger" size="sm" onClick={() => handleDeleteRecipe(drink)}>
-                  <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
-                </Button>
-                <FavouriteButton recipe={drink} />
-              </>
-            }
-            {user && (user._id !== drink.posted_by) &&
-              <FavouriteButton recipe={drink} />
-            }
-          </Card.Header> */}
+
+      {/* <Link to='/view-recipe' state={{ drinkId: drink._id }} style={{textDecoration: "none", textAlign: "center"}}>
         <Card.Footer style={{backgroundColor: "#1b8f47", color: "white", fontSize: "large"}}>
           View full recipe
         </Card.Footer>
-      </Link>
+      </Link> */}
     </Card>
   )
 }

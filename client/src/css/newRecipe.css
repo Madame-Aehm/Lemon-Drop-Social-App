@@ -1,26 +1,5 @@
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  border: solid 1px #704021;
-  border-radius: 0.3em;
-  padding: 1em;
-  background: rgba(148,211,51,0.2)
-}
-
-.one-line {
-  display: flex;
-  justify-content: space-between; 
-  gap: 1em
-}
-
-.one-line > .new-rec-label {
-  min-width: 4em;
-}
-
 .new-rec-label {
   font-weight: 700;
-  color: #704021;
   margin: 0
 }
 

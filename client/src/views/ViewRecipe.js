@@ -19,7 +19,7 @@ function ViewRecipe() {
   const { handleDeleteRecipe } = useContext(RecipesContext);
   const location = useLocation();
   const { drinkId } = location.state;
-  const { recipe, comments, setComments, loading, error } = useRecipeFetch(drinkId);
+  const { recipe, comments, setComments, loading, setLoading, error } = useRecipeFetch(drinkId);
   const [commentText, setCommentText] = useState("");
 
   const handleTextChange = (e) => {
@@ -65,8 +65,8 @@ function ViewRecipe() {
   }
 
   const deleteOnClick = async() => {
+    setLoading(true);
     await handleDeleteRecipe(recipe);
-    alert(recipe.name + " has been deleted");
     redirect("/home", {replace: true});
   }
 

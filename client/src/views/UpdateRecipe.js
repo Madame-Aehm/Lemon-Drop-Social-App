@@ -13,16 +13,16 @@ function UpdateRecipe() {
    
   const [ingredientsList, setIngredientsList] = useState([{ ingredient: "", quantity: 0, measure: "" }]);
   const [stepsList, setStepsList] = useState([""]);
-  const [inputInfo, setInputInfo] = useState({});
-  // const [name, setName] = useState("");
-  // const [method, setMethod] = useState("");
+  const [name, setName] = useState("");
+  const [method, setMethod] = useState("");
   const { recipesList, setRecipesList } = useContext(RecipesContext);
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
      setIngredientsList(recipe.ingredients);
      setStepsList(recipe.instructions);
-     setInputInfo({ name: recipe.name, method: recipe.method });
+     setName(recipe.name);
+     setMethod(recipe.method);
      setLoading(false);
   }, [])
 
@@ -35,7 +35,8 @@ function UpdateRecipe() {
         const image = await recipeUpdateImage(selectedFile, recipe.image);
         if (!image.error) {
           const recipeObject = { 
-            ...inputInfo, 
+            name: name,
+            method: method,
             ingredients: ingredientsList, 
             instructions: stepsList, 
             image: image,
@@ -80,7 +81,7 @@ function UpdateRecipe() {
       {loading && <PageLoader/>}
       <h1 className='page-title'>Edit Recipe</h1>
       {recipe && 
-        <RecipeForm setSelectedFile={setSelectedFile} inputInfo={inputInfo} setInputInfo={setInputInfo} ingredientsList={ingredientsList} 
+        <RecipeForm setSelectedFile={setSelectedFile} name={name} setName={setName} method={method} setMethod={setMethod} ingredientsList={ingredientsList} 
           setIngredientsList={setIngredientsList} stepsList={stepsList} setStepsList={setStepsList} handleSubmit={handleSubmit} />
       }
     </div>
