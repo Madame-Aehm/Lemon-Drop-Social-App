@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import UserPlainView from '../components/UserPlainView';
 import UserRecipes from '../components/UserRecipes';
 import useSingleUserFetch from '../hooks/useSingleUserFetch';
 import { AuthContext } from '../context/AuthContext.js'
+import Fade from 'react-bootstrap/Fade';
 
 function ViewUser() {
   const location = useLocation();
@@ -13,6 +14,7 @@ function ViewUser() {
   const { user } = useContext(AuthContext);
   const { userId } = location.state;
   const { userToView } = useSingleUserFetch(userId);
+  const [mount, setMount] = useState(false);
 
   const plainDisplay = {
     display: "flex"
@@ -25,13 +27,14 @@ function ViewUser() {
  }
  useEffect(() => {
    profileRedirect();
+   setMount(true);
  }, [])
  
 
   return (
-    <>
-      {userToView.username && 
-        <div className='simple-display no-padding'>
+    <Fade in={mount}>
+      <div className='simple-display no-padding'>
+        {userToView.username && <>
           <h1 className='page-title'>{userToView.username}'s Profile</h1>
           <div className='profile-tabs-container'>
             <Tabs
@@ -56,13 +59,10 @@ function ViewUser() {
               </Tab>
             </Tabs>
           </div>
-        </div>
-        
-      }
-    </>
+        </>}
+      </div>
+    </Fade>
     
-      
-      
   )
 }
 

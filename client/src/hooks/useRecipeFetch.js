@@ -21,18 +21,21 @@ function useRecipeFetch(id) {
   const [comments, setComments] = useState([]);
 
   const getRecipe = async() => {
-    try {
-      const response = await fetch("http://localhost:5000/recipes/" + id);
-      const result = await response.json();
-      console.log(result);
-      setRecipe(result);
-      setComments(result.comments);
-      setLoading(false);
-    } catch(error) {
-      setError(error)
-      console.log(error);
-      setLoading(false);
+    if (id) {
+      try {
+        const response = await fetch("http://localhost:5000/recipes/recipe/" + id);
+        const result = await response.json();
+        console.log(result);
+        setRecipe(result);
+        setComments(result.comments);
+        setLoading(false);
+      } catch(error) {
+        setError(error)
+        console.log(error);
+        setLoading(false);
+      }
     }
+
   }
 
   useEffect(() => {

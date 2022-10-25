@@ -5,7 +5,7 @@ import { RecipesContext } from '../context/RecipesContext.js'
 import PageLoader from './PageLoader.js';
 
 
-function DeleteButton({toDelete}) {
+function DeleteButton({toDelete, redirectHome}) {
   const { handleDeleteRecipe } = useContext(RecipesContext);
   const [loading, setLoading] = useState(false);
   
@@ -13,6 +13,7 @@ function DeleteButton({toDelete}) {
     setLoading(true);
     handleDeleteRecipe(toDelete);
     setLoading(false);
+    redirectHome();
   }
 
   return (

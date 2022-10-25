@@ -45,7 +45,7 @@ function DrinkCard({ drink }) {
       </Link>
       </Card.ImgOverlay>
 
-      <Card.Header bg="white" className='d-flex align-items-center justify-content-between'>
+      <Card.Header bg="white" className='d-flex flex-wrap align-items-center justify-content-between'>
           <Card.Title className='header-title'>{drink.name}</Card.Title>
           <Card.Subtitle className="text-muted">
             { formatDistanceToNow(new Date(drink.createdAt), { addSuffix: true }) }
@@ -66,17 +66,12 @@ function DrinkCard({ drink }) {
             }
           })}
         </p>
-        <p>Last updated { formatDistanceToNow(new Date(drink.updatedAt), { addSuffix: true }) }</p>
-        <p>Favourited {drink.favourited_by.length} times</p>
+        <Card.Subtitle className='text-muted mb-3'>
+          Last updated { formatDistanceToNow(new Date(drink.updatedAt), { addSuffix: true }) }
+        </Card.Subtitle>
         <br/>
         <br/>
       </Card.Body>
-
-      {/* <Link to='/view-recipe' state={{ drinkId: drink._id }} style={{textDecoration: "none", textAlign: "center"}}>
-        <Card.Footer style={{backgroundColor: "#1b8f47", color: "white", fontSize: "large"}}>
-          View full recipe
-        </Card.Footer>
-      </Link> */}
     </Card>
   )
 }

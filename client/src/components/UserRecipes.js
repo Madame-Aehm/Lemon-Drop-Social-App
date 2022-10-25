@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Button from 'react-bootstrap/esm/Button.js';
 import { Link } from 'react-router-dom';
 import { RecipesContext } from '../context/RecipesContext.js'
 import DrinkCard from './DrinkCard.js';
@@ -9,7 +8,7 @@ import SortSelector from './SortSelector.js';
 
 function UserRecipes({ userToView, filter }) {
   const { user } = useContext(AuthContext);
-  const { recipesList } = useContext(RecipesContext);
+  const { recipesList, sort } = useContext(RecipesContext);
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
@@ -18,7 +17,7 @@ function UserRecipes({ userToView, filter }) {
     } else if (recipesList && filter === "favourites") {
       setUserList(recipesList.filter((recipe) => recipe.favourited_by.includes(userToView._id)));
     }
-  }, [recipesList]);
+  }, [recipesList, sort]);
   
   return (
     <div className='page-grid-4-1'>

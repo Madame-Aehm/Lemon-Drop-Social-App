@@ -14,6 +14,7 @@ function SignUp() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [inputInfo, setInputInfo] = useState({});
   const [PWinvalid, setPWinvalid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFileAttach = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -42,6 +43,7 @@ function SignUp() {
   }
 
   const signUp = async () => {
+    setLoading(true);
     const image = await signUpImageUpload(selectedFile);
     inputInfo.profile_picture = image; 
     const myHeaders = new Headers();
@@ -65,8 +67,10 @@ function SignUp() {
         alert("Successfully signed up! Please log in.");
         redirect("/login", { replace: true });
       }
+      setLoading(false);
     } catch(error) {
-      console.log("sign up error: " + error);
+      alert("sign up error: " + error);
+      setLoading(false);
     }
   }
 

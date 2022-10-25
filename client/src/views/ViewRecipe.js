@@ -1,21 +1,25 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import * as Icon from 'react-bootstrap-icons';
 import useRecipeFetch from '../hooks/useRecipeFetch';
 import PageLoader from '../components/PageLoader'
-import '../css/viewRecipe.css'
 import CommentCard from '../components/CommentCard';
 import getToken from '../utils/getToken';
 import { AuthContext } from '../context/AuthContext.js'
 import { RecipesContext } from '../context/RecipesContext.js'
 import SeeUserLink from '../components/SeeUserLink';
 import FavouriteButton from '../components/FavouriteButton';
+import Fade from 'react-bootstrap/Fade';
+import Card from 'react-bootstrap/Card';
+import DeleteButton from '../components/DeleteButton';
+import { formatDistanceToNow } from 'date-fns';
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
   const redirect = useNavigate();
+  const [mount, setMount] = useState(false);
   const { handleDeleteRecipe } = useContext(RecipesContext);
   const location = useLocation();
   const { drinkId } = location.state;
@@ -64,86 +68,113 @@ function ViewRecipe() {
     }
   }
 
-  const deleteOnClick = async() => {
-    setLoading(true);
-    await handleDeleteRecipe(recipe);
+  const redirectHome = async() => {
     redirect("/home", {replace: true});
   }
 
+  useEffect(() => {
+    setMount(true);
+  }, [])
+
   return (
+    <Fade in={mount}>
     <div className='simple-display'>
       {loading && <PageLoader/>}
       {error && <p>{error}</p>}
       {!recipe && <p>There nothing here?</p>}
       {(!loading && !error && recipe) && 
         <>
-          <div className='recipe-div'>
-            {(user && user._id !== recipe.posted_by._id) && <FavouriteButton recipe={recipe} />}
+          <Card style={{maxWidth: "800px"}}>
+            <Card.Header className='d-flex align-items-center justify-content-between'>
+              {user && <p></p>}
+              <Card.Title className='header-title text-center'>
+                {recipe.name}
+              </Card.Title>
+              {(user && user._id !== recipe.posted_by._id) && 
+                <FavouriteButton recipe={recipe} includeCount={true}/>
+              }
+              {user && (user._id === recipe.posted_by._id) &&
+                <span>
+                  <Link to={'/update-recipe'} className='edit-link' state={{ recipe: recipe }} style={{marginRight: "0.5em"}}>
+                    <Icon.Pencil style={{fontSize: "large"}} title='Edit Recipe' />
+                  </Link>
+                  <DeleteButton toDelete={recipe} redirectHome={redirectHome} />
+                </span>
+              }
+            </Card.Header>
 
-            <h1 className='page-title'>{recipe.name}</h1>
+            <Card.Img src={recipe.image.url} alt={recipe.name}/>
 
-            {user && (user._id === recipe.posted_by._id) &&
-            <div style={{marginBottom: "0.5em", display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "1em"}}>
-              <Link to={'/update-recipe'} className='edit-link' 
-                state={{ recipe: recipe }}>
-                <Icon.Pencil style={{fontSize: "large"}} title='Edit Recipe' />
-              </Link>
-              <Button variant="danger" size="sm" onClick={deleteOnClick}>
-                <Icon.Trash title='Delete Recipe' style={{fontSize: "large"}}/>
-              </Button>
-            </div>}
+            <Card.Header className='d-flex justify-content-between align-items-center'>
+              <div>
+                <SeeUserLink user={ recipe.posted_by }  />
+              </div>
+              <div className='d-flex flex-column align-items-end'>
+                <Card.Text className='text-right'>
+                  <Card.Subtitle className='text-muted'>Originally posted: { new Date(recipe.createdAt).toDateString().substring(4) }</Card.Subtitle>
+                </Card.Text>
+                <Card.Text className='text-right'>
+                  <Card.Subtitle className='text-muted'>Last updated: { formatDistanceToNow(new Date(recipe.createdAt), { addSuffix: true }) }</Card.Subtitle>
+                </Card.Text>
+              </div>
+            </Card.Header>
 
-            <img src={recipe.image.url} alt={recipe.name} style={{maxWidth: '500px', minWidth: '200px', width: '90%', alignSelf: "center"}}/>
+            <Card.Body className='d-flex flex-column'>
 
-            <SeeUserLink user={ recipe.posted_by }  />
+              <Card.Title>Method:</Card.Title>
+              <Card.Text>{recipe.method}</Card.Text>
+             
+              <Card.Title>Ingredients:</Card.Title>
+              <ul>
+                {recipe.ingredients.map((ingredient) => {
+                  return <li key={ingredient._id}>{ingredient.quantity} {ingredient.measure} {ingredient.ingredient}</li>
+                })}
+              </ul>
 
-            <div className='simple-align'>
-              <h4 className='sub-title'>Method:</h4>
-              <h5 style={{paddingLeft: "1em"}}>{recipe.method}</h5>
-            </div>
+              <Card.Title>Instructions:</Card.Title>
+              <ol style={{maxWidth: "100%"}}>
+                {recipe.instructions.map((step, i) => {
+                  return <li key={"step"+i}>{step}</li>
+                })}
+              </ol>
+
+              <span className='align-self-end'>
+                <Icon.HeartFill style={{fontSize: "large", color: "#DE4940"}}/> Favourited {recipe.favourited_by.length} times
+              </span>
+
+              <Card.Title>Comments:</Card.Title>
+              {comments.length === 0 && <p style={{textAlign: "center"}}>No comments yet :( </p>}
+              {comments.length > 0 && comments.map((comment) => {
+                return <CommentCard key={comment._id} comment={comment} comments={comments} setComments={setComments} recipe={recipe} />
+              })}
+
+              <hr/>
+
+              {user && 
+                <Form onSubmit={handleSubmitComment}>
+                  <Form.Label className='sub-title'>Leave a comment: </Form.Label>
+                  <Form.Control className='mb-3' as="textarea" rows={3} value={commentText} onChange={handleTextChange}/>
+                  <Button variant='success' type='submit'>Post comment</Button>
+                </Form>
+              }
+              {!user && 
+                <Form>
+                  <Form.Label className='sub-title'>Leave a comment: </Form.Label>
+                  <Form.Control className='mb-3' as="textarea" rows={3} placeholder='Only logged-in users can leave comments.' disabled/>
+                  <Button disabled variant='success' type='submit'>Post comment</Button>
+                </Form>
+              }
+
+            </Card.Body>
+
             
-            <h4 className='sub-title'>Ingredients</h4>
-            <ul>
-              {recipe.ingredients.map((ingredient) => {
-                return <li key={ingredient._id}>{ingredient.quantity} {ingredient.measure} {ingredient.ingredient}</li>
-              })}
-            </ul>
-
-            <h4 className='sub-title'>Instructions</h4>
-            <ol style={{maxWidth: "100%"}}>
-              {recipe.instructions.map((step, i) => {
-                return <li key={"step"+i}>{step}</li>
-              })}
-            </ol>
-
-            <h4 className='sub-title'>Comments: </h4>
-            {comments.length === 0 && <p style={{textAlign: "center"}}>No comments yet :( </p>}
-            {comments.length > 0 && comments.map((comment) => {
-              return <CommentCard key={comment._id} comment={comment} comments={comments} setComments={setComments} recipe={recipe} />
-            })}
-
-            <hr/>
-
-            {user && 
-              <Form onSubmit={handleSubmitComment}>
-                <Form.Label className='sub-title'>Leave a comment: </Form.Label>
-                <Form.Control className='mb-3' as="textarea" rows={3} value={commentText} onChange={handleTextChange}/>
-                <Button variant='success' type='submit'>Post comment</Button>
-              </Form>
-            }
-            {!user && 
-              <Form>
-                <Form.Label className='sub-title'>Leave a comment: </Form.Label>
-                <Form.Control className='mb-3' as="textarea" rows={3} placeholder='Only logged-in users can leave comments.' disabled/>
-                <Button disabled variant='success' type='submit'>Post comment</Button>
-              </Form>
-            }
-          </div>
+          </Card>
         </>}
 
       
       
     </div>
+    </Fade>
   )
 }
 

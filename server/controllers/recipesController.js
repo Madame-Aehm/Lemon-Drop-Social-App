@@ -16,6 +16,13 @@ const getAllRecipes = async (req, res) => {
   }
 };
 
+const getSearchResults = async (req, res) => {
+  console.log(req.params);
+
+  res.json({ msg: "something" })
+
+}
+
 const getByID = async (req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -250,5 +257,5 @@ const deleteFavsOnRecipeDelete = async() => {
 //   }
 // }
 
-export { getAllRecipes, getByID, postNewRecipe, deleteRecipe, updateRecipe, 
+export { getAllRecipes, getSearchResults, getByID, postNewRecipe, deleteRecipe, updateRecipe, 
   uploadImage, addComment, deleteComment, addFavourite, deleteFavourite }

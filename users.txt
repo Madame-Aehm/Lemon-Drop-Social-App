@@ -1,0 +1,11 @@
+email: barchef@9001.com
+password: 1mTheBo55
+
+email: gingal@lemondrop.com
+password: 1mTheBo55
+
+email: fireball_fiend@lemondrop.com
+password: 1mTheBo55
+
+email: responsible_drinkings@lemondrop.com
+password: 1mTheBo55

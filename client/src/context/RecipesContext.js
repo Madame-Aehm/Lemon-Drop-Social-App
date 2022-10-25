@@ -3,21 +3,26 @@ import { AuthContext } from '../context/AuthContext.js';
 import getToken from '../utils/getToken';
 import { deleteImage } from '../utils/imageMangement';
 import { resetSubArray } from '../utils/JSFunctions.js';
-import arraySort from 'array-sort';
 
 export const RecipesContext = createContext();
 
 export const RecipesContextProvider = (props) => {
-  const [recipesList, setRecipesList] = useState(null);
+  const [recipesList, setRecipesList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [sort, setSort] = useState("");
   const { user, setUser } = useContext(AuthContext);
-  const [sort, setSort] = useState("newest");
 
   const fetchAllRecipes = async () => {
-    const response = await fetch("http://localhost:5000/recipes/")
-    const data = await response.json()
-    setRecipesList(data);
-    setLoading(false);
+    try{
+      const response = await fetch("http://localhost:5000/recipes/")
+      const data = await response.json()
+      setRecipesList(data);
+      setSort("newest");
+      setLoading(false); 
+    } catch (error) {
+      setError(error);
+    }
   }
 
   const deleteRecipe = async (id) => {
@@ -67,23 +72,9 @@ export const RecipesContextProvider = (props) => {
     fetchAllRecipes();
   }, [])
 
-  useEffect(() => {
-    if (recipesList && sort === "newest") {
-      setRecipesList(arraySort(recipesList, 'createdAt'));
-    }
-    if (recipesList && sort === "oldest") {
-      setRecipesList(arraySort(recipesList, 'createdAt', { reverse: true }));
-    }
-    if (recipesList && sort === "popular") {
-      setRecipesList(arraySort(recipesList, 'favourited_by.length'));
-    }
-    if (recipesList && sort === "recently-updated") {
-      setRecipesList(arraySort(recipesList, 'updatedAt'));
-    } 
-  }, [sort]);
 
   return (
-    <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe, handleDeleteRecipe, loading, sort, setSort }}>
+    <RecipesContext.Provider value={{ recipesList, setRecipesList, deleteRecipe, handleDeleteRecipe, loading, error, sort, setSort }}>
       { props.children }
     </RecipesContext.Provider>
   )
