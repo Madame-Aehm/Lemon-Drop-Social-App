@@ -7,7 +7,7 @@ function SeeUserLink({ user }) {
 
   return (
     <Link className='simple-align' style={{ textDecoration: "none"}}
-    to={'/view-user'} state={{ userId: user._id }}>
+    to={'/view-user/' + user._id} >
       <img src={formattedPicture} alt="Recipe Author" className='thumbnail-image'/>
       <h5 className='account-mini-title'>{user.username}</h5>
     </Link>

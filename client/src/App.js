@@ -11,11 +11,13 @@ import NewRecipe from './views/NewRecipe';
 import ViewRecipe from './views/ViewRecipe';
 import ViewUser from './views/ViewUser';
 import UpdateRecipe from './views/UpdateRecipe';
+import ReturnToTop from './components/ReturnToTop';
 
 function App() {
   return (
     <>
       <NavBar />
+      <ReturnToTop />
       <Routes>
         <Route path='*' element={ <LaunchPage/> } />
         <Route path='/' element={ <LaunchPage/> } />
@@ -25,8 +27,8 @@ function App() {
         <Route path='/my-profile' element={ <ProtectedRoute> <MyProfile/> </ProtectedRoute> } />
         <Route path='/new-recipe' element={ <ProtectedRoute> <NewRecipe/> </ProtectedRoute> } />
         <Route path='/update-recipe' element={ <ProtectedRoute> <UpdateRecipe/> </ProtectedRoute> } />
-        <Route path='/view-recipe' element={ <ViewRecipe/> } />
-        <Route path='/view-user' element={ <ViewUser/> } />
+        <Route path='/view-recipe/:_id' element={ <ViewRecipe/> } />
+        <Route path='/view-user/:_id' element={ <ViewUser/> } />
       </Routes>
     </>
   );

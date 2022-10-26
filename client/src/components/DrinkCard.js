@@ -40,7 +40,7 @@ function DrinkCard({ drink }) {
             </span>
         }
         </>
-      <Link className='view-link-button' to='/view-recipe' state={{ drinkId: drink._id }}>
+      <Link className='view-link-button' to={'/view-recipe/' + drink._id} >
           View full recipe
       </Link>
       </Card.ImgOverlay>

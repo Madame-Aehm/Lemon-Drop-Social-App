@@ -42,7 +42,6 @@ code {
     border: solid 1px rgba(0,0,0,0.3);
     border-radius: 0.3em;
   }
-
 }
 
 @media only screen and (max-width: 1000px) {
@@ -104,6 +103,17 @@ code {
   padding: 1em;
 }
 
+#scroll-button {
+  display: none;
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  opacity: 0.5;
+}
+
+#scroll-button:hover {
+  opacity: 1;
+}
 
 
 

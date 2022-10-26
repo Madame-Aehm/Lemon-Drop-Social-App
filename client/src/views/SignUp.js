@@ -7,6 +7,7 @@ import { passwordValidation } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import { deleteImage, signUpImageUpload } from '../utils/imageMangement';
 import PasswordInput from '../components/PasswordInput';
+import PageLoader from '../components/PageLoader';
 
 function SignUp() {
   const { logout, user } = useContext(AuthContext);
@@ -76,6 +77,7 @@ function SignUp() {
 
   return (
     <div>
+      {loading && <PageLoader />}
       <h1 className='page-title'>Sign Up!</h1>
 
       {!user && 

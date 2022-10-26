@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import * as Icon from 'react-bootstrap-icons';
@@ -8,7 +8,6 @@ import PageLoader from '../components/PageLoader'
 import CommentCard from '../components/CommentCard';
 import getToken from '../utils/getToken';
 import { AuthContext } from '../context/AuthContext.js'
-import { RecipesContext } from '../context/RecipesContext.js'
 import SeeUserLink from '../components/SeeUserLink';
 import FavouriteButton from '../components/FavouriteButton';
 import Fade from 'react-bootstrap/Fade';
@@ -20,10 +19,8 @@ function ViewRecipe() {
   const { user } = useContext(AuthContext);
   const redirect = useNavigate();
   const [mount, setMount] = useState(false);
-  const { handleDeleteRecipe } = useContext(RecipesContext);
-  const location = useLocation();
-  const { drinkId } = location.state;
-  const { recipe, comments, setComments, loading, setLoading, error } = useRecipeFetch(drinkId);
+  const { _id } = useParams();
+  const { recipe, comments, setComments, loading, error } = useRecipeFetch(_id);
   const [commentText, setCommentText] = useState("");
 
   const handleTextChange = (e) => {

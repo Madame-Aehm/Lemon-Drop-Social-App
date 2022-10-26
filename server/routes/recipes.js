@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get("/", getAllRecipes);
 router.get("/recipe/:id", getByID);
-router.get("/search/:name/:method", getSearchResults);
+// router.get("/search/:name/:method", getSearchResults);
 
 router.post('/upload-image', multerUploads.single("image"), uploadImage);
 router.post('/new-recipe', jwtAuth, postNewRecipe);

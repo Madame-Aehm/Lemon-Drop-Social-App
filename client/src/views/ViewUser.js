@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import UserPlainView from '../components/UserPlainView';
 import UserRecipes from '../components/UserRecipes';
 import useSingleUserFetch from '../hooks/useSingleUserFetch';
@@ -9,26 +9,25 @@ import { AuthContext } from '../context/AuthContext.js'
 import Fade from 'react-bootstrap/Fade';
 
 function ViewUser() {
-  const location = useLocation();
   const redirect = useNavigate();
   const { user } = useContext(AuthContext);
-  const { userId } = location.state;
-  const { userToView } = useSingleUserFetch(userId);
+  const { _id } = useParams();
+  const { userToView } = useSingleUserFetch(_id);
   const [mount, setMount] = useState(false);
 
   const plainDisplay = {
     display: "flex"
   }
 
- function profileRedirect() {
-  if (user && (userId === user._id)) {
-        redirect("/my-profile", {replace: true});
-      }
- }
- useEffect(() => {
-   profileRedirect();
-   setMount(true);
- }, [])
+  function profileRedirect() {
+    if (user && (_id === user._id)) {
+          redirect("/my-profile", {replace: true});
+        }
+  }
+  useEffect(() => {
+    profileRedirect();
+    setMount(true);
+  }, [])
  
 
   return (

@@ -60,7 +60,7 @@ function SortSelector({ searchResult, setSearchResult }) {
   }
 
   return (
-    <div className='d-flex'>
+    <div>
       <label>Sort by:</label>
       <Form.Select defaultValue={sort} onChange={handleOnChange}>
         <option value={"newest"}>Newest</option>

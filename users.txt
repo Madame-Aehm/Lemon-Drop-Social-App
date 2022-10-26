@@ -9,3 +9,6 @@ password: 1mTheBo55
 
 email: responsible_drinkings@lemondrop.com
 password: 1mTheBo55
+
+email: moe@lemondrop.com
+password: 1mTheBo55
