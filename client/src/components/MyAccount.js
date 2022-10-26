@@ -248,7 +248,7 @@ function MyAccount({ loading, setLoading }) {
         <div className='simple-display'>
           {loading && <PageLoader />}
 
-          <div className='simple-align'>
+          <div className='d-flex gap-2'>
             <h4 className='sub-title'>Account Details</h4>
             <Button style={{padding: "0 0.3em", paddingBottom: "0.2em"}} variant='warning' title="Edit Account Details" 
               onClick={handleEditSwitch}>
@@ -260,7 +260,7 @@ function MyAccount({ loading, setLoading }) {
           <Button variant="warning" onClick={handleEditSwitch} style={plainDisplay}>Edit Mode</Button>
 
           <div style={inputDisplay}>
-          <h5 className='account-mini-title'>{user.username}</h5>
+          <h5>{user.username}</h5>
           <table>
             <tbody>
               <tr>

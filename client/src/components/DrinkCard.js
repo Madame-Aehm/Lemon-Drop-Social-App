@@ -36,7 +36,7 @@ function DrinkCard({ drink }) {
               <Link to={'/update-recipe'} className='edit-link' state={{ recipe: drink }} style={{marginRight: "0.5em"}}>
                 <Icon.Pencil style={{fontSize: "large"}}/>
               </Link>
-              <DeleteButton toDelete={drink} />
+              <DeleteButton toDelete={drink} redirect={false} />
             </span>
         }
         </>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import * as Icon from 'react-bootstrap-icons';
@@ -17,7 +17,6 @@ import { formatDistanceToNow } from 'date-fns';
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
-  const redirect = useNavigate();
   const [mount, setMount] = useState(false);
   const { _id } = useParams();
   const { recipe, comments, setComments, loading, error } = useRecipeFetch(_id);
@@ -44,7 +43,6 @@ function ViewRecipe() {
         const response = await fetch("http://localhost:5000/recipes/add-comment/" + recipe._id, reqOptions);
         const result = await response.json();
         const newComment = result.comments[result.comments.length - 1];
-        console.log(result);
         setComments([...comments, { 
           comment: newComment.comment,
           createdAt: newComment.createdAt,
@@ -65,10 +63,6 @@ function ViewRecipe() {
     }
   }
 
-  const redirectHome = async() => {
-    redirect("/home", {replace: true});
-  }
-
   useEffect(() => {
     setMount(true);
   }, [])
@@ -83,7 +77,6 @@ function ViewRecipe() {
         <>
           <Card style={{maxWidth: "800px"}}>
             <Card.Header className='d-flex align-items-center justify-content-between'>
-              {user && <p></p>}
               <Card.Title className='header-title text-center'>
                 {recipe.name}
               </Card.Title>
@@ -95,7 +88,7 @@ function ViewRecipe() {
                   <Link to={'/update-recipe'} className='edit-link' state={{ recipe: recipe }} style={{marginRight: "0.5em"}}>
                     <Icon.Pencil style={{fontSize: "large"}} title='Edit Recipe' />
                   </Link>
-                  <DeleteButton toDelete={recipe} redirectHome={redirectHome} />
+                  <DeleteButton toDelete={recipe} redirect={true} />
                 </span>
               }
             </Card.Header>
@@ -107,12 +100,8 @@ function ViewRecipe() {
                 <SeeUserLink user={ recipe.posted_by }  />
               </div>
               <div className='d-flex flex-column align-items-end'>
-                <Card.Text className='text-right'>
-                  <Card.Subtitle className='text-muted'>Originally posted: { new Date(recipe.createdAt).toDateString().substring(4) }</Card.Subtitle>
-                </Card.Text>
-                <Card.Text className='text-right'>
-                  <Card.Subtitle className='text-muted'>Last updated: { formatDistanceToNow(new Date(recipe.createdAt), { addSuffix: true }) }</Card.Subtitle>
-                </Card.Text>
+                <Card.Subtitle className='text-muted text-right'>Originally posted: { new Date(recipe.createdAt).toDateString().substring(4) }</Card.Subtitle>
+                <Card.Subtitle className='text-muted text-right'>Last updated: { formatDistanceToNow(new Date(recipe.createdAt), { addSuffix: true }) }</Card.Subtitle>
               </div>
             </Card.Header>
 

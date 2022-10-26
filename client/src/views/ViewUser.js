@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import UserPlainView from '../components/UserPlainView';
 import UserRecipes from '../components/UserRecipes';
 import useSingleUserFetch from '../hooks/useSingleUserFetch';
@@ -32,10 +32,10 @@ function ViewUser() {
 
   return (
     <Fade in={mount}>
-      <div className='simple-display no-padding'>
+      <div className='simple-display p-0'>
         {userToView.username && <>
           <h1 className='page-title'>{userToView.username}'s Profile</h1>
-          <div className='profile-tabs-container'>
+          <div style={{width: "100%"}}>
             <Tabs
               defaultActiveKey="account"
               id="uncontrolled-tab-example"

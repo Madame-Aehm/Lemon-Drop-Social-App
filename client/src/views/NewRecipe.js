@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import '../css/newRecipe.css';
 import { deleteImage, recipeImageUpload } from '../utils/imageMangement';
 import { RecipesContext } from '../context/RecipesContext.js'
 import { AuthContext } from '../context/AuthContext.js';
@@ -51,7 +50,6 @@ function NewRecipe() {
           const response = await fetch("http://localhost:5000/recipes/new-recipe", reqOptions);
           const result = await response.json();
           if (!result.error) {
-            console.log(result);
             resetForm();
             setRecipesList([result].concat(recipesList));
             user.posted_recipes.push(result._id);

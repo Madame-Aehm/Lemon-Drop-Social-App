@@ -97,7 +97,6 @@ function UserRecipes({ userToView, filter }) {
           Welcome to <strong className='header-title'>Lemon Drop Drinks</strong>!
           Your home as a flavour enthusiast 🌞
         </p>
-        {/* <p className='hide-on-collapse'><Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link></p> */}
       </>}
 
       <div className='d-flex align-items-end justify-content-between gap-2'>

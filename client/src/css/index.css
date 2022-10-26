@@ -12,6 +12,14 @@ code {
     monospace;
 }
 
+.simple-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+}
+
 .page-grid-4-1 {
   display: grid;
   grid-template-columns: 4fr 1fr;
@@ -95,6 +103,18 @@ code {
   color: white;
 }
 
+.edit-link {
+  background-color: #ffc107;
+  color: black;
+  border-radius: 0.2em;
+  padding: 0.1em 0.5em 0.4em
+}
+
+.edit-link:hover {
+  color: black;
+  background-color: #E4A11B;
+}
+
 .recipe-div {
   background-color: #eff1cf;
   display: flex;
@@ -115,76 +135,71 @@ code {
   opacity: 1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.simple-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1em;
-  padding: 1em;
-}
-
 .page-title {
   color: #94d333;
   text-align: center;
   margin: 0.5em;
 }
 
-.link-button {
-  font-size: large;
-  background-color: #1b8f47;
-  color: white;
-  text-decoration: none;
-  border-radius: 0.5em;
+/* for profile table */
+td {
   padding: 0.5em 1em;
 }
 
-.link-button2 {
-  width: 100%;
-  font-size: large;
-  background-color: #1b8f47;
-  color: white;
-  text-decoration: none;
-  border-radius: 0.5em;
+.plain-user-info {
+  width: 500px;
+  max-width: 90%;
+  flex-direction: column; 
+  gap: 0.5em;
+  border: solid 1px rgba(0,0,0,0.3);
   padding: 1em;
+  border-radius: 0.5em;
 }
 
-.edit-link {
-  background-color: #ffc107;
-  color: black;
-  border-radius: 0.2em;
-  padding: 0.1em 0.5em 0.4em
+.new-rec-label {
+  font-weight: 700;
+  margin: 0
 }
 
-.edit-link:hover {
-  color: black;
-  background-color: #E4A11B;
-}
-
-
-.p-type-1 {
-  text-align: center;
-  color: #754423;
-}
-
-.fine {
-  transform: translate(-50%, -50%)
-}
-
-.recipe-search {
+/* for recipe form */
+.box {
+  background-color: white;
+  border: solid 1px black;
+  border-radius: 0.3em;
+  padding: 0.5em 1em;
   display: flex;
-  gap: 1em
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+@media only screen and (max-width: 600px) {
+  .box {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5em;
+  }
+
+  .box > input {
+    width: 100%;
+  }
+
+  .box > label {
+    align-self: flex-start;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  .box > input[name='ingredient'] {
+    width: 65%;
+  }
+  .box > input[name='quantity'] {
+    width: 5%;
+  }
+  .box > input[name='measure'] {
+    width: 20%;
+  }
 }

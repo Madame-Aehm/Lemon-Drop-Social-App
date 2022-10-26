@@ -15,7 +15,7 @@ function ProtectedRoute({ children }) {
     <>
       {user ? children : 
         <div className='simple-display'>
-          <p className='p-type-1'>Access to this page is restricted to logged-in users.</p>
+          <p className='text-center'>Access to this page is restricted to logged-in users.</p>
           <Button size="lg" variant="success" onClick={handleClick}>Login?</Button>
         </div>
       }

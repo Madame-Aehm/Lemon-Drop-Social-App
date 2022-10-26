@@ -7,10 +7,6 @@ export const AuthContext = createContext();
 export const AuthContextProvider = (props) => {
   const redirect = useNavigate();
   const [user, setUser] = useState(null);
-
-//   function parseJwt (token) {
-//     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-// }
   
   const checkForUser = () => {
     const token = getToken();

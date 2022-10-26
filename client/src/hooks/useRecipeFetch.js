@@ -25,7 +25,6 @@ function useRecipeFetch(id) {
       try {
         const response = await fetch("http://localhost:5000/recipes/recipe/" + id);
         const result = await response.json();
-        console.log(result);
         setRecipe(result);
         setComments(result.comments);
         setLoading(false);

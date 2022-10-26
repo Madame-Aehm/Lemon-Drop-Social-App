@@ -14,19 +14,19 @@ function UserPlainView({ userToView, display }) {
         <h5>{userToView.username}</h5>
 
         {userToView.email && 
-          <div className='simple-align'>
+          <div className='d-flex gap-2'>
             <h6 className='account-mini-title'>Email: </h6>
             <h6 className='sub-title'>{userToView.email}</h6>
           </div>
         }
         
 
-        <div className='simple-align'>
+        <div className='d-flex gap-2'>
           <h6 className='account-mini-title'>User since: </h6>
           <h6 className='sub-title'>{date}</h6>
         </div>
 
-        <div className='simple-align'>
+        <div className='d-flex gap-2'>
           <h6 className='account-mini-title'>Recipes posted: </h6>
           <h6 className='sub-title'>{userToView.posted_recipes.length}</h6>
         </div>

@@ -17,12 +17,12 @@ function SearchForm({ searchInput, setSearchInput, searchResult, submitSearch, c
           Fill out one or more fields and our faeries will find the best matches.
         </Form.Text>
         <br/>
-        <Form.Label htmlFor='search-name'>Drink Name:</Form.Label>
-        <Form.Control className='mb-2' type='text' id='search-name' value={searchInput.name} name='name' onChange={handleSearchInputChanges} />
-        <Form.Label htmlFor='search-method'>Method:</Form.Label>
-        <Form.Control className='mb-2' type='text' id='search-method' value={searchInput.method} name='method' onChange={handleSearchInputChanges} />
-        <Form.Label htmlFor='search-ingredient'>Includes ingredient:</Form.Label>
-        <Form.Control type='text' id='search-ingredient' name='ingredient' value={searchInput.ingredient} onChange={handleSearchInputChanges} />
+        <Form.Label>Drink Name:</Form.Label>
+        <Form.Control className='mb-2' type='text' value={searchInput.name} name='name' onChange={handleSearchInputChanges} />
+        <Form.Label>Method:</Form.Label>
+        <Form.Control className='mb-2' type='text' value={searchInput.method} name='method' onChange={handleSearchInputChanges} />
+        <Form.Label>Includes ingredient:</Form.Label>
+        <Form.Control type='text' name='ingredient' value={searchInput.ingredient} onChange={handleSearchInputChanges} />
         <Form.Text className='text-muted'>Please only type one ingredient</Form.Text>
         <br/>
         <Button className='mb-3' variant='success' onClick={submitSearch}>Search</Button>

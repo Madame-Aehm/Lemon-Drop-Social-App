@@ -15,7 +15,6 @@ function useSingleUserFetch(id) {
 
   useEffect(() => {
     fetchById();
-    console.log(userToView)
   }, [id])
   
 

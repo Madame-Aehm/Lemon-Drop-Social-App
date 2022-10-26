@@ -108,7 +108,7 @@ function SignUp() {
 
       {user && 
         <div className='simple-display'>
-          <p className='p-type-1'><strong>{user.username}</strong> is already logged in.</p>
+          <p className='text-center'><strong>{user.username}</strong> is already logged in.</p>
           <Button size="lg" variant="success" onClick={logout}>Logout?</Button>
         </div>
       }

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import '../css/profile-page.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import MyAccount from '../components/MyAccount';
@@ -18,7 +17,7 @@ function MyProfile() {
 
   return (
     <Fade in={mount}>
-        <div className='profile-tabs-container'>
+        <div style={{width: "100%"}}>
           <Tabs
             defaultActiveKey="account"
             id="uncontrolled-tab-example"
