@@ -66,9 +66,9 @@ function DrinkCard({ drink }) {
             }
           })}
         </p>
-        <Card.Subtitle className='text-muted mb-3'>
-          Last updated { formatDistanceToNow(new Date(drink.updatedAt), { addSuffix: true }) }
-        </Card.Subtitle>
+        <div>
+          <Icon.HeartFill style={{fontSize: "large", color: "#DE4940"}}/> Favourited by  {drink.favourited_by.length} mixologists
+        </div>
         <br/>
         <br/>
       </Card.Body>

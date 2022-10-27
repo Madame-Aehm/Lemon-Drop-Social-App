@@ -72,8 +72,8 @@ function ViewRecipe() {
     <div className='simple-display'>
       {loading && <PageLoader/>}
       {error && <p>{error}</p>}
-      {!recipe && <p>There nothing here?</p>}
-      {(!loading && !error && recipe) && 
+      {recipe.error && <p>{recipe.error}</p>}
+      {(!error && recipe.name) &&
         <>
           <Card style={{maxWidth: "800px"}}>
             <Card.Header className='d-flex align-items-center justify-content-between'>
@@ -95,12 +95,12 @@ function ViewRecipe() {
 
             <Card.Img src={recipe.image.url} alt={recipe.name}/>
 
-            <Card.Header className='d-flex justify-content-between align-items-center'>
+            <Card.Header className='d-flex flex-wrap justify-content-center justify-content-sm-between align-items-center gap-3'>
               <div>
                 <SeeUserLink user={ recipe.posted_by }  />
               </div>
               <div className='d-flex flex-column align-items-end'>
-                <Card.Subtitle className='text-muted text-right'>Originally posted: { new Date(recipe.createdAt).toDateString().substring(4) }</Card.Subtitle>
+                <Card.Subtitle className='text-muted text-right mb-2'>Originally posted: { new Date(recipe.createdAt).toDateString().substring(4) }</Card.Subtitle>
                 <Card.Subtitle className='text-muted text-right'>Last updated: { formatDistanceToNow(new Date(recipe.createdAt), { addSuffix: true }) }</Card.Subtitle>
               </div>
             </Card.Header>

@@ -28,8 +28,7 @@ function Home() {
       return (
         e.name.toLowerCase().includes(searchInput.name.trim().toLowerCase())
         && e.method.toLowerCase().includes(searchInput.method.trim().toLowerCase())
-        && e.ingredients.filter((i) => i.ingredient.toLowerCase().includes(searchInput.ingredient.trim().toLowerCase))
-        // && e.ingredients.ingredient.toLowerCase().includes(searchInput.ingredient.trim().toLowerCase())
+        && e.ingredients.some(i => searchInput.ingredient.toLowerCase().includes(i.ingredient.toLowerCase()))
         )
     })
     setSearchResult(filterResult);
@@ -98,7 +97,7 @@ function Home() {
             {/* <p className='hide-on-collapse'><Link className='link-button' to={'/new-recipe'}>Post a recipe!</Link></p> */}
           </>}
 
-          <div className='d-flex align-items-end justify-content-between gap-2'>
+          <div className='sort-search-container'>
             <SortSelector searchResult={searchResult} setSearchResult={setSearchResult} />
             <div className='show-on-collapse'>
               <Button variant='success' onClick={handleShow}>Search<Icon.ArrowBarRight style={{fontSize: "x-large"}}/></Button>

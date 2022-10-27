@@ -7,12 +7,13 @@ import UserRecipes from '../components/UserRecipes';
 import useSingleUserFetch from '../hooks/useSingleUserFetch';
 import { AuthContext } from '../context/AuthContext.js'
 import Fade from 'react-bootstrap/Fade';
+import PageLoader from '../components/PageLoader';
 
 function ViewUser() {
   const redirect = useNavigate();
   const { user } = useContext(AuthContext);
   const { _id } = useParams();
-  const { userToView } = useSingleUserFetch(_id);
+  const { userToView, loading, error } = useSingleUserFetch(_id);
   const [mount, setMount] = useState(false);
 
   const plainDisplay = {
@@ -33,7 +34,10 @@ function ViewUser() {
   return (
     <Fade in={mount}>
       <div className='simple-display p-0'>
-        {userToView.username && <>
+        {loading && <PageLoader />}
+        {userToView.error && <p>{userToView.error}</p>}
+        {error && <p>Something went wrong: {error}</p>}
+        {(!error && userToView.username) && <>
           <h1 className='page-title'>{userToView.username}'s Profile</h1>
           <div style={{width: "100%"}}>
             <Tabs

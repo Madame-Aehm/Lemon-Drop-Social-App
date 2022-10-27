@@ -33,6 +33,24 @@ code {
   padding: 0.5em;
 }
 
+.sort-search-container {
+  display: flex; 
+  align-items: flex-end; 
+  justify-content: space-between; 
+  gap: 1em;
+}
+
+@media only screen and (max-width: 400px) {
+  .sort-search-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* .sort-search-container > :first-child {
+    align-self: center;
+  } */
+}
+
 .cards-container {
   grid-area: 'recipes';
   display: flex;
