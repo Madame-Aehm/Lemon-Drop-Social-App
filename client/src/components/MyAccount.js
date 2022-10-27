@@ -333,15 +333,13 @@ function MyAccount({ loading, setLoading }) {
               </tr>
               <tr>
                 <td colSpan={2} style={{textAlign: "center"}} >
-                  <Button variant="success" onClick={handleEditSwitch}>Done</Button>
+                  <Button variant="success" onClick={handleEditSwitch}>Leave edit mode</Button>
                 </td>
               </tr>
             </tbody>
           </table>
           </div>
-
           
-
           <br/>
           <br/>
 

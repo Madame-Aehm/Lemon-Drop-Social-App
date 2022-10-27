@@ -23,16 +23,21 @@ function Home() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const submitSearch = () => {
-    const filterResult = recipesList.filter((e) => {
+  const submitSearch = (e) => {
+    e.preventDefault();
+    if (JSON.stringify(searchInput) !== JSON.stringify({ name: "", method: "", ingredient: "" })) {
+      const filterResult = recipesList.filter((e) => {
       return (
-        e.name.toLowerCase().includes(searchInput.name.trim().toLowerCase())
-        && e.method.toLowerCase().includes(searchInput.method.trim().toLowerCase())
-        && e.ingredients.some(i => searchInput.ingredient.toLowerCase().includes(i.ingredient.toLowerCase()))
+        e.name.toLowerCase().includes(searchInput.name)
+        && e.method.toLowerCase().includes(searchInput.method)
+        && e.ingredients.some(i => i.ingredient.toLowerCase().includes(searchInput.ingredient.trim().toLowerCase()))
         )
-    })
-    setSearchResult(filterResult);
-    handleClose();
+      })
+      setSearchResult(filterResult);
+      handleClose();
+    } else {
+      alert("You must fill in at least one search field")
+    }
   }
 
   const clearSearch = () => {

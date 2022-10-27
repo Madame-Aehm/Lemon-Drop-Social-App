@@ -22,17 +22,21 @@ function UserRecipes({ userToView, filter }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const submitSearch = () => {
-    const filterResult = userList.filter((e) => {
-      return (
-        e.name.toLowerCase().includes(searchInput.name.trim().toLowerCase())
-        && e.method.toLowerCase().includes(searchInput.method.trim().toLowerCase())
-        // && e.ingredients.ingredient.toLowerCase().includes(searchInput.ingredient.trim().toLowerCase())
-        )
-        
-    })
-    setSearchResult(filterResult);
-    handleClose();
+  const submitSearch = (e) => {
+    e.preventDefault();
+    if (JSON.stringify(searchInput) !== JSON.stringify({ name: "", method: "", ingredient: "" })) {
+      const filterResult = userList.filter((e) => {
+        return (
+          e.name.toLowerCase().includes(searchInput.name.trim().toLowerCase())
+          && e.method.toLowerCase().includes(searchInput.method.trim().toLowerCase())
+          && e.ingredients.some(i => i.ingredient.toLowerCase().includes(searchInput.ingredient.trim().toLowerCase()))
+          )
+      })
+      setSearchResult(filterResult);
+      handleClose();
+    } else {
+      alert("You must fill in at least one search field")
+    }
   }
 
   const clearSearch = () => {

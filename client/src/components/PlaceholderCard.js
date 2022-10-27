@@ -5,7 +5,7 @@ import Placeholder from 'react-bootstrap/Placeholder';
 function PlaceholderCard() {
   return (
     <Card style={{maxWidth: "325px"}}>
-      <Card.Img variant="top" src="images/placeholder.png" alt="Loading" />
+      <Card.Img variant="top" src="https://res.cloudinary.com/cocktail-recipes/image/upload/v1666878764/assets/placeholder_m3n8ad.png" alt="Loading" />
       <Card.Body className='d-flex flex-column'>
         <Placeholder as={Card.Title} animation="glow">
           <Placeholder xs={6} />

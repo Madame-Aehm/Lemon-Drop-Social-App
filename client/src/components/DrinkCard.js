@@ -25,7 +25,7 @@ function DrinkCard({ drink }) {
 
   return (
     <Card style={{maxWidth: "325px"}}>
-      <Card.Img variant='top' src={formattedPicture} />
+      <Card.Img variant='top' src={formattedPicture} alt={drink.name} />
       <Card.ImgOverlay className={floats}>
         <>
         {user && (user._id !== drink.posted_by) &&

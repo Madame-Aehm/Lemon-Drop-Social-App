@@ -6,7 +6,7 @@ import { RecipesContext } from '../context/RecipesContext.js'
 import { addFavourite, removeFavourite } from '../utils/favouritesManagement.js';
 import { checkIf, resetSubArray } from '../utils/JSFunctions.js';
 
-function FavouriteButton({ recipe, includeCount }) {
+function FavouriteButton({ recipe }) {
 
   const { user, setUser } = useContext(AuthContext);
   const { recipesList, setRecipesList } = useContext(RecipesContext);
