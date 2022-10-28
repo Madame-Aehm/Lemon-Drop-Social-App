@@ -11,13 +11,13 @@ router.get("/user/:id", getUserByID);
 router.get("/my-profile", jwtAuth, getMyProfile);
 router.post("/verify-password", jwtAuth, verifyAndUpdatePW);
 
-router.post('/upload-image', multerUploads.single("image"), uploadImage);
-router.post('/delete-image', deleteImage);
+router.post('/upload-image', jwtAuth, multerUploads.single("image"), uploadImage);
+router.post('/delete-image', jwtAuth, deleteImage);
 router.post('/sign-up', newUser);
 router.post('/login', login);
 
 router.patch('/update-user', jwtAuth, updateUser);
 
-router.delete('/user/:id', deleteUser);
+router.delete('/user/:id', jwtAuth, deleteUser);
 
 export default router

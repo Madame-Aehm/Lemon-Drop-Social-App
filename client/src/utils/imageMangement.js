@@ -1,34 +1,46 @@
+import getToken from "./getToken";
+
 const deleteImage = async (image) => {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  const imageData = JSON.stringify(image);
-  const reqOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: imageData
-  };
-  try {
-    const response = await fetch("http://localhost:5000/api/users/delete-image", reqOptions);
-    const result = await response.json();
-    console.log(result);
-  } catch(error) {
-    alert("error deleting image: ", error);
+  const token = getToken();
+  if (token) {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+    const imageData = JSON.stringify(image);
+    const reqOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: imageData
+    };
+    try {
+      const response = await fetch("http://localhost:5000/api/users/delete-image", reqOptions);
+      const result = await response.json();
+      console.log(result);
+    } catch(error) {
+      alert("error deleting image: ", error);
+    }
   }
 }
 
 const uploadImage = async (file, url) => {
-  const formData = new FormData();
-  formData.append("image", file);
-  const reqOptions = {
-    method: "POST",
-    body: formData
-  };
-  try {
-    const response = await fetch(url, reqOptions);
-    const result = await response.json();
-    return result
-  } catch (error) {
-    alert("image upload error: ", error)
+  const token = getToken();
+  if (token) {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    const formData = new FormData();
+    formData.append("image", file);
+    const reqOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formData
+    };
+    try {
+      const response = await fetch(url, reqOptions);
+      const result = await response.json();
+      return result
+    } catch (error) {
+      alert("image upload error: ", error)
+    }
   }
 }
 
@@ -39,8 +51,13 @@ const recipeImageUpload = async (selectedFile) => {
       public_id: null
     }
   } else {
-    const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
-    return image
+    try {
+      const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
+      return image
+    } catch (error) {
+      console.log(error);
+    }
+    
   }
 }
 
@@ -48,10 +65,13 @@ const recipeUpdateImage = async (selectedFile, original) => {
   if (!selectedFile) {
     return original
   } else {
-    const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
-    return image
+    try {
+      const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
+      return image
+    } catch (error) {
+      console.log(error);
+    }
   }
-
 }
 
 const signUpImageUpload = async (selectedFile) => {
@@ -61,8 +81,12 @@ const signUpImageUpload = async (selectedFile) => {
       public_id: null
     }
   } else {
-    const image = await uploadImage(selectedFile, "http://localhost:5000/api/users/upload-image")
-    return image
+    try {
+      const image = await uploadImage(selectedFile, "http://localhost:5000/api/users/upload-image")
+      return image
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 

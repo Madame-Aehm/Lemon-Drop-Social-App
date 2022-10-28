@@ -47,7 +47,7 @@ function NewRecipe() {
             headers: myHeaders,
             body: toSubmit,
           }
-          const response = await fetch("http://localhost:5000/recipes/new-recipe", reqOptions);
+          const response = await fetch("http://localhost:5000/api/recipes/new-recipe", reqOptions);
           const result = await response.json();
           if (!result.error) {
             resetForm();

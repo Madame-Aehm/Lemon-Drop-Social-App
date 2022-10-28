@@ -16,13 +16,6 @@ const getAllRecipes = async (req, res) => {
   }
 };
 
-const getSearchResults = async (req, res) => {
-  console.log(req.params);
-
-  res.json({ msg: "something" })
-
-}
-
 const getByID = async (req, res) => {
   const id = req.params.id;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -235,27 +228,5 @@ const deleteFavsOnRecipeDelete = async() => {
 
 }
 
-// const getByMethod = async (req, res) => {
-//   const requested = await recipeModel
-//     .find({ method: req.params.method })
-//     .populate({ path: "posted_by", select: "username"});
-//   if (requested.length === 0) {
-//     res.status(200).json({
-//       msg: "No recipe with '" + req.params.method + "' method."
-//     })
-//   } else {
-//     try {
-//       res.status(200).json(
-//         requested
-//       )
-//     } catch(error) {
-//       res.status(500).json({
-//         msg: "Server failed",
-//         error: error
-//       })
-//     }
-//   }
-// }
-
-export { getAllRecipes, getSearchResults, getByID, postNewRecipe, deleteRecipe, updateRecipe, 
+export { getAllRecipes, getByID, postNewRecipe, deleteRecipe, updateRecipe, 
   uploadImage, addComment, deleteComment, addFavourite, deleteFavourite }
