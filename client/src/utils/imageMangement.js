@@ -8,7 +8,7 @@ const deleteImage = async (image) => {
     body: imageData
   };
   try {
-    const response = await fetch("http://localhost:5000/users/delete-image", reqOptions);
+    const response = await fetch("http://localhost:5000/api/users/delete-image", reqOptions);
     const result = await response.json();
     console.log(result);
   } catch(error) {
@@ -39,7 +39,7 @@ const recipeImageUpload = async (selectedFile) => {
       public_id: null
     }
   } else {
-    const image = await uploadImage(selectedFile, "http://localhost:5000/recipes/upload-image")
+    const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
     return image
   }
 }
@@ -48,7 +48,7 @@ const recipeUpdateImage = async (selectedFile, original) => {
   if (!selectedFile) {
     return original
   } else {
-    const image = await uploadImage(selectedFile, "http://localhost:5000/recipes/upload-image")
+    const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
     return image
   }
 
@@ -61,7 +61,7 @@ const signUpImageUpload = async (selectedFile) => {
       public_id: null
     }
   } else {
-    const image = await uploadImage(selectedFile, "http://localhost:5000/users/upload-image")
+    const image = await uploadImage(selectedFile, "http://localhost:5000/api/users/upload-image")
     return image
   }
 }

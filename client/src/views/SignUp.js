@@ -56,7 +56,7 @@ function SignUp() {
       body: newUser,
     }
     try {
-      const response = await fetch("http://localhost:5000/users/sign-up", reqOptions);
+      const response = await fetch("http://localhost:5000/api/users/sign-up", reqOptions);
       const result = await response.json();
       console.log(result);
       if (result.error) {

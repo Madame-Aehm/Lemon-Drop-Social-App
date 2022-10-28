@@ -40,7 +40,7 @@ function ViewRecipe() {
           headers: myHeaders,
           body: body
         }
-        const response = await fetch("http://localhost:5000/recipes/add-comment/" + recipe._id, reqOptions);
+        const response = await fetch("http://localhost:5000/api/recipes/add-comment/" + recipe._id, reqOptions);
         const result = await response.json();
         const newComment = result.comments[result.comments.length - 1];
         setComments([...comments, { 

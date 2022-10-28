@@ -27,7 +27,7 @@ export const AuthContextProvider = (props) => {
       headers: myHeaders
     };
     try {
-      const response = await fetch("http://localhost:5000/users/my-profile", reqOptions);
+      const response = await fetch("http://localhost:5000/api/users/my-profile", reqOptions);
       const result = await response.json();
       setUser(result);
     } catch(error) {
@@ -46,7 +46,7 @@ export const AuthContextProvider = (props) => {
     };
     try {
       const response = await fetch(
-        "http://localhost:5000/users/login",
+        "http://localhost:5000/api/users/login",
         reqOptions
       );
       const result = await response.json();

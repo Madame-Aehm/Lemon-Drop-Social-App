@@ -15,7 +15,7 @@ export const RecipesContextProvider = (props) => {
 
   const fetchAllRecipes = async () => {
     try{
-      const response = await fetch("http://localhost:5000/recipes/")
+      const response = await fetch("http://localhost:5000/api/recipes/")
       const data = await response.json()
       setRecipesList(data);
       setSort("newest");
@@ -38,7 +38,7 @@ export const RecipesContextProvider = (props) => {
         body: toSubmit
       }
       try {
-        const response = await fetch("http://localhost:5000/recipes/delete-recipe", reqOptions);
+        const response = await fetch("http://localhost:5000/api/recipes/delete-recipe", reqOptions);
         const result = response.json();
         return result;
       } catch (error) {

@@ -10,7 +10,7 @@ const addFavourite = async(recipe) => {
       headers: myHeaders,
     }
     try {
-      const response = await fetch("http://localhost:5000/recipes/add-favourite/" + recipe._id, reqOptions);
+      const response = await fetch("http://localhost:5000/api/recipes/add-favourite/" + recipe._id, reqOptions);
       const result= await response.json();
       console.log(result);
     } catch(error) {
@@ -28,7 +28,7 @@ const removeFavourite = async(recipe) => {
     headers: myHeaders
   }
   try {
-    const response = await fetch("http://localhost:5000/recipes/delete-favourite/" + recipe._id, reqOptions);
+    const response = await fetch("http://localhost:5000/api/recipes/delete-favourite/" + recipe._id, reqOptions);
     const result = await response.json();
     console.log(result);
   } catch (error) {

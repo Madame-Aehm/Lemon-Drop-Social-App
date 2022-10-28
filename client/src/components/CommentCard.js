@@ -23,7 +23,7 @@ function CommentCard({ comment, comments, setComments, recipe }) {
           headers: myHeaders,
           body: body
         }
-        const response = await fetch("http://localhost:5000/recipes/delete-comment/" + recipe._id, reqOptions);
+        const response = await fetch("http://localhost:5000/api/recipes/delete-comment/" + recipe._id, reqOptions);
         const result = await response.json();
         console.log(result);
         setComments(comments.filter((item) => item._id !== comment._id));

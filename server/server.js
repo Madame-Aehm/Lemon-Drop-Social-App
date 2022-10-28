@@ -42,8 +42,8 @@ const addMiddlewares = () => {
 }
 
 const loadRoutes = () => {
-  app.use('/recipes', recipesRouter);
-  app.use('/users', usersRouter);
+  app.use('/api/recipes', recipesRouter);
+  app.use('/api/users', usersRouter);
 }
 
 (async function controller () {
