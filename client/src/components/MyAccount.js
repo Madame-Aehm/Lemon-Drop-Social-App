@@ -262,6 +262,7 @@ function MyAccount({ loading, setLoading }) {
 
           <div style={inputDisplay}>
           <h5>{user.username}</h5>
+          <p>To update your profile, make your changes to the desired field and click the corresponding yellow edit button to apply them.</p>
           <table>
             <tbody>
               <tr>

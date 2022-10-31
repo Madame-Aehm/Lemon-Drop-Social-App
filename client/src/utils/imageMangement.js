@@ -54,7 +54,6 @@ const recipeImageUpload = async (selectedFile) => {
   } else {
     try {
       const image = await uploadImage(selectedFile, baseURL + "/api/recipes/upload-image");
-      console.log(image);
       return image
     } catch (error) {
       console.log(error);

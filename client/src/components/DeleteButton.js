@@ -15,9 +15,9 @@ function DeleteButton({toDelete, redirect}) {
     redirectOnDelete("/home", {replace: true});
   }
   
-  const handleClick = () => {
+  const handleClick = async() => {
     setLoading(true);
-    handleDeleteRecipe(toDelete);
+    await handleDeleteRecipe(toDelete);
     setLoading(false);
     if (redirect) {
       redirectHome();

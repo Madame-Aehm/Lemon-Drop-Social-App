@@ -21,12 +21,12 @@ function Login() {
     setPWinvalid(false);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     setLoading(true);
     const validPassword = passwordValidation(inputInfo.password);
     if (validPassword) {
       e.preventDefault();
-      login(inputInfo);
+      await login(inputInfo);
       setLoading(false);
     } else {
       e.preventDefault();

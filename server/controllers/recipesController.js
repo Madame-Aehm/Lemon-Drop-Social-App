@@ -36,12 +36,9 @@ const getByID = async (req, res) => {
 
 const uploadImage = async(req, res) => {
   try {
-    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-      folder: "recipe_images",
-      return_delete_token: true,
-    });
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, { folder: "recipe_images" });
     return res.status(200).json({
-      url: uploadResult.url,
+      url: uploadResult.secure_url,
       public_id: uploadResult.public_id
     });
   } catch (error) {

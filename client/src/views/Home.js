@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/esm/Button';
 import * as Icon from 'react-bootstrap-icons';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import SearchForm from '../components/SearchForm';
-const DrinkCard =React.lazy(() => import('../components/DrinkCard'));
+import DrinkCard from '../components/DrinkCard';
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -61,9 +61,7 @@ function Home() {
             {(recipesList && !searchResult) && <>
               {recipesList.map((drink) => {
                 return (
-                  <Suspense key={drink._id} fallback={<PlaceholderCard/>}>
-                    <DrinkCard drink={drink} />
-                  </Suspense>
+                  <DrinkCard key={drink._id} drink={drink} />
                 )
               })}
             </>}
