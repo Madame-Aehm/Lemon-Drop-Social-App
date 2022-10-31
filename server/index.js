@@ -29,7 +29,12 @@ const addMiddlewares = () => {
       extended: true,
     })
   );
-  app.use(cors());
+  app.use(cors(
+  //   {
+  //   origin: "https://lemon-drop-recipes.vercel.app" || "http://localhost:3000",
+  //   credentials: true
+  // }
+  ));
   cloudinaryConfig();
   app.use(passport.initialize());
   passportConfig();
