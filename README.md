@@ -4,4 +4,6 @@ This project is the product of my second module at Code Academy Berlin. The goal
 
 The MERN stack (MongoDB, Express.js, React and Node.js) makes up the base of this project. Mongoose provides structure with schemas/models, Cloudinary hosts the images, and JWs tokens provide authentication, along with other middleware such as Multer, Passport, Bycrypt and CORS.
 
-Most styled elements are from the React-Bootstrap library.
+Most styled elements are imported the React-Bootstrap library.
+
+Live preview [here](https://lemon-drop-recipes.vercel.app/).
