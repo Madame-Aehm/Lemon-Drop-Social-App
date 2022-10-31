@@ -3,13 +3,13 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "launchBoth": "concurrently \"nodemon server.js\" \"cd ../client && npm start\""
+    "start": "nodemon index.js",
+    "launchBoth": "concurrently \"nodemon index.js\" \"cd ../client && npm start\""
   },
-  "author": "",
+  "author": "Madame-Aehm",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",

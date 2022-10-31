@@ -11,6 +11,7 @@ import PasswordInput from './PasswordInput';
 import PageLoader from './PageLoader';
 import * as Icon from 'react-bootstrap-icons';
 import UserPlainView from './UserPlainView';
+import { baseURL } from '../utils/getServerURL';
 
 function MyAccount({ loading, setLoading }) {
   const { user, setUser } = useContext(AuthContext);
@@ -110,7 +111,7 @@ function MyAccount({ loading, setLoading }) {
         if (user.profile_picture.public_id) {
           await deleteImage(user.profile_picture);
         }
-        const image = await uploadImage(selectedFile, "http://localhost:5000/api/users/upload-image");
+        const image = await uploadImage(selectedFile, baseURL + "/api/users/upload-image");
         updateUser({ profile_picture: image });
         setSelectedFile(null);
         const fileInput = document.querySelector("input[name='profile_picture']");
@@ -179,7 +180,7 @@ function MyAccount({ loading, setLoading }) {
           headers: myHeaders,
           body: reqBody
         }
-        const response = await fetch("http://localhost:5000/api/users/verify-password", reqOptions);
+        const response = await fetch(baseURL + "/api/users/verify-password", reqOptions);
         const result = await response.json();
         return result
       } catch(error) {
@@ -220,7 +221,7 @@ function MyAccount({ loading, setLoading }) {
         headers: myHeaders,
         body: toUpdate
       }
-      const response = await fetch("http://localhost:5000/api/users/update-user", reqOptions);
+      const response = await fetch(baseURL + "/api/users/update-user", reqOptions);
       const result = await response.json();
       setUser(result);
     } else {

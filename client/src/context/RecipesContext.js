@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
+import { baseURL } from '../utils/getServerURL.js';
 import getToken from '../utils/getToken';
 import { deleteImage } from '../utils/imageMangement';
 import { resetSubArray } from '../utils/JSFunctions.js';
@@ -15,7 +16,7 @@ export const RecipesContextProvider = (props) => {
 
   const fetchAllRecipes = async () => {
     try{
-      const response = await fetch("http://localhost:5000/api/recipes/")
+      const response = await fetch(baseURL + "/api/recipes/")
       const data = await response.json()
       setRecipesList(data);
       setSort("newest");
@@ -38,7 +39,7 @@ export const RecipesContextProvider = (props) => {
         body: toSubmit
       }
       try {
-        const response = await fetch("http://localhost:5000/api/recipes/delete-recipe", reqOptions);
+        const response = await fetch(baseURL + "/api/recipes/delete-recipe", reqOptions);
         const result = response.json();
         return result;
       } catch (error) {

@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext.js';
 import Button from 'react-bootstrap/esm/Button';
 import * as Icon from 'react-bootstrap-icons';
 import SeeUserLink from './SeeUserLink';
+import { baseURL } from '../utils/getServerURL';
 
 function CommentCard({ comment, comments, setComments, recipe }) {
   const { user } = useContext(AuthContext);
@@ -23,7 +24,7 @@ function CommentCard({ comment, comments, setComments, recipe }) {
           headers: myHeaders,
           body: body
         }
-        const response = await fetch("http://localhost:5000/api/recipes/delete-comment/" + recipe._id, reqOptions);
+        const response = await fetch(baseURL + "/api/recipes/delete-comment/" + recipe._id, reqOptions);
         const result = await response.json();
         console.log(result);
         setComments(comments.filter((item) => item._id !== comment._id));

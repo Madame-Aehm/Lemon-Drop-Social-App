@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom';
 import { passwordValidation } from '../utils/JSFunctions';
 import { AuthContext } from '../context/AuthContext.js'
 import PasswordInput from '../components/PasswordInput';
+import PageLoader from '../components/PageLoader';
 
 function Login() {
 
   const { login, logout, user } = useContext(AuthContext);
   const [inputInfo, setInputInfo] = useState({});
   const [PWinvalid, setPWinvalid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   const handleChanges = (e) => {
@@ -20,19 +22,23 @@ function Login() {
   }
 
   const handleSubmit = (e) => {
+    setLoading(true);
     const validPassword = passwordValidation(inputInfo.password);
     if (validPassword) {
       e.preventDefault();
       login(inputInfo);
+      setLoading(false);
     } else {
       e.preventDefault();
       e.stopPropagation();
       setPWinvalid(true);
+      setLoading(false);
     }
   }
 
   return (
     <div>
+      {loading && <PageLoader />}
       <h1 className='page-title'>Login</h1>
       {!user &&
         <Form name="loginForm" onSubmit={handleSubmit} className='simple-display'>

@@ -1,3 +1,4 @@
+import { baseURL } from "./getServerURL";
 import getToken from "./getToken";
 
 const deleteImage = async (image) => {
@@ -13,7 +14,7 @@ const deleteImage = async (image) => {
       body: imageData
     };
     try {
-      const response = await fetch("http://localhost:5000/api/users/delete-image", reqOptions);
+      const response = await fetch(baseURL + "/api/users/delete-image", reqOptions);
       const result = await response.json();
       console.log(result);
     } catch(error) {
@@ -52,7 +53,8 @@ const recipeImageUpload = async (selectedFile) => {
     }
   } else {
     try {
-      const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
+      const image = await uploadImage(selectedFile, baseURL + "/api/recipes/upload-image");
+      console.log(image);
       return image
     } catch (error) {
       console.log(error);
@@ -66,7 +68,7 @@ const recipeUpdateImage = async (selectedFile, original) => {
     return original
   } else {
     try {
-      const image = await uploadImage(selectedFile, "http://localhost:5000/api/recipes/upload-image")
+      const image = await uploadImage(selectedFile, baseURL + "/api/recipes/upload-image")
       return image
     } catch (error) {
       console.log(error);
@@ -77,12 +79,12 @@ const recipeUpdateImage = async (selectedFile, original) => {
 const signUpImageUpload = async (selectedFile) => {
   if (!selectedFile) {
     return {
-      url: "http://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
+      url: "https://res.cloudinary.com/cocktail-recipes/image/upload/v1664980716/user_avatars/g7imx82ggre6lljzqb0r.png",
       public_id: null
     }
   } else {
     try {
-      const image = await uploadImage(selectedFile, "http://localhost:5000/api/users/upload-image")
+      const image = await uploadImage(selectedFile, baseURL + "/api/users/upload-image")
       return image
     } catch (error) {
       console.log(error)

@@ -33,7 +33,6 @@ const addMiddlewares = () => {
   cloudinaryConfig();
   app.use(passport.initialize());
   passportConfig();
-
   //track requests
   app.use((req, res, next) => {
     console.log(req.path, req.method)

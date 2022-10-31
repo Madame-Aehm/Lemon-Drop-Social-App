@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { baseURL } from '../utils/getServerURL.js';
 import getToken from '../utils/getToken.js';
 
 export const AuthContext = createContext();
@@ -27,7 +28,7 @@ export const AuthContextProvider = (props) => {
       headers: myHeaders
     };
     try {
-      const response = await fetch("http://localhost:5000/api/users/my-profile", reqOptions);
+      const response = await fetch(baseURL + "/api/users/my-profile", reqOptions);
       const result = await response.json();
       setUser(result);
     } catch(error) {
@@ -46,7 +47,7 @@ export const AuthContextProvider = (props) => {
     };
     try {
       const response = await fetch(
-        "http://localhost:5000/api/users/login",
+        baseURL + "/api/users/login",
         reqOptions
       );
       const result = await response.json();

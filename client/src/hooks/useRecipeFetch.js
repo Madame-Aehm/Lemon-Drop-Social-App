@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { baseURL } from '../utils/getServerURL';
 
 function useRecipeFetch(id) {
   const [recipe, setRecipe] = useState({});
@@ -8,7 +9,7 @@ function useRecipeFetch(id) {
 
   const getRecipe = async() => {
     try {
-      const response = await fetch("http://localhost:5000/api/recipes/recipe/" + id);
+      const response = await fetch(baseURL + "/api/recipes/recipe/" + id);
       const result = await response.json();
       if (result.name) {
         setRecipe(result);

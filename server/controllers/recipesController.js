@@ -40,10 +40,14 @@ const uploadImage = async(req, res) => {
       folder: "recipe_images",
       return_delete_token: true,
     });
-    return res.status(200).json({
-      url: uploadResult.url,
-      public_id: uploadResult.public_id
-    });
+    return res.status(200).json(
+      uploadResult
+    //   {
+    //   uploadResult: uploadResult,
+    //   url: uploadResult.url,
+    //   public_id: uploadResult.public_id
+    // }
+    );
   } catch (error) {
     res.status(500).json({ error: error });
   }

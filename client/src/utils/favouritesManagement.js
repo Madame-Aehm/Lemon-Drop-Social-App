@@ -1,3 +1,4 @@
+import { baseURL } from "./getServerURL";
 import getToken from "./getToken";
 
 const addFavourite = async(recipe) => {
@@ -10,7 +11,7 @@ const addFavourite = async(recipe) => {
       headers: myHeaders,
     }
     try {
-      const response = await fetch("http://localhost:5000/api/recipes/add-favourite/" + recipe._id, reqOptions);
+      const response = await fetch(baseURL + "/api/recipes/add-favourite/" + recipe._id, reqOptions);
       const result= await response.json();
       console.log(result);
     } catch(error) {
@@ -28,7 +29,7 @@ const removeFavourite = async(recipe) => {
     headers: myHeaders
   }
   try {
-    const response = await fetch("http://localhost:5000/api/recipes/delete-favourite/" + recipe._id, reqOptions);
+    const response = await fetch(baseURL + "/api/recipes/delete-favourite/" + recipe._id, reqOptions);
     const result = await response.json();
     console.log(result);
   } catch (error) {

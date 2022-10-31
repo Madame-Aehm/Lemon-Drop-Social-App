@@ -8,6 +8,7 @@ import { AuthContext } from '../context/AuthContext.js'
 import { deleteImage, signUpImageUpload } from '../utils/imageMangement';
 import PasswordInput from '../components/PasswordInput';
 import PageLoader from '../components/PageLoader';
+import { baseURL } from '../utils/getServerURL';
 
 function SignUp() {
   const { logout, user } = useContext(AuthContext);
@@ -56,7 +57,7 @@ function SignUp() {
       body: newUser,
     }
     try {
-      const response = await fetch("http://localhost:5000/api/users/sign-up", reqOptions);
+      const response = await fetch(baseURL + "/api/users/sign-up", reqOptions);
       const result = await response.json();
       console.log(result);
       if (result.error) {

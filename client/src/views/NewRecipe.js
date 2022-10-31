@@ -6,6 +6,7 @@ import getToken from '../utils/getToken';
 import PageLoader from '../components/PageLoader';
 import RecipeForm from '../components/RecipeForm';
 import Fade from 'react-bootstrap/Fade';
+import { baseURL } from '../utils/getServerURL';
 
 function NewRecipe() {
 
@@ -47,7 +48,7 @@ function NewRecipe() {
             headers: myHeaders,
             body: toSubmit,
           }
-          const response = await fetch("http://localhost:5000/api/recipes/new-recipe", reqOptions);
+          const response = await fetch(baseURL + "/api/recipes/new-recipe", reqOptions);
           const result = await response.json();
           if (!result.error) {
             resetForm();

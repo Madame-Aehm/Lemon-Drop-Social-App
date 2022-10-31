@@ -1,4 +1,5 @@
 {
+  "homepage": "https://lemon-drop-madame-aehm.vercel.app/",
   "name": "lemon-drop-recipes",
   "version": "0.1.0",
   "private": true,
@@ -43,3 +44,5 @@
     "react-router-dom": "^6.4.0"
   }
 }
+
+

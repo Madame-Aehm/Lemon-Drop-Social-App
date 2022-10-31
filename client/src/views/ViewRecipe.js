@@ -14,6 +14,7 @@ import Fade from 'react-bootstrap/Fade';
 import Card from 'react-bootstrap/Card';
 import DeleteButton from '../components/DeleteButton';
 import { formatDistanceToNow } from 'date-fns';
+import { baseURL } from '../utils/getServerURL';
 
 function ViewRecipe() {
   const { user } = useContext(AuthContext);
@@ -40,7 +41,7 @@ function ViewRecipe() {
           headers: myHeaders,
           body: body
         }
-        const response = await fetch("http://localhost:5000/api/recipes/add-comment/" + recipe._id, reqOptions);
+        const response = await fetch(baseURL + "/api/recipes/add-comment/" + recipe._id, reqOptions);
         const result = await response.json();
         const newComment = result.comments[result.comments.length - 1];
         setComments([...comments, { 

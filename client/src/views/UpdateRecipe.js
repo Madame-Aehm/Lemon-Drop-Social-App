@@ -5,6 +5,7 @@ import { RecipesContext } from '../context/RecipesContext.js'
 import RecipeForm from '../components/RecipeForm';
 import getToken from '../utils/getToken';
 import { deleteImage, recipeUpdateImage } from '../utils/imageMangement';
+import { baseURL } from '../utils/getServerURL';
 
 function UpdateRecipe() {
   const [loading, setLoading] = useState(true);
@@ -51,7 +52,7 @@ function UpdateRecipe() {
               headers: myHeaders,
               body: toSubmit
             }
-            const response = await fetch("http://localhost:5000/api/recipes/update-recipe/" + recipe._id, reqOptions);
+            const response = await fetch(baseURL + "/api/recipes/update-recipe/" + recipe._id, reqOptions);
             const result = await response.json();
             if (!result.error) {
               if (selectedFile && recipe.image.public_id) {

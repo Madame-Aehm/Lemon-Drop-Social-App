@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { baseURL } from '../utils/getServerURL';
 
 function useSingleUserFetch(id) {
   const [userToView, setUserToView] = useState({});
@@ -8,7 +9,7 @@ function useSingleUserFetch(id) {
   const fetchById = async() => {
     setLoading(true);
     try{
-      const response = await fetch("http://localhost:5000/api/users/user/" + id);
+      const response = await fetch(baseURL + "/api/users/user/" + id);
       const result = await response.json();
       if (result.username) {
         setUserToView(result);
