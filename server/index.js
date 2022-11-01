@@ -12,6 +12,17 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
+const allowedOrigins = ["https://lemon-drop-recipes.vercel.app", "http://localhost:3000"];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Restricted by CORS"))
+    }
+  }
+}
+
 const mongoDBConnect = () => {
   mongoose.connect(process.env.MONGO_URI)
     .then(() => {
@@ -29,12 +40,7 @@ const addMiddlewares = () => {
       extended: true,
     })
   );
-  app.use(cors(
-  //   {
-  //   origin: "https://lemon-drop-recipes.vercel.app" || "http://localhost:3000",
-  //   credentials: true
-  // }
-  ));
+  // app.use(cors(corsOptions));
   cloudinaryConfig();
   app.use(passport.initialize());
   passportConfig();
@@ -46,8 +52,8 @@ const addMiddlewares = () => {
 }
 
 const loadRoutes = () => {
-  app.use('/api/recipes', recipesRouter);
-  app.use('/api/users', usersRouter);
+  app.use('/api/recipes', cors(), recipesRouter);
+  app.use('/api/users', cors(corsOptions), usersRouter);
 }
 
 (async function controller () {
