@@ -3,9 +3,9 @@ import { getAllUsers, newUser, getUserByID, uploadImage, deleteUser, updateUser,
 import { multerUploads } from '../middlewares/multer.js';
 import jwtAuth from "../utils/jwtAuth.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/all", getAllUsers);
+// router.get("/all", getAllUsers);
 router.get("/user/:id", getUserByID);
 
 router.get("/my-profile", jwtAuth, getMyProfile);
