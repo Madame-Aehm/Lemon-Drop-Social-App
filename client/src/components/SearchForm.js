@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 function SearchForm({ searchInput, setSearchInput, searchResult, submitSearch, clearSearch }) {
 
   const handleSearchInputChanges = (e) => {
-    setSearchInput({ ...searchInput, [e.target.name]: e.target.value.trim().toLowerCase()});
+    setSearchInput({ ...searchInput, [e.target.name]: e.target.value.toLowerCase()});
   }
 
   return (

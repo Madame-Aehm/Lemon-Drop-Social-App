@@ -28,8 +28,8 @@ function Home() {
     if (JSON.stringify(searchInput) !== JSON.stringify({ name: "", method: "", ingredient: "" })) {
       const filterResult = recipesList.filter((e) => {
       return (
-        e.name.toLowerCase().includes(searchInput.name)
-        && e.method.toLowerCase().includes(searchInput.method)
+        e.name.toLowerCase().includes(searchInput.name.trim())
+        && e.method.toLowerCase().includes(searchInput.method.trim())
         && e.ingredients.some(i => i.ingredient.toLowerCase().includes(searchInput.ingredient.trim().toLowerCase()))
         )
       })
